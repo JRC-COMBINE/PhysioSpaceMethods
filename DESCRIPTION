@@ -1,0 +1,13 @@
+Package: PhysioSpaceMethods
+Type: Package
+Title: Creates and Uses Physio Spaces as a dimension reduction mapping
+Version: 0.1.5
+Author: Ali H. Esfahani
+Maintainer: Ali H. Esfahani <esfahani@aices.rwth-aachen.de>
+Description: This package uses 'Big Data' to make robust 'Physiological Vectors' in N dimensions spaces, with which you will map new data to extract information from a big high dimensional confusing new data. (0.1.1 added wilcoxon normalized statistic output, 0.1.2 rewritten overhaul, 0.1.3 imputation and list References added)
+License: MIT
+Encoding: UTF-8
+LazyData: FALSE
+Imports: foreach, doParallel, progress
+RoxygenNote: 6.0.1
+

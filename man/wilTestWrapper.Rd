@@ -4,10 +4,10 @@
 \alias{wilTestWrapper}
 \title{Creates and Uses Physio Spaces as a dimension reduction mapping}
 \usage{
-wilTestWrapper(ReferencesJ, iplus, iminus, WilxSTATICResponse)
+wilTestWrapper(ReferencesJ, iplus, iminus, STATICResponse)
 }
 \arguments{
-\item{ReferencesJ, iplus, iminus, WilxSTATICResponse}{}
+\item{ReferencesJ, iplus, iminus, STATICResponse}{}
 }
 \description{
 This package uses 'Big Data' to make robust 'Physiological Vectors' in N dimensions spaces, with which you will map new data to extract infromation from a big high dimensional confusing new data.

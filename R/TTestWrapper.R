@@ -2,18 +2,19 @@
 #'
 #' @description This package uses 'Big Data' to make robust 'Physiological Vectors' in N dimensions spaces, with which you will map new data to extract infromation from a big high dimensional confusing new data.
 #'
-#' @param ReferencesJ,iplus,iminus
+#' @param ReferencesJ,iplus,iminus,STATICResponse
 #'
 #' @return NULL
 #'
-#' @examples TTestWrapper()
+#' @examples tTestWrapper()
 #'
-#' @export TTestWrapper
+#' @export tTestWrapper
 
 #
-TTestWrapper <- function(ReferencesJ,iplus,iminus,...){ #... is needed so apply with WilxSTATICResponse input won't break this function
-  TTestTemp <- t.test(ReferencesJ[iplus], ReferencesJ[iminus])
-  sgn <- -sign(TTestTemp$statistic)
-  pval = TTestTemp$p.value
+tTestWrapper <- function(ReferencesJ,iplus,iminus,STATICResponse){
+  tTestTemp <- t.test(ReferencesJ[iplus], ReferencesJ[iminus])
+  if(STATICResponse) return(tTestTemp$statistic) #ToDo: Want to have values from -1 to 1
+  sgn <- -sign(tTestTemp$statistic)
+  pval = tTestTemp$p.value
   return(log10(pval) * sgn)
 }

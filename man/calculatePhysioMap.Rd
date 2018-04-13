@@ -5,17 +5,49 @@
 \title{Mapping new data into a physiological-space}
 \usage{
 calculatePhysioMap(InputData, Space, GenesRatio = 0.05, PARALLEL = FALSE,
-  TTEST = FALSE, WilxSTATICResponse = F, NumbrOfCores = NA)
+  NumbrOfCores = NA, TTEST = FALSE, STATICResponse = F)
 }
 \arguments{
-\item{InputData}{A matrix with genes as rows and samples as columns. Corresponding Entrez Gene
-IDs must be assigned to 'rownames' of the matrix, and name of each sample/column should be written in 'colnames'.}
+\item{InputData}{A matrix of input gene expressions to be analyzed, with genes as rows and samples as columns. Corresponding Entrez Gene
+IDs must be assigned to 'rownames' of the matrix, and name of each sample/column should be written in 'colnames'. REMEMBER that the gene
+expressions in 'InputData' should be relative; e.g. fold change or signed p value of a statistical test.}
+
+\item{Space}{The space in which the 'InputData' will be mapped. Just as 'InputData',
+it should be a matrix with genes as rows and samples as columns, with corresponding Entrez Gene
+IDs in 'rownames' of the matrix, and name of each axis of the space written in 'colnames'.}
+
+\item{GenesRatio}{The ratio of gene expression values to be considered in the calculation. In the calculations only the highest and lowest
+GenesRatio*100 percent of values in each sample are used, since signal to noise ratio in gene expression values
+has a direct relation to the relative magnitute of expressions and out noisy inputs need to be filtered out.
+GenesRatio should be a numerical value between 0 and 1. Default value is 0.05.}
+
+\item{PARALLEL}{Logical value indicating if calculations should be done in parallel. Default value is FALSE.}
+
+\item{NumbrOfCores}{Number of cores to be used when 'PARALLEL' is TRUE. Default is NA which will result in the program using
+'all available cores - 1'.}
+
+\item{TTEST}{Logical value indicating if t.test should be done in place of the default wilcoxon rank-sum test (more info can be found
+in the original PhysioSpace: Lenz et. al., PLOS One 2013). Using t.test will speed up calculations. Default value is FALSE.}
+
+\item{STATICResponse}{Logical value indicating if 'statistic' should be returned rather than the default 'signed p value'.
+Default value is FALSE.}
+}
+\value{
+Matrix of mapped 'InputData' values in 'Space', with rows corrisponding to axises of 'Space' and columns representing
+samples in 'InputData'. Mapped values are signed p value when STATICResponse==FALSE, and are 'statistic' value when
+STATICResponse==TRUE (more info can be found in the original PhysioSpace: Lenz et. al., PLOS One 2013).
 }
 \description{
 calculatePhysioMap computes mapped values of each input sample inside of a space,
 calculated prior from a compendium of known samples (Check ?SpaceMaker for more info).
 }
+\details{
+ToDo
+}
 \examples{
-print()
+require(PhysioSpaces)
+calculatePhysioMap(InputData = HS_LUKK_Space[,100:110], Space=HS_LUKK_Space[,1:10])
+calculatePhysioMap(InputData = HS_LUKK_Space[,100:110], Space=HS_U133Plus2_Space[,1:10],
+PARALLEL=T, NumbrOfCores=4, GenesRatio = 0.01, STATICResponse = F, TTEST = T)
 
 }

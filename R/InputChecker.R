@@ -19,7 +19,7 @@ inputChecker <- function(InputData, References){
   if(anyNA(InputData)) InputData <- imputeMissingGeneExpression(InputData)
   if(anyNA(References)) References <- imputeMissingGeneExpression(References)
   #Other checks:
-  if (!all(rownames(InputData) == rownames(References))) {
+  if (!identical(rownames(InputData), rownames(References))) {
     message("Rows of InputData doesn't match rows of References, trying to match them...")
     matchedIndxes <- match(rownames(InputData), rownames(References))
     commonRowsSum <- sum(!is.na(matchedIndxes))

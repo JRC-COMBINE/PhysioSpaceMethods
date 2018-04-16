@@ -2,17 +2,27 @@
 % Please edit documentation in R/ParallelInitializer.R
 \name{parallelInitializer}
 \alias{parallelInitializer}
-\title{Creates and Uses Physio Spaces as a dimension reduction mapping}
+\title{Initializing and Preparing for Parallel Processing}
 \usage{
 parallelInitializer(NumbrOfCores)
 }
 \arguments{
-\item{CLUSTER, machineAddresses, rscript, NumbrOfCores}{}
+\item{NumbrOfCores}{Number of cores (Threads) to use in parallel}
+
+\item{CLUSTER}{logical value, setting if the calculation should be done on a Cluster. Not implemented in this version of PhysioSpaceMethods.}
+
+\item{machineAddresses}{Address of Cluster nodes, only relevant when CLUSTER==TRUE. Not implemented in this version of PhysioSpaceMethods.}
+
+\item{rscript}{Location of rscript on each node of Cluster, only relevant when CLUSTER==TRUE. Not implemented in this version of PhysioSpaceMethods.}
+}
+\value{
+An object of class c("SOCKcluster", "cluster"), made by makeCluster of package parallel.
 }
 \description{
-This package uses 'Big Data' to make robust 'Physiological Vectors' in N dimensions spaces, with which you will map new data to extract infromation from a big high dimensional confusing new data.
+parallelInitializer is an internal function used by calculatePhysioMap. It is called when user wants to
+run calculatePhysioMap in parallel.
 }
 \examples{
-parallelInitializer()
+parallelInitializer(NumbrOfCores = 4)
 
 }

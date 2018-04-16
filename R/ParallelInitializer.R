@@ -1,12 +1,16 @@
-#' @title Creates and Uses Physio Spaces as a dimension reduction mapping
+#' @title Initializing and Preparing for Parallel Processing
 #'
-#' @description This package uses 'Big Data' to make robust 'Physiological Vectors' in N dimensions spaces, with which you will map new data to extract infromation from a big high dimensional confusing new data.
+#' @description parallelInitializer is an internal function used by calculatePhysioMap. It is called when user wants to
+#' run calculatePhysioMap in parallel.
 #'
-#' @param CLUSTER,machineAddresses,rscript,NumbrOfCores
+#' @param NumbrOfCores Number of cores (Threads) to use in parallel
+#' @param CLUSTER logical value, setting if the calculation should be done on a Cluster. Not implemented in this version of PhysioSpaceMethods.
+#' @param machineAddresses Address of Cluster nodes, only relevant when CLUSTER==TRUE. Not implemented in this version of PhysioSpaceMethods.
+#' @param rscript Location of rscript on each node of Cluster, only relevant when CLUSTER==TRUE. Not implemented in this version of PhysioSpaceMethods.
 #'
-#' @return NULL
+#' @return An object of class c("SOCKcluster", "cluster"), made by makeCluster of package parallel.
 #'
-#' @examples parallelInitializer()
+#' @examples parallelInitializer(NumbrOfCores = 4)
 #'
 #' @export parallelInitializer
 

@@ -1,12 +1,20 @@
-#' @title Creates and Uses Physio Spaces as a dimension reduction mapping
+#' @title Imputing Missing Data
 #'
-#' @description This package uses 'Big Data' to make robust 'Physiological Vectors' in N dimensions spaces, with which you will map new data to extract infromation from a big high dimensional confusing new data.
+#' @description imputeMissingGeneExpression is an internal function called by inputChecker. It uses KNN method to impute
+#' any missing value of the InputData or Space (or else missing values would break the pipeline in calculatePhysioMap).
 #'
-#' @param InptGEX
+#' KNN is shown to be not the best method to impute gene expression data, so we recommend that user imputes any missing
+#' value themselves before using calculatePhysioMap.
 #'
-#' @return NULL
+#' @param InptGEX Input matrix with missng values
+#' @param METHOD Method to use in imputation. For now only KNN is available.
 #'
-#' @examples  imputeMissingGeneExpression()
+#' @return A matrix with the same dimensions as InptGEX, with missing values imputed.
+#'
+#' @examples require(PhysioSpaces)
+#' MatToImpute <- HS_LUKK_Space[,100:110]
+#' MatToImpute[sample(x = 1:length(MatToImpute), size = length(MatToImpute)/20)] <- NA
+#' ImputedMat <- imputeMissingGeneExpression(InptGEX = MatToImpute, METHOD = "KNN")
 #'
 #' @export imputeMissingGeneExpression
 

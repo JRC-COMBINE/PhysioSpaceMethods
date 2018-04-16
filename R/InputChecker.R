@@ -1,37 +1,42 @@
-#' @title Creates and Uses Physio Spaces as a dimension reduction mapping
+#' @title Checking calculatePhysioMap Inputs
 #'
-#' @description This package uses 'Big Data' to make robust 'Physiological Vectors' in N dimensions spaces, with which you will map new data to extract infromation from a big high dimensional confusing new data.
+#' @description inputChecker is an internal function used by calculatePhysioMap to ckeck the format of inputs, 'InputData' and 'Space' to be
+#' exact. It checks to see 1- both 'InputData' and 'Space' are matrices, 2- if 'InputData' or 'Space' contain any NA, and trying to impute
+#' using imputeMissingGeneExpression function if they do, and 3- it matches the rows of 'InputData' or 'Space' based on their row names.
 #'
-#' @param InputData,References
+#' @param InputData Same InputData as in calculatePhysioMap. Check calculatePhysioMap's help for more info.
+#' @param Space Same Space as in calculatePhysioMap. Check calculatePhysioMap's help for more info.
 #'
-#' @return NULL
+#' @return inputChecker returns corrected 'InputData' and 'Space' directly to the environment it was called from
+#' (By assigning new matrices to parent.frame()).
 #'
-#' @examples inputChecker()
+#' @examples require(PhysioSpaces)
+#' inputChecker(InputData = HS_LUKK_Space[,100:110], Space=HS_LUKK_Space[,1:10])
 #'
 #' @export inputChecker
 
 #
-inputChecker <- function(InputData, References){
+inputChecker <- function(InputData, Space){
   #In case inputs were vectors
   if(!is.matrix(InputData)) stop("'calculatePhysioMap' expects a matrix for InputData")
-  if(!is.matrix(References)) stop("'calculatePhysioMap' expects a matrix for References")
+  if(!is.matrix(Space)) stop("'calculatePhysioMap' expects a matrix for Space")
   #Imputing missing values:
   if(anyNA(InputData)) InputData <- imputeMissingGeneExpression(InputData)
-  if(anyNA(References)) References <- imputeMissingGeneExpression(References)
+  if(anyNA(Space)) Space <- imputeMissingGeneExpression(Space)
   #Other checks:
-  if (!identical(rownames(InputData), rownames(References))) {
-    message("Rows of InputData doesn't match rows of References, trying to match them...")
-    matchedIndxes <- match(rownames(InputData), rownames(References))
+  if (!identical(rownames(InputData), rownames(Space))) {
+    message("Rows of InputData doesn't match rows of Space, trying to match them...")
+    matchedIndxes <- match(rownames(InputData), rownames(Space))
     commonRowsSum <- sum(!is.na(matchedIndxes))
-    if(commonRowsSum < 0.1*min(nrow(InputData), nrow(References))) stop("Less than 10% of rows could be match! aborting...")
+    if(commonRowsSum < 0.1*min(nrow(InputData), nrow(Space))) stop("Less than 10% of rows could be match! aborting...")
     if(commonRowsSum < 200) stop("Less than 200 rows could be match! which is not enough for PhysioSpace, aborting...")
     InputData <- InputData[!is.na(matchedIndxes),]
-    References <- References[na.omit(matchedIndxes),]
-    message(paste("Matching done, with",nrow(References),"common rows between InputData and References."))
+    Space <- Space[na.omit(matchedIndxes),]
+    message(paste("Matching done, with",nrow(Space),"common rows between InputData and Space."))
   }
   if (min(InputData, na.rm = T) >= 0)
     warning("You didn't provide relative values in InputData??!")
   #Returning new datasets:
   assign("InputData", value = InputData, envir = parent.frame())
-  assign("References", value = References, envir = parent.frame())
+  assign("Space", value = Space, envir = parent.frame())
 }

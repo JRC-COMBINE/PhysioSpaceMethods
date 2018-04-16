@@ -1,7 +1,7 @@
 #' @title Mapping new data into a physiological-space
 #'
 #' @description calculatePhysioMap computes mapped values of each input sample inside of a space,
-#' calculated prior from a compendium of known samples (Check ?SpaceMaker for more info).
+#' calculated prior from a compendium of known samples.
 #'
 #' @param InputData A matrix of input gene expressions to be analyzed, with genes as rows and samples as columns. Corresponding Entrez Gene
 #' IDs must be assigned to 'rownames' of the matrix, and name of each sample/column should be written in 'colnames'. REMEMBER that the gene

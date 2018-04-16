@@ -2,17 +2,29 @@
 % Please edit documentation in R/tTestWrapper.R
 \name{tTestWrapper}
 \alias{tTestWrapper}
-\title{Creates and Uses Physio Spaces as a dimension reduction mapping}
+\title{T-testing Between Plus and Minus Genes}
 \usage{
 tTestWrapper(ReferencesJ, iplus, iminus, STATICResponse)
 }
 \arguments{
-\item{ReferencesJ, iplus, iminus, STATICResponse}{}
+\item{ReferencesJ}{Vector of gene expressions to do statistical test on.}
+
+\item{iplus}{Index of first group of genes for statistical testing.}
+
+\item{iminus}{Index of first group of genes for statistical testing.}
+
+\item{STATICResponse}{Same STATICResponse as in calculatePhysioMap. Check calculatePhysioMap's help for more info.}
+}
+\value{
+Log2 signed p value of t-test if STATICResponse==FALSE, t-test statisitic if STATICResponse==TRUE.
 }
 \description{
-This package uses 'Big Data' to make robust 'Physiological Vectors' in N dimensions spaces, with which you will map new data to extract infromation from a big high dimensional confusing new data.
+tTestWrapper is an internal function used by calculatePhysioMap that does t-test between iplus and iminus indexed genes in
+ReferencesJ.
 }
 \examples{
-tTestWrapper()
+require(PhysioSpaces)
+tTestWrapper(ReferencesJ = HS_LUKK_Space[,91], iplus = sample(1:nrow(HS_LUKK_Space), size = nrow(HS_LUKK_Space)/20),
+iminus = sample(1:nrow(HS_LUKK_Space), size = nrow(HS_LUKK_Space)/20), STATICResponse = F)
 
 }

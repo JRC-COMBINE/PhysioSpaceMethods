@@ -39,7 +39,7 @@ STATICResponse==TRUE (more info can be found in the original PhysioSpace: Lenz e
 }
 \description{
 calculatePhysioMap computes mapped values of each input sample inside of a space,
-calculated prior from a compendium of known samples (Check ?SpaceMaker for more info).
+calculated prior from a compendium of known samples.
 }
 \details{
 ToDo

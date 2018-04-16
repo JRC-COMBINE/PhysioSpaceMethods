@@ -2,17 +2,26 @@
 % Please edit documentation in R/InputChecker.R
 \name{inputChecker}
 \alias{inputChecker}
-\title{Creates and Uses Physio Spaces as a dimension reduction mapping}
+\title{Checking calculatePhysioMap Inputs}
 \usage{
-inputChecker(InputData, References)
+inputChecker(InputData, Space)
 }
 \arguments{
-\item{InputData, References}{}
+\item{InputData}{Same InputData as in calculatePhysioMap. Check calculatePhysioMap's help for more info.}
+
+\item{Space}{Same Space as in calculatePhysioMap. Check calculatePhysioMap's help for more info.}
+}
+\value{
+inputChecker returns corrected 'InputData' and 'Space' directly to the environment it was called from
+(By assigning new matrices to parent.frame()).
 }
 \description{
-This package uses 'Big Data' to make robust 'Physiological Vectors' in N dimensions spaces, with which you will map new data to extract infromation from a big high dimensional confusing new data.
+inputChecker is an internal function used by calculatePhysioMap to ckeck the format of inputs, 'InputData' and 'Space' to be
+exact. It checks to see 1- both 'InputData' and 'Space' are matrices, 2- if 'InputData' or 'Space' contain any NA, and trying to impute
+using imputeMissingGeneExpression function if they do, and 3- it matches the rows of 'InputData' or 'Space' based on their row names.
 }
 \examples{
-inputChecker()
+require(PhysioSpaces)
+inputChecker(InputData = HS_LUKK_Space[,100:110], Space=HS_LUKK_Space[,1:10])
 
 }

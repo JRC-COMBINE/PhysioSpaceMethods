@@ -1,7 +1,7 @@
 <h1>PhysioSpace Methods</h1>
 R package implementation of PhysioSpace (Lenz, Michael, et al. "PhysioSpace: relating gene expression experiments from heterogeneous sources using shared physiological processes." PLoS One 8.10 (2013): e77627).
 
-Recommended to install PhysioSpaces package alongside.
+We recommended to install PhysioSpaces package alongside this package.
 
 ### Table of Contents
 **[Installation Instructions](#installation-instructions)**<br>

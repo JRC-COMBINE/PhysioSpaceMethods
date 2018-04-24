@@ -54,7 +54,7 @@ calculatePhysioMap.default <- function(InputData, Space, GenesRatio = 0.05,
   NSamples <- ncol(InputData)
   physioMap <- matrix(NA, ncol(Space), NSamples)
   suppressPackageStartupMessages(require(doParallel)) #Although doParallel is loaded via namespace cause it's part of
-  # PhysioSpaceMethods imports, I have to manually load it orelse foreach will break (cause of its weird syntax?)
+  # PhysioSpaceMethods imports, I have to manually load it or else foreach will break (cause of its weird syntax?)
   if(PARALLEL) cl <- parallelInitializer(NumbrOfCores=NumbrOfCores)
   pb <- progress_bar$new(format = "(:spin) [:bar] :percent eta: :eta",
                          total = ifelse(PARALLEL,NSamples/length(cl),NSamples), clear = FALSE)

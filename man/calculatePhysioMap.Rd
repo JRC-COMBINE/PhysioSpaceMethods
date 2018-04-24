@@ -5,7 +5,8 @@
 \title{Mapping new data into a physiological-space}
 \usage{
 calculatePhysioMap(InputData, Space, GenesRatio = 0.05, PARALLEL = FALSE,
-  NumbrOfCores = NA, TTEST = FALSE, STATICResponse = F)
+  NumbrOfCores = NA, TTEST = FALSE, STATICResponse = F,
+  ImputationMethod = "PCA")
 }
 \arguments{
 \item{InputData}{A matrix of input gene expressions to be analyzed, with genes as rows and samples as columns. Corresponding Entrez Gene
@@ -31,6 +32,8 @@ in the original PhysioSpace: Lenz et. al., PLOS One 2013). Using t.test will spe
 
 \item{STATICResponse}{Logical value indicating if 'statistic' should be returned rather than the default 'signed p value'.
 Default value is FALSE.}
+
+\item{ImputationMethod}{Imputation method to use in case of missing values.}
 }
 \value{
 Matrix of mapped 'InputData' values in 'Space', with rows corrisponding to axises of 'Space' and columns representing

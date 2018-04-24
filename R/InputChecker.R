@@ -6,6 +6,7 @@
 #'
 #' @param InputData Same InputData as in calculatePhysioMap. Check calculatePhysioMap's help for more info.
 #' @param Space Same Space as in calculatePhysioMap. Check calculatePhysioMap's help for more info.
+#' @param ImputationMethod Imputation method to use in case of missing values.
 #'
 #' @return inputChecker returns corrected 'InputData' and 'Space' directly to the environment it was called from
 #' (By assigning new matrices to parent.frame()).
@@ -16,13 +17,13 @@
 #' @export inputChecker
 
 #
-inputChecker <- function(InputData, Space){
+inputChecker <- function(InputData, Space, ImputationMethod){
   #In case inputs were vectors
   if(!is.matrix(InputData)) stop("'calculatePhysioMap' expects a matrix for InputData")
   if(!is.matrix(Space)) stop("'calculatePhysioMap' expects a matrix for Space")
   #Imputing missing values:
-  if(anyNA(InputData)) InputData <- imputeMissingGeneExpression(InputData)
-  if(anyNA(Space)) Space <- imputeMissingGeneExpression(Space)
+  if(anyNA(InputData)) InputData <- imputeMissingGeneExpression(InputData, METHOD=ImputationMethod)
+  if(anyNA(Space)) Space <- imputeMissingGeneExpression(Space, METHOD=ImputationMethod)
   #Other checks:
   if (!identical(rownames(InputData), rownames(Space))) {
     message("Rows of InputData doesn't match rows of Space, trying to match them...")

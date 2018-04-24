@@ -4,12 +4,14 @@
 \alias{inputChecker}
 \title{Checking calculatePhysioMap Inputs}
 \usage{
-inputChecker(InputData, Space)
+inputChecker(InputData, Space, ImputationMethod)
 }
 \arguments{
 \item{InputData}{Same InputData as in calculatePhysioMap. Check calculatePhysioMap's help for more info.}
 
 \item{Space}{Same Space as in calculatePhysioMap. Check calculatePhysioMap's help for more info.}
+
+\item{ImputationMethod}{Imputation method to use in case of missing values.}
 }
 \value{
 inputChecker returns corrected 'InputData' and 'Space' directly to the environment it was called from

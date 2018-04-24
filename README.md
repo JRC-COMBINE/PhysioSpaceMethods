@@ -22,12 +22,12 @@ devtools::install_github(repo = "JRC-COMBINE/PhysioSpaceMethods")
 ### Alternative installation methods (Manual download):
 In case you encountered any problem while installing, you can download the repository first and install from downloaded local files.
 First clone the repository in your desired repository:
-```console
+```Shell
 cd [Your desired directory]
 git clone https://github.com/JRC-COMBINE/PhysioSpaceMethods.git
 ```
 Then install using <a href="https://cran.r-project.org/web/packages/devtools/">Devtools</a>:
-```console
+```shell
 R -e "devtools::install_local('./PhysioSpaceMethods/')"
 ```
 

@@ -11,6 +11,8 @@
 #'
 #' @return A matrix with the same dimensions as InptGEX, with missing values imputed.
 #'
+#' @import impute
+#'
 #' @examples require(PhysioSpaces)
 #' MatToImpute <- HS_LUKK_Space[,100:110]
 #' MatToImpute[sample(x = 1:length(MatToImpute), size = length(MatToImpute)/20)] <- NA

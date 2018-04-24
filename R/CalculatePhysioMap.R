@@ -21,6 +21,8 @@
 #' @param STATICResponse Logical value indicating if 'statistic' should be returned rather than the default 'signed p value'.
 #' Default value is FALSE.
 #'
+#' @import progress doParallel
+#'
 #' @details ToDo
 #'
 #' @return Matrix of mapped 'InputData' values in 'Space', with rows corrisponding to axises of 'Space' and columns representing
@@ -51,8 +53,8 @@ calculatePhysioMap.default <- function(InputData, Space, GenesRatio = 0.05,
   NGenes <- nrow(InputData)
   NSamples <- ncol(InputData)
   physioMap <- matrix(NA, ncol(Space), NSamples)
-  suppressPackageStartupMessages(require(progress))
-  suppressPackageStartupMessages(require(doParallel))
+  suppressPackageStartupMessages(require(doParallel)) #Although doParallel is loaded via namespace cause it's part of
+  # PhysioSpaceMethods imports, I have to manually load it orelse foreach will break (cause of its weird syntax?)
   if(PARALLEL) cl <- parallelInitializer(NumbrOfCores=NumbrOfCores)
   pb <- progress_bar$new(format = "(:spin) [:bar] :percent eta: :eta",
                          total = ifelse(PARALLEL,NSamples/length(cl),NSamples), clear = FALSE)

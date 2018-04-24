@@ -20,6 +20,7 @@
 #' in the original PhysioSpace: Lenz et. al., PLOS One 2013). Using t.test will speed up calculations. Default value is FALSE.
 #' @param STATICResponse Logical value indicating if 'statistic' should be returned rather than the default 'signed p value'.
 #' Default value is FALSE.
+#' @param ImputationMethod Imputation method to use in case of missing values.
 #'
 #' @import progress doParallel
 #'
@@ -39,7 +40,8 @@
 #Pre-function for dispaching the calculating to the write function:
 calculatePhysioMap <- function(InputData, Space, GenesRatio = 0.05,
                                PARALLEL = FALSE, NumbrOfCores=NA,
-                               TTEST = FALSE, STATICResponse = F){
+                               TTEST = FALSE, STATICResponse = F,
+                               ImputationMethod = "PCA"){
   UseMethod("calculatePhysioMap", object = Space)
 }
 
@@ -47,9 +49,10 @@ calculatePhysioMap <- function(InputData, Space, GenesRatio = 0.05,
 ##The main function for calculating PhysioScores:
 calculatePhysioMap.default <- function(InputData, Space, GenesRatio = 0.05,
                                        PARALLEL = FALSE, NumbrOfCores=NA,
-                                       TTEST = FALSE, STATICResponse = F){
+                                       TTEST = FALSE, STATICResponse = F,
+                                       ImputationMethod = "PCA"){
   #Initializing:
-  inputChecker(InputData, Space)
+  inputChecker(InputData, Space, ImputationMethod)
   NGenes <- nrow(InputData)
   NSamples <- ncol(InputData)
   physioMap <- matrix(NA, ncol(Space), NSamples)
@@ -91,7 +94,8 @@ calculatePhysioMap.default <- function(InputData, Space, GenesRatio = 0.05,
 ##PhysioSpace for gene lists as a Space:
 calculatePhysioMap.list <- function(InputData, Space, GenesRatio = 0.05,
                                     PARALLEL = FALSE, NumbrOfCores=NA,
-                                    TTEST = FALSE, STATICResponse = F){
+                                    TTEST = FALSE, STATICResponse = F,
+                                    ImputationMethod = "PCA"){
 
   #Check the format of the input, and correct:(How can I move this function to its own .R file??)
   inputChecker <- function(InputData, Space){

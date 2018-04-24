@@ -9,22 +9,21 @@ imputeMissingGeneExpression(InptGEX, METHOD = "KNN")
 \arguments{
 \item{InptGEX}{Input matrix with missng values}
 
-\item{METHOD}{Method to use in imputation. For now only KNN is available.}
+\item{METHOD}{Method to use in imputation.}
 }
 \value{
 A matrix with the same dimensions as InptGEX, with missing values imputed.
 }
 \description{
-imputeMissingGeneExpression is an internal function called by inputChecker. It uses KNN method to impute
+imputeMissingGeneExpression is an internal function called by inputChecker. It uses different methods to impute
 any missing value of the InputData or Space (or else missing values would break the pipeline in calculatePhysioMap).
-
-KNN is shown to be not the best method to impute gene expression data, so we recommend that user imputes any missing
-value themselves before using calculatePhysioMap.
 }
 \examples{
 require(PhysioSpaces)
 MatToImpute <- HS_LUKK_Space[,100:110]
 MatToImpute[sample(x = 1:length(MatToImpute), size = length(MatToImpute)/20)] <- NA
-ImputedMat <- imputeMissingGeneExpression(InptGEX = MatToImpute, METHOD = "KNN")
+ImputedMat <- imputeMissingGeneExpression(InptGEX = MatToImpute, METHOD = "PCA")
+ImputedMat2 <- imputeMissingGeneExpression(InptGEX = MatToImpute, METHOD = "KNN")
+ImputedMat3 <- imputeMissingGeneExpression(InptGEX = MatToImpute, METHOD = "Regression")
 
 }

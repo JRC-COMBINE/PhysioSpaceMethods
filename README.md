@@ -12,7 +12,7 @@ We recommended to install PhysioSpaces package alongside this package.
 **[Next Steps, Credits, Feedback, License](#next-steps)**<br>
 
 # Installation Instructions
-###Installing via Devtools (Recommended method):
+### Installing via Devtools (Recommended method):
 Easiest way to install PhysioSpaceMethods is via <a href="https://cran.r-project.org/web/packages/devtools/">Devtools</a>.
 After installing Devtools from cran, you can install PhysioSpaceMethods by:
 ```r
@@ -20,18 +20,21 @@ devtools::install_github(repo = "JRC-COMBINE/PhysioSpaceMethods")
 ```
 
 ### Alternative installation methods (Manual download):
-In case you encountered any problem while installing, you can download the repository first and install from downloaded local files.
-First clone the repository in your desired repository:
+In case you encountered any problem while installing PhysioSpaceMethods, you can download the repository first and 
+install the package from downloaded local files.
+In your terminal, first clone the repository in your desired repository:
 ```Shell
 cd [Your desired directory]
 git clone https://github.com/JRC-COMBINE/PhysioSpaceMethods.git
 ```
-Then install using <a href="https://cran.r-project.org/web/packages/devtools/">Devtools</a>:
+Then install the downloaded package using <a href="https://cran.r-project.org/web/packages/devtools/">Devtools</a>:
 ```Shell
 R -e "devtools::install_local('./PhysioSpaceMethods/')"
 ```
 
 # Usage Instructions
+PhysioSpace Methods maps user's sample inside of a physiological space, calculated prior from a compendium of known samples.
+
 # Troubleshooting
 # Compatibility
 # Notes and Miscellaneous

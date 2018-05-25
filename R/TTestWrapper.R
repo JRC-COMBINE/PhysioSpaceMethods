@@ -19,7 +19,11 @@
 #
 tTestWrapper <- function(ReferencesJ,iplus,iminus,STATICResponse){
   tTestTemp <- t.test(ReferencesJ[iplus], ReferencesJ[iminus])
-  if(STATICResponse) return(tTestTemp$statistic) #ToDo: Want to have values from -1 to 1
+  if(STATICResponse) {
+    Stats <- tTestTemp$statistic
+    MaxStat <- t.test(sort(ReferencesJ,decreasing = T)[1:length(iplus)], sort(ReferencesJ)[1:length(iminus)])$statistic
+    return(Stats/MaxStat)
+  }
   sgn <- -sign(tTestTemp$statistic)
   pval = tTestTemp$p.value
   return(log10(pval) * sgn)

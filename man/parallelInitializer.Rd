@@ -8,12 +8,6 @@ parallelInitializer(NumbrOfCores)
 }
 \arguments{
 \item{NumbrOfCores}{Number of cores (Threads) to use in parallel}
-
-\item{CLUSTER}{logical value, setting if the calculation should be done on a Cluster. Not implemented in this version of PhysioSpaceMethods.}
-
-\item{machineAddresses}{Address of Cluster nodes, only relevant when CLUSTER==TRUE. Not implemented in this version of PhysioSpaceMethods.}
-
-\item{rscript}{Location of rscript on each node of Cluster, only relevant when CLUSTER==TRUE. Not implemented in this version of PhysioSpaceMethods.}
 }
 \value{
 An object of class c("SOCKcluster", "cluster"), made by makeCluster of package parallel.

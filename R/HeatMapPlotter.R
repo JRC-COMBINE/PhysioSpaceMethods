@@ -10,9 +10,11 @@
 #' @param PDFHeight Height of the output PDF, in inches. Default is 7.
 #' @param main The title of the heatmap. Default is an empty string (no title).
 #'
+#' @import grDevices graphics
+#'
 #' @return PhysioHeatmap returns(Invisibly) PDFFullName.
 #'
-#' @examples require(PhysioSpacesMethods)
+#' @examples
 #' randMatInpt <- matrix(data = rnorm(n = 4000,mean = 10,sd = 20),nrow = 400)
 #' rownames(randMatInpt) <- paste("ROWS",1:400)
 #' colnames(randMatInpt) <- paste("Sample",1:10)

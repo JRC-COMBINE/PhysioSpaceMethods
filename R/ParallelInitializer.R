@@ -4,16 +4,15 @@
 #' run calculatePhysioMap in parallel.
 #'
 #' @param NumbrOfCores Number of cores (Threads) to use in parallel
-#' @param CLUSTER logical value, setting if the calculation should be done on a Cluster. Not implemented in this version of PhysioSpaceMethods.
-#' @param machineAddresses Address of Cluster nodes, only relevant when CLUSTER==TRUE. Not implemented in this version of PhysioSpaceMethods.
-#' @param rscript Location of rscript on each node of Cluster, only relevant when CLUSTER==TRUE. Not implemented in this version of PhysioSpaceMethods.
+# #' @param CLUSTER logical value, setting if the calculation should be done on a Cluster. Not implemented in this version of PhysioSpaceMethods.
+# #' @param machineAddresses Address of Cluster nodes, only relevant when CLUSTER==TRUE. Not implemented in this version of PhysioSpaceMethods.
+# #' @param rscript Location of rscript on each node of Cluster, only relevant when CLUSTER==TRUE. Not implemented in this version of PhysioSpaceMethods.
 #'
 #' @return An object of class c("SOCKcluster", "cluster"), made by makeCluster of package parallel.
 #'
 #' @examples parallelInitializer(NumbrOfCores = 4)
 #'
-#' @export parallelInitializer
-
+#' @export
 parallelInitializer <- function(NumbrOfCores){
   # suppressPackageStartupMessages(require(doParallel)) #for now this is move to'calculatePhysioMap.R'
   # if(CLUSTER) {
@@ -43,8 +42,15 @@ parallelInitializer <- function(NumbrOfCores){
 #   return(cl)
 # }
 
-#' @export parallelInitializer.SingleMachine
-#
+#' @title Initializing and Preparing for Parallel Processing on a Single Machine
+#'
+#' @description parallelInitializer.SingleMachine is an internal function for parallelInitializer.
+#'
+#' @param NumbrOfCores Number of cores (Threads) to use in parallel
+#'
+#' @return An object of class c("SOCKcluster", "cluster"), made by makeCluster of package parallel.
+#'
+#' @export
 parallelInitializer.SingleMachine <- function(NumbrOfCores){
   if(is.na(NumbrOfCores)) NumbrOfCores=detectCores()-1 # not to overload your computer
   cl <- makeCluster(NumbrOfCores, outfile="") # outfile is for having progressbar working in foreach

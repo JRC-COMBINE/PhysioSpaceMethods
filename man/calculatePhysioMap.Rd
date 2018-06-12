@@ -48,9 +48,10 @@ calculated prior from a compendium of known samples.
 ToDo
 }
 \examples{
-require(PhysioSpaces)
-calculatePhysioMap(InputData = HS_LUKK_Space[,100:110], Space=HS_LUKK_Space[,1:10])
-calculatePhysioMap(InputData = HS_LUKK_Space[,100:110], Space=HS_U133Plus2_Space[,1:10],
-PARALLEL=T, NumbrOfCores=4, GenesRatio = 0.01, STATICResponse = F, TTEST = T)
+SimulatedGeneExpressionData <- matrix(rnorm(n = 100000, mean = 0, sd = 100),ncol = 10, dimnames = list(1:10000,1:10))
+SimulatedReferenceSpace <- matrix(rnorm(n = 100000, mean = 0, sd = 100),ncol = 10, dimnames = list(1:10000,11:20))
+calculatePhysioMap(InputData = SimulatedGeneExpressionData, SimulatedReferenceSpace)
+calculatePhysioMap(InputData = SimulatedGeneExpressionData, SimulatedReferenceSpace,
+PARALLEL=TRUE, NumbrOfCores=4, GenesRatio = 0.01, STATICResponse = FALSE, TTEST = TRUE)
 
 }

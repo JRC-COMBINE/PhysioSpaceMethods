@@ -8,16 +8,18 @@
 #' @param iminus Index of first group of genes for statistical testing.
 #' @param STATICResponse Same STATICResponse as in calculatePhysioMap. Check calculatePhysioMap's help for more info.
 #'
+#' @import stats
+#'
 #' @return Log2 signed p value of Rank sum test if STATICResponse==FALSE, Rank sum statisitic normalized between -1 and 1
 #' if STATICResponse==TRUE.
 #'
-#' @examples require(PhysioSpaces)
-#' wilTestWrapper(ReferencesJ = HS_LUKK_Space[,91], iplus = sample(1:nrow(HS_LUKK_Space), size = nrow(HS_LUKK_Space)/20),
-#' iminus = sample(1:nrow(HS_LUKK_Space), size = nrow(HS_LUKK_Space)/20), STATICResponse = F)
+#' @examples
+#' SimulatedReferenceSpace <- matrix(rnorm(n = 100000, mean = 0, sd = 100),ncol = 10, dimnames = list(1:10000,11:20))
+#' wilTestWrapper(ReferencesJ = SimulatedReferenceSpace[,9], iplus = sample(1:nrow(SimulatedReferenceSpace), size = nrow(SimulatedReferenceSpace)/20),
+#' iminus = sample(1:nrow(SimulatedReferenceSpace), size = nrow(SimulatedReferenceSpace)/20), STATICResponse = FALSE)
 #'
 #' @export wilTestWrapper
 
-#
 wilTestWrapper <- function(ReferencesJ,iplus,iminus,STATICResponse){
   wilTestTemp <- wilcox.test(ReferencesJ[iplus], ReferencesJ[iminus])
   if(STATICResponse) return(2*((wilTestTemp$statistic/(length(iplus)*length(iminus)))-0.5)) #Want to have values from -1 to 1

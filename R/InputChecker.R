@@ -8,11 +8,14 @@
 #' @param Space Same Space as in calculatePhysioMap. Check calculatePhysioMap's help for more info.
 #' @param ImputationMethod Imputation method to use in case of missing values.
 #'
+#' @import stats
+#'
 #' @return inputChecker returns corrected 'InputData' and 'Space' directly to the environment it was called from
 #' (By assigning new matrices to parent.frame()).
 #'
-#' @examples require(PhysioSpaces)
-#' inputChecker(InputData = HS_LUKK_Space[,100:110], Space=HS_LUKK_Space[,1:10])
+#' @examples
+#' SimulatedGeneExpressionData <- matrix(rnorm(n = 100000, mean = 0, sd = 100),ncol = 10, dimnames = list(1:10000,1:10))
+#' inputChecker(InputData = SimulatedGeneExpressionData[,1:5], Space = SimulatedGeneExpressionData[sample(1:10000),6:10])
 #'
 #' @export inputChecker
 

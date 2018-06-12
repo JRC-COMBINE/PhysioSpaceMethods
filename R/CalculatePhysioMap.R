@@ -22,7 +22,7 @@
 #' Default value is FALSE.
 #' @param ImputationMethod Imputation method to use in case of missing values.
 #'
-#' @import progress doParallel
+#' @import progress doParallel foreach parallel
 #'
 #' @details ToDo
 #'
@@ -31,12 +31,14 @@
 #' STATICResponse==TRUE (more info can be found in the original PhysioSpace: Lenz et. al., PLOS One 2013).
 #'
 #'
-#' @examples require(PhysioSpaces)
-#' calculatePhysioMap(InputData = HS_LUKK_Space[,100:110], Space=HS_LUKK_Space[,1:10])
-#' calculatePhysioMap(InputData = HS_LUKK_Space[,100:110], Space=HS_U133Plus2_Space[,1:10],
-#' PARALLEL=T, NumbrOfCores=4, GenesRatio = 0.01, STATICResponse = F, TTEST = T)
+#' @examples
+#' SimulatedGeneExpressionData <- matrix(rnorm(n = 100000, mean = 0, sd = 100),ncol = 10, dimnames = list(1:10000,1:10))
+#' SimulatedReferenceSpace <- matrix(rnorm(n = 100000, mean = 0, sd = 100),ncol = 10, dimnames = list(1:10000,11:20))
+#' calculatePhysioMap(InputData = SimulatedGeneExpressionData, SimulatedReferenceSpace)
+#' calculatePhysioMap(InputData = SimulatedGeneExpressionData, SimulatedReferenceSpace,
+#' PARALLEL=TRUE, NumbrOfCores=4, GenesRatio = 0.01, STATICResponse = FALSE, TTEST = TRUE)
 #'
-#' @export calculatePhysioMap
+#' @export
 #Pre-function for dispaching the calculating to the write function:
 calculatePhysioMap <- function(InputData, Space, GenesRatio = 0.05,
                                PARALLEL = FALSE, NumbrOfCores=NA,
@@ -45,8 +47,9 @@ calculatePhysioMap <- function(InputData, Space, GenesRatio = 0.05,
   UseMethod("calculatePhysioMap", object = Space)
 }
 
-#' @export calculatePhysioMap.default
+
 ##The main function for calculating PhysioScores:
+#' @export
 calculatePhysioMap.default <- function(InputData, Space, GenesRatio = 0.05,
                                        PARALLEL = FALSE, NumbrOfCores=NA,
                                        TTEST = FALSE, STATICResponse = F,
@@ -56,32 +59,30 @@ calculatePhysioMap.default <- function(InputData, Space, GenesRatio = 0.05,
   NGenes <- nrow(InputData)
   NSamples <- ncol(InputData)
   physioMap <- matrix(NA, ncol(Space), NSamples)
-  suppressPackageStartupMessages(require(doParallel)) #Although doParallel is loaded via namespace cause it's part of
-  # PhysioSpaceMethods imports, I have to manually load it or else foreach will break (cause of its weird syntax?)
   if(PARALLEL) cl <- parallelInitializer(NumbrOfCores=NumbrOfCores)
   pb <- progress_bar$new(format = "(:spin) [:bar] :percent eta: :eta",
                          total = ifelse(PARALLEL,NSamples/length(cl),NSamples), clear = FALSE)
   #
   #Main:
   suppressWarnings( #So dopar won't make a warning if PARALELL=F and cl doesn't exist
-  physioMap <-
-    foreach(i = 1:NSamples, .combine='cbind', .final=as.matrix, .export=c("tTestWrapper","wilTestWrapper"), .packages = "PhysioSpaceMethods") %dopar% {
-      tempDiff <- InputData[, i]
-      if (!is.null(GenesRatio)) {
-        numGenes = round(NGenes * GenesRatio)
-      } else{
-        stop("Don't have Number of genes to compare??!?!")
+    physioMap <-
+      foreach(SAMPEL=1:NSamples, .combine='cbind', .final=as.matrix, .export=c("tTestWrapper","wilTestWrapper"), .packages = "PhysioSpaceMethods") %dopar% {
+        tempDiff <- InputData[, SAMPEL]
+        if (!is.null(GenesRatio)) {
+          numGenes = round(NGenes * GenesRatio)
+        } else{
+          stop("Don't have Number of genes to compare??!?!")
+        }
+        ordDiff = order(tempDiff)
+        if (!is.null(numGenes)) {
+          iplus = ordDiff[(NGenes - numGenes + 1):NGenes]
+          iminus = ordDiff[1:numGenes]
+        }
+        pb$tick()
+        apply(X = Space, MARGIN = 2, FUN = if(TTEST) tTestWrapper else wilTestWrapper,
+              iplus=iplus, iminus = iminus, STATICResponse = STATICResponse) # this apply can be written as simple for loop also, results
+        ## seems to be the same, but writing a nested foreach loop may speed up stuff -> will have to try later
       }
-      ordDiff = order(tempDiff)
-      if (!is.null(numGenes)) {
-        iplus = ordDiff[(NGenes - numGenes + 1):NGenes]
-        iminus = ordDiff[1:numGenes]
-      }
-      pb$tick()
-      apply(X = Space, MARGIN = 2, FUN = if(TTEST) tTestWrapper else wilTestWrapper,
-            iplus=iplus, iminus = iminus, STATICResponse = STATICResponse) # this apply can be written as simple for loop also, results
-      ## seems to be the same, but writing a nested foreach loop may speed up stuff -> will have to try later
-    }
   )
   if(PARALLEL) stopCluster(cl)
 
@@ -90,8 +91,9 @@ calculatePhysioMap.default <- function(InputData, Space, GenesRatio = 0.05,
   return(physioMap)
 }
 
-#' @export calculatePhysioMap.list
+
 ##PhysioSpace for gene lists as a Space:
+#' @export
 calculatePhysioMap.list <- function(InputData, Space, GenesRatio = 0.05,
                                     PARALLEL = FALSE, NumbrOfCores=NA,
                                     TTEST = FALSE, STATICResponse = F,

@@ -23,8 +23,8 @@ tTestWrapper is an internal function used by calculatePhysioMap that does t-test
 ReferencesJ.
 }
 \examples{
-require(PhysioSpaces)
-tTestWrapper(ReferencesJ = HS_LUKK_Space[,91], iplus = sample(1:nrow(HS_LUKK_Space), size = nrow(HS_LUKK_Space)/20),
-iminus = sample(1:nrow(HS_LUKK_Space), size = nrow(HS_LUKK_Space)/20), STATICResponse = F)
+SimulatedReferenceSpace <- matrix(rnorm(n = 100000, mean = 0, sd = 100),ncol = 10, dimnames = list(1:10000,11:20))
+tTestWrapper(ReferencesJ = SimulatedReferenceSpace[,4], iplus = sample(1:nrow(SimulatedReferenceSpace), size = nrow(SimulatedReferenceSpace)/20),
+iminus = sample(1:nrow(SimulatedReferenceSpace), size = nrow(SimulatedReferenceSpace)/20), STATICResponse = FALSE)
 
 }

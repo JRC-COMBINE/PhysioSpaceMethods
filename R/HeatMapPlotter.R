@@ -64,8 +64,8 @@ PhysioHeatmap <- function(PhysioResults, ColorLevels = 100, PDFFullName = NULL, 
     if(!identical(Space,NA)) Space <- Space[,CombinedReductionIndices]
   }
   if(is.na(PlotSize)) PlotSize <- max(dim(PhysioResults)) + 10
-  if(is.na(RowColCex)) RowColCex <- 0.4*min((50/PlotSize),1)
-  if(is.na(KeyLabelCex)) KeyLabelCex <- 0.4*min((50/PlotSize),1)
+  if(is.na(RowColCex)) RowColCex <- 0.6*min((50/PlotSize),1)
+  if(is.na(KeyLabelCex)) KeyLabelCex <- 0.6*min((50/PlotSize),1)
 
   #Check to see if PhysioResults is too big for PlotSize:
   if(max(dim(PhysioResults)) > PlotSize-9){
@@ -133,14 +133,14 @@ PhysioHeatmap <- function(PhysioResults, ColorLevels = 100, PDFFullName = NULL, 
   #Making the color key:
   rect(xleft = seq(Xoffset+ncol(PhysioResults),Xoffset+ncol(PhysioResults)+1.8,length.out = 10),
        xright = seq(Xoffset+ncol(PhysioResults)+0.2,Xoffset+ncol(PhysioResults)+2,length.out = 10),
-       ybottom = rep(Yoffset+nrow(PhysioResults)+3,10), ytop = rep(Yoffset+nrow(PhysioResults)+4,10),
+       ybottom = rep(Yoffset+nrow(PhysioResults)+2,10), ytop = rep(Yoffset+nrow(PhysioResults)+3,10),
        col = colorRampPalette(colors = c(rgb(red = 0, green = 0, blue = 1),
                                          rgb(red = 1, green = 1, blue = 0.8),
                                          rgb(red = 1, green = 0, blue = 0)))(n = 10),
        border = NA)
-  text(x = Xoffset+ncol(PhysioResults), y = Yoffset+nrow(PhysioResults)+4,
+  text(x = Xoffset+ncol(PhysioResults), y = Yoffset+nrow(PhysioResults)+3,
        labels = round(Mn), adj = 0, cex = KeyLabelCex, srt=90)
-  text(x = Xoffset+ncol(PhysioResults)+2, y = Yoffset+nrow(PhysioResults)+4,
+  text(x = Xoffset+ncol(PhysioResults)+2, y = Yoffset+nrow(PhysioResults)+3,
        labels = round(Mx), adj = 0, cex = KeyLabelCex, srt=90)
   #
 

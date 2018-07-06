@@ -10,6 +10,8 @@
 #' @param PDFWidth Width of the output PDF, in inches. Default is 7.
 #' @param PDFHeight Height of the output PDF, in inches. Default is 7.
 #' @param main The title of the heatmap. Default is an empty string (no title).
+#' @param PlotSize A numerical value with which you can zoom in and out of the heatmap. Default is NA, which makes PhysioHeatmap choose
+#' the PlotSize automatically.
 #' @param SymmetricColoring Logical value that determines if color coding should distribute equally around 0. Default is false, which means
 #' colors will be distributed equally from minimum to maximum value of PhysioResults.
 #' @param RowColCex Row and column cex (A numerical value giving the amount by which plotting text and symbols should be magnified relative
@@ -41,7 +43,7 @@
 #'
 #' PhysioHeatmap(PhysioResults = res, PDFFullName = "outheat.pdf", main = "Heatmap Testing")
 #' PhysioHeatmap(PhysioResults = res, PDFFullName = "outheatLowColorLevel.pdf", main = "Heatmap Testing", ColorLevels = 3)
-#' PhysioHeatmap(PhysioResults = res, PDFFullName = "outheatClusteredRows.pdf", main = "Heatmap Testing", SpaceClustering = T, Space = randMatRef)
+#' PhysioHeatmap(PhysioResults = res, PDFFullName = "outheatClusteredRows.pdf", main = "Heatmap Testing", SpaceClustering = TRUE, Space = randMatRef)
 #' PhysioHeatmap(PhysioResults = res, PDFFullName = "outheatReducedRows.pdf", main = "Heatmap Testing", ReducedPlotting = 2)
 #' @export PhysioHeatmap
 

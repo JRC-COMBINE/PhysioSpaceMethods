@@ -42,7 +42,7 @@
 #Pre-function for dispaching the calculating to the write function:
 calculatePhysioMap <- function(InputData, Space, GenesRatio = 0.05,
                                PARALLEL = FALSE, NumbrOfCores=NA,
-                               TTEST = FALSE, STATICResponse = F,
+                               TTEST = FALSE, STATICResponse = FALSE,
                                ImputationMethod = "PCA"){
   UseMethod("calculatePhysioMap", object = Space)
 }
@@ -52,7 +52,7 @@ calculatePhysioMap <- function(InputData, Space, GenesRatio = 0.05,
 #' @export
 calculatePhysioMap.default <- function(InputData, Space, GenesRatio = 0.05,
                                        PARALLEL = FALSE, NumbrOfCores=NA,
-                                       TTEST = FALSE, STATICResponse = F,
+                                       TTEST = FALSE, STATICResponse = FALSE,
                                        ImputationMethod = "PCA"){
   #Initializing:
   inputChecker(InputData, Space, ImputationMethod)
@@ -96,7 +96,7 @@ calculatePhysioMap.default <- function(InputData, Space, GenesRatio = 0.05,
 #' @export
 calculatePhysioMap.list <- function(InputData, Space, GenesRatio = 0.05,
                                     PARALLEL = FALSE, NumbrOfCores=NA,
-                                    TTEST = FALSE, STATICResponse = F,
+                                    TTEST = FALSE, STATICResponse = FALSE,
                                     ImputationMethod = "PCA"){
 
   #Check the format of the input, and correct:(How can I move this function to its own .R file??)
@@ -107,7 +107,7 @@ calculatePhysioMap.list <- function(InputData, Space, GenesRatio = 0.05,
     if(anyNA(InputData)) InputData <- imputeMissingGeneExpression(InputData)
     #Other checks:
     if(is.null(names(Space))) stop("list-Space should have 'names'!")
-    if (min(InputData, na.rm = T) >= 0)
+    if (min(InputData, na.rm = TRUE) >= 0)
       warning("You didn't provide relative values in InputData??!")
   }
 

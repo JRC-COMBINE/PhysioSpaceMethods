@@ -8,7 +8,7 @@
 #'
 #' @return A matrix with the same dimensions as InptGEX, with missing values imputed.
 #'
-#' @import missMDA impute utils
+#' @import missMDA DMwR utils
 #'
 #' @examples
 #' MatToImpute <- matrix(rnorm(n = 100000, mean = 0, sd = 100),ncol = 10, dimnames = list(1:10000,1:10))
@@ -18,12 +18,11 @@
 #'
 #' @export imputeMissingGeneExpression
 
-imputeMissingGeneExpression <- function(InptGEX, METHOD="KNN"){
+imputeMissingGeneExpression <- function(InptGEX, METHOD="PCA"){
   if(METHOD=="KNN"){
     ##KNN is shown to be among the worse but popular methods of gene expression imputation, I'll use it for now but have to change later
     #Prob'ly won't work for RNA-seq either -> another reason to change to a better method
-    invisible(capture.output(imputedInpt <- impute::impute.knn(data = InptGEX)$data)) #'invisible+capture.output' so I could suppress all irritating cat messages of impute.knn
-    return(imputedInpt)
+    return(knnImputation(data = InptGEX))
   } else if(METHOD=="PCA") {
     res.comp <- imputePCA(InptGEX,ncp = estim_ncpPCA(InptGEX,ncp.max=7)$ncp)
     return(res.comp$completeObs)

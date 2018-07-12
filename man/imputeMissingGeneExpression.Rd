@@ -4,7 +4,7 @@
 \alias{imputeMissingGeneExpression}
 \title{Imputing Missing Data}
 \usage{
-imputeMissingGeneExpression(InptGEX, METHOD = "KNN")
+imputeMissingGeneExpression(InptGEX, METHOD = "PCA")
 }
 \arguments{
 \item{InptGEX}{Input matrix with missng values}

@@ -38,7 +38,7 @@ inputChecker <- function(InputData, Space, ImputationMethod){
     Space <- Space[na.omit(matchedIndxes),]
     message(paste("Matching done, with",nrow(Space),"common rows between InputData and Space."))
   }
-  if (min(InputData, na.rm = T) >= 0)
+  if (min(InputData, na.rm = TRUE) >= 0)
     warning("You didn't provide relative values in InputData??!")
   #Returning new datasets:
   assign("InputData", value = InputData, envir = parent.frame())

@@ -5,7 +5,7 @@
 \title{Mapping new data into a physiological-space}
 \usage{
 calculatePhysioMap(InputData, Space, GenesRatio = 0.05, PARALLEL = FALSE,
-  NumbrOfCores = NA, TTEST = FALSE, STATICResponse = F,
+  NumbrOfCores = NA, TTEST = FALSE, STATICResponse = FALSE,
   ImputationMethod = "PCA")
 }
 \arguments{

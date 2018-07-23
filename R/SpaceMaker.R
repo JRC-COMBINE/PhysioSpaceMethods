@@ -123,12 +123,12 @@ spaceMaker <- function(GeneExMatrix, DESIGN = NA, CONTRASTs = NA, Output = "Phys
 
   ##Main function:
   if(!is.matrix(GeneExMatrix)) stop("'GeneExMatrix' should be a matrix!")
-  if(LinearOrRNASEQ == "Linear"){
+  if(LinearOrRNASeq == "Linear"){
     return(spaceMaker.Linear(GeneExMatrix, RETURNMODEL, RETURNFD))
-  } else if(LinearOrRNASEQ == "RNASeq"){
+  } else if(LinearOrRNASeq == "RNASeq"){
     return(spaceMaker.RNAseq(GeneExMatrix, RETURNMODEL, RETURNFD))
   } else {
-    stop("'LinearOrRNASEQ' input should be either 'Linear' or 'RNASeq'")
+    stop("'LinearOrRNASeq' input should be either 'Linear' or 'RNASeq'")
   }
 }
 

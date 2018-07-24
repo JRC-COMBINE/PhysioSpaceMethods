@@ -72,7 +72,7 @@ E-MTAB-2836-atlasExperimentSummary.Rdata contains a RangedSummarizedExperiment o
 ```r
 #Making the gene expression matrix:
 library(SummarizedExperiment) #SummarizedExperiment is needed for working with RangedSummarizedExperiment objects.
-load("./TRAsh/E-MTAB-2836-atlasExperimentSummary.Rdata") #Loading the object into R
+load("E-MTAB-2836-atlasExperimentSummary.Rdata") #Loading the object into R
 EMTAB2836CountMatrix <- assay(experimentSummary$rnaseq)
 ```
 

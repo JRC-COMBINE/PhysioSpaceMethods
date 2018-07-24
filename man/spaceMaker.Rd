@@ -38,7 +38,8 @@ this case DESeq2 package is used for calculations.}
 Depending on the 'Output' argument, the returned value is either a matrix, or a model. If Output = "PhysioScore",
 a matrix is returned, with genes in rows and Physiological axes on the columns. In this case, values inside this matrix are
 PhysioScores (-log2(p value)*sign(fold change)). In case of Output = "FoldChange", a matrix of fold changes is returned. And
-if Output = "Model", the fitted model by limma::lmFit() or DESeq2::DESeq() is returned.
+if Output = "Model", the fitted model by limma::lmFit() or DESeq2::DESeq() is returned. REMEMBER that when user provides
+'DESIGN' input argument, colnames of the returned matrix remains empty and is needed to be assigned by the user
 }
 \description{
 This function uses 'Big Data' to make robust 'Physiological Vectors' in N dimensions spaces,

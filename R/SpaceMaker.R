@@ -77,7 +77,7 @@ spaceMaker <- function(GeneExMatrix, DESIGN = NA, CONTRASTs = NA, Output = "Phys
     pb <- progress_bar$new(format = "(:spin) [:bar] :percent eta: :eta",
                            total = length(CONTRASTs), clear = FALSE)
     for(Const in CONTRASTs){
-      FITGenes[[Const]] <- topTable(fit = FITCont, coef = Const, adjust="BH", number = Inf, sort.by = "none")
+      FITGenes[[Const]] <- topTable(fit = FITCont, coef = Const, adjust.method="BH", number = Inf, sort.by = "none")
       pb$tick()
     }
 
@@ -109,7 +109,7 @@ spaceMaker <- function(GeneExMatrix, DESIGN = NA, CONTRASTs = NA, Output = "Phys
 
     #Making colData for DESeqDataSetFromMatrix:
     colDataForDESeqModel = data.frame("CONDITION" = colnames(GeneExMatrix))
-    colnames(GeneExMatrix) <- make.names(colnames(GeneExMatrix), unique = T) #because DESeqDataSetFromMatrix forces
+    colnames(GeneExMatrix) <- make.names(colnames(GeneExMatrix), unique = TRUE) #because DESeqDataSetFromMatrix forces
     #colnames of countData as rownames to colData, and colData is a data.frame so repeat in those names mean error.
 
     if(is.na(CONTRASTs)){

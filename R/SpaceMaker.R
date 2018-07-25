@@ -30,7 +30,8 @@
 #' this case DESeq2 package is used for calculations.
 #'
 #'
-#' @import DESeq2 limma
+#' @importFrom limma lmFit makeContrasts contrasts.fit eBayes topTable
+#' @importFrom DESeq2 DESeqDataSetFromMatrix DESeq results
 #'
 #' @return Depending on the 'Output' argument, the returned value is either a matrix, or a model. If Output = "PhysioScore",
 #' a matrix is returned, with genes in rows and Physiological axes on the columns. In this case, values inside this matrix are

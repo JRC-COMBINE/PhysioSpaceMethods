@@ -15,7 +15,7 @@
 #' GenesRatio should be a numerical value between 0 and 1. Default value is 0.05.
 #' @param PARALLEL Logical value indicating if calculations should be done in parallel. Default value is FALSE.
 #' @param NumbrOfCores Number of cores to be used when 'PARALLEL' is TRUE. Default is NA which will result in the program using
-#' 'all available cores - 1'.
+#' 'all available cores - 1'. Assigning a number higher that the value parallel::detectCores() returns will result in an error.
 #' @param TTEST Logical value indicating if t.test should be done in place of the default wilcoxon rank-sum test (more info can be found
 #' in the original PhysioSpace: Lenz et. al., PLOS One 2013). Using t.test will speed up calculations. Default value is FALSE.
 #' @param STATICResponse Logical value indicating if 'statistic' should be returned rather than the default 'signed p value'.
@@ -35,8 +35,10 @@
 #' SimulatedGeneExpressionData <- matrix(rnorm(n = 100000, mean = 0, sd = 100),ncol = 10, dimnames = list(1:10000,1:10))
 #' SimulatedReferenceSpace <- matrix(rnorm(n = 100000, mean = 0, sd = 100),ncol = 10, dimnames = list(1:10000,11:20))
 #' calculatePhysioMap(InputData = SimulatedGeneExpressionData, SimulatedReferenceSpace)
+#' if(parallel::detectCores()>1){ #More than one core is needed for parallel processing
 #' calculatePhysioMap(InputData = SimulatedGeneExpressionData, SimulatedReferenceSpace,
-#' PARALLEL=TRUE, NumbrOfCores=4, GenesRatio = 0.01, STATICResponse = FALSE, TTEST = TRUE)
+#' PARALLEL=TRUE, NumbrOfCores=2, GenesRatio = 0.01, STATICResponse = FALSE, TTEST = TRUE)
+#' }
 #'
 #' @export
 #Pre-function for dispaching the calculating to the write function:

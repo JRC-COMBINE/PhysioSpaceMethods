@@ -5,12 +5,13 @@ Version: 0.1.5
 Author: Ali H. Esfahani
 Maintainer: Ali H. Esfahani <ali.hadizadeh@rwth-aachen.de>
 Description: This package uses 'Big Data' to make robust 'Physiological Vectors' in N dimensions spaces, \t with which you will map new data to extract information from a big high dimensional confusing new data.
-biocViews: DimensionReduction
+biocViews: DimensionReduction, Clustering, GeneExpression
 License: GPL-3
 Encoding: UTF-8
 LazyData: FALSE
 Imports: foreach, doParallel, progress, missMDA, DMwR, grDevices, graphics, parallel, stats, utils, DESeq2, limma
 RoxygenNote: 6.0.1
 Suggests: knitr,
-    rmarkdown
+    rmarkdown,
+    testthat
 VignetteBuilder: knitr

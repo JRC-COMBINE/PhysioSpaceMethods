@@ -10,7 +10,7 @@
 #'
 #' @return An object of class c("SOCKcluster", "cluster"), made by makeCluster of package parallel.
 #'
-#' @examples parallelInitializer(NumbrOfCores = 4)
+#' @examples parallelInitializer(NumbrOfCores = 2)
 #'
 #' @export
 parallelInitializer <- function(NumbrOfCores){
@@ -49,6 +49,8 @@ parallelInitializer <- function(NumbrOfCores){
 #' @param NumbrOfCores Number of cores (Threads) to use in parallel
 #'
 #' @return An object of class c("SOCKcluster", "cluster"), made by makeCluster of package parallel.
+#'
+#' @examples parallelInitializer.SingleMachine(NumbrOfCores = 2)
 #'
 #' @export
 parallelInitializer.SingleMachine <- function(NumbrOfCores){

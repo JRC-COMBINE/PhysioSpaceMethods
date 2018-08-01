@@ -24,7 +24,7 @@ tTestWrapper <- function(ReferencesJ,iplus,iminus,STATICResponse){
   tTestTemp <- t.test(ReferencesJ[iplus], ReferencesJ[iminus])
   if(STATICResponse) {
     Stats <- tTestTemp$statistic
-    MaxStat <- t.test(sort(ReferencesJ,decreasing = TRUE)[1:length(iplus)], sort(ReferencesJ)[1:length(iminus)])$statistic
+    MaxStat <- t.test(sort(ReferencesJ,decreasing = TRUE)[seq_along(iplus)], sort(ReferencesJ)[seq_along(iminus)])$statistic
     return(Stats/MaxStat)
   }
   sgn <- -sign(tTestTemp$statistic)

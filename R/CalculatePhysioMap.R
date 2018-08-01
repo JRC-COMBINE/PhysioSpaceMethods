@@ -68,7 +68,7 @@ calculatePhysioMap.default <- function(InputData, Space, GenesRatio = 0.05,
   #Main:
   suppressWarnings( #So dopar won't make a warning if PARALELL=F and cl doesn't exist
     physioMap <-
-      foreach(SAMPEL=1:NSamples, .combine='cbind', .final=as.matrix, .export=c("tTestWrapper","wilTestWrapper"), .packages = "PhysioSpaceMethods") %dopar% {
+      foreach(SAMPEL=seq_len(NSamples), .combine='cbind', .final=as.matrix, .export=c("tTestWrapper","wilTestWrapper"), .packages = "PhysioSpaceMethods") %dopar% {
         tempDiff <- InputData[, SAMPEL]
         if (!is.null(GenesRatio)) {
           numGenes = round(NGenes * GenesRatio)
@@ -77,8 +77,8 @@ calculatePhysioMap.default <- function(InputData, Space, GenesRatio = 0.05,
         }
         ordDiff = order(tempDiff)
         if (!is.null(numGenes)) {
-          iplus = ordDiff[(NGenes - numGenes + 1):NGenes]
-          iminus = ordDiff[1:numGenes]
+          iplus = ordDiff[seq.int(from = (NGenes - numGenes + 1), to = NGenes)]
+          iminus = ordDiff[seq_len(numGenes)]
         }
         pb$tick()
         apply(X = Space, MARGIN = 2, FUN = if(TTEST) tTestWrapper else wilTestWrapper,

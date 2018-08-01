@@ -60,7 +60,9 @@ PhysioHeatmap <- function(PhysioResults, ColorLevels = 100, PDFFullName = NULL, 
     } else {
       stop("'ReducedPlotting' is supposed to be Logical or a numeric value!")
     }
-    SingleReductionsIndices <- apply(PhysioResults, MARGIN = 2, function(X) order(X)[c(1:ReductionLevel,(length(X)-ReductionLevel+1):length(X))])
+    SingleReductionsIndices <- apply(PhysioResults, MARGIN = 2, function(X) order(X)[c(seq_len(ReductionLevel),
+                                                                                       seq.int(from = (length(X)-ReductionLevel+1),
+                                                                                               to = length(X)))])
     CombinedReductionIndices <- unique(c(SingleReductionsIndices))
     PhysioResults <- PhysioResults[CombinedReductionIndices,]
     if(!identical(Space,NA)) Space <- Space[,CombinedReductionIndices]
@@ -116,17 +118,17 @@ PhysioHeatmap <- function(PhysioResults, ColorLevels = 100, PDFFullName = NULL, 
   Xoffset <- (PlotWidth/2) - ncol(PhysioResults)/2 #ifelse(test = SpaceClustering, no = (PlotWidth/2) - ncol(PhysioResults)/2, yes = (3*PlotWidth/4) - ncol(PhysioResults)/2)
   Yoffset <- (PlotHeight/2) - (nrow(PhysioResults)/2) + max(nchar(colnames(PhysioResults)))/20
   ColLabelYoffset <- Yoffset #- (max(nchar(colnames(PhysioResultsMorghed)))-10)/10
-  ColLabelXoffset <- Xoffset + (1:ncol(PhysioResultsMorghed)) + 0.5 #- max(nchar(colnames(PhysioResultsMorghed)))/12
+  ColLabelXoffset <- Xoffset + (seq_len(ncol(PhysioResultsMorghed))) + 0.5 #- max(nchar(colnames(PhysioResultsMorghed)))/12
   RowLabelXoffset <- Xoffset #+ 1.5
 
   text(labels = colnames(PhysioResultsMorghed), y = ColLabelYoffset, x = ColLabelXoffset,
        cex = RowColCex, srt=90, font = 2, adj = 1)
-  text(labels = rownames(PhysioResultsMorghed), y = Yoffset+0.5+(1:nrow(PhysioResultsMorghed)),
+  text(labels = rownames(PhysioResultsMorghed), y = Yoffset+0.5+(seq_len(nrow(PhysioResultsMorghed))),
        x = RowLabelXoffset, cex = RowColCex, font = 2, adj = 1)
   title(main = main)
 
-  for(ROW in 1:nrow(PhysioResultsMorghed)){
-    for(COL in 1:ncol(PhysioResultsMorghed)){
+  for(ROW in seq_len(nrow(PhysioResultsMorghed))){
+    for(COL in seq_len(ncol(PhysioResultsMorghed))){
       rect(xleft = Xoffset+COL,xright = Xoffset+COL+1,ybottom = Yoffset+ROW,ytop = Yoffset+ROW+1,
            col = COLORInterpolated[PhysioResultsMorghed[ROW,COL]], lty = 0, border= "grey")
     }

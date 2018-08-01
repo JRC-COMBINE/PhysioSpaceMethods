@@ -53,7 +53,7 @@ SimulatedReferenceSpace <- matrix(rnorm(n = 100000, mean = 0, sd = 100),ncol = 1
 calculatePhysioMap(InputData = SimulatedGeneExpressionData, SimulatedReferenceSpace)
 if(parallel::detectCores()>1){ #More than one core is needed for parallel processing
 calculatePhysioMap(InputData = SimulatedGeneExpressionData, SimulatedReferenceSpace,
-PARALLEL=TRUE, NumbrOfCores=4, GenesRatio = 0.01, STATICResponse = FALSE, TTEST = TRUE)
+PARALLEL=TRUE, NumbrOfCores=2, GenesRatio = 0.01, STATICResponse = FALSE, TTEST = TRUE)
 }
 
 }

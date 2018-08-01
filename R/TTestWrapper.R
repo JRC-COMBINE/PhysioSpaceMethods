@@ -29,5 +29,5 @@ tTestWrapper <- function(ReferencesJ,iplus,iminus,STATICResponse){
   }
   sgn <- -sign(tTestTemp$statistic)
   pval = tTestTemp$p.value
-  return(log10(pval) * sgn)
+  return(log2(pval) * sgn)
 }

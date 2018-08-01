@@ -25,5 +25,5 @@ wilTestWrapper <- function(ReferencesJ,iplus,iminus,STATICResponse){
   if(STATICResponse) return(2*((wilTestTemp$statistic/(length(iplus)*length(iminus)))-0.5)) #Want to have values from -1 to 1
   sgn <- sign(-(wilTestTemp$statistic - (length(iplus)*length(iminus)) / 2))
   pval = wilTestTemp$p.value
-  return(log10(pval) * sgn)
+  return(log2(pval) * sgn)
 }

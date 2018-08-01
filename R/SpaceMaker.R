@@ -83,9 +83,11 @@ spaceMaker <- function(GeneExMatrix, DESIGN = NA, CONTRASTs = NA, Output = "Phys
     }
 
     if(Output == "PhysioScore"){
-      Outi <- sapply(X = FITGenes, function(x) -log2(x$adj.P.Val)*sign(x$logFC))
+      Outi <- vapply(X = FITGenes, function(x) -log2(x$adj.P.Val)*sign(x$logFC),
+                     FUN.VALUE = numeric(length = nrow(GeneExMatrix)))
     } else if(Output == "FoldChange"){
-      Outi <- sapply(X = FITGenes, function(x) x$logFC)
+      Outi <- vapply(X = FITGenes, function(x) x$logFC,
+                     FUN.VALUE = numeric(length = nrow(GeneExMatrix)))
     } else if(Output == "Model"){
       return(FITMain)
     }
@@ -131,9 +133,11 @@ spaceMaker <- function(GeneExMatrix, DESIGN = NA, CONTRASTs = NA, Output = "Phys
     }
 
     if(Output == "PhysioScore"){
-      Outi <- sapply(X = MODELResults, function(x) -log2(x$padj)*sign(x$log2FoldChange))
+      Outi <- vapply(X = MODELResults, function(x) -log2(x$padj)*sign(x$log2FoldChange),
+                     FUN.VALUE = numeric(length = nrow(GeneExMatrix)))
     } else if(Output == "FoldChange"){
-      Outi <- sapply(X = MODELResults, function(x) x$log2FoldChange)
+      Outi <- vapply(X = MODELResults, function(x) x$log2FoldChange,
+                     FUN.VALUE = numeric(length = nrow(GeneExMatrix)))
     } else if(Output == "Model"){
       return(MODELCalculated)
     }

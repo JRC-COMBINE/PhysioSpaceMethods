@@ -66,26 +66,31 @@ calculatePhysioMap.default <- function(InputData, Space, GenesRatio = 0.05,
                          total = ifelse(PARALLEL,NSamples/length(cl),NSamples), clear = FALSE)
   #
   #Main:
-  suppressWarnings( #So dopar won't make a warning if PARALELL=F and cl doesn't exist
-    physioMap <-
-      foreach(SAMPEL=seq_len(NSamples), .combine='cbind', .final=as.matrix, .export=c("tTestWrapper","wilTestWrapper"), .packages = "PhysioSpaceMethods") %dopar% {
-        tempDiff <- InputData[, SAMPEL]
-        if (!is.null(GenesRatio)) {
-          numGenes = round(NGenes * GenesRatio)
-        } else{
-          stop("Don't have Number of genes to compare??!?!")
-        }
-        ordDiff = order(tempDiff)
-        if (!is.null(numGenes)) {
-          iplus = ordDiff[seq.int(from = (NGenes - numGenes + 1), to = NGenes)]
-          iminus = ordDiff[seq_len(numGenes)]
-        }
-        pb$tick()
-        apply(X = Space, MARGIN = 2, FUN = if(TTEST) tTestWrapper else wilTestWrapper,
-              iplus=iplus, iminus = iminus, STATICResponse = STATICResponse) # this apply can be written as simple for loop also, results
-        ## seems to be the same, but writing a nested foreach loop may speed up stuff -> will have to try later
-      }
-  )
+  SingleThreadOfPhysioCalc <- function(INPT){
+    if (!is.null(GenesRatio)) {
+      numGenes = round(NGenes * GenesRatio)
+    } else{
+      stop("Don't have Number of genes to compare??!?!")
+    }
+    ordDiff = order(INPT)
+    if (!is.null(numGenes)) {
+      iplus = ordDiff[seq.int(from = (NGenes - numGenes + 1), to = NGenes)]
+      iminus = ordDiff[seq_len(numGenes)]
+    }
+    pb$tick()
+    apply(X = Space, MARGIN = 2, FUN = if(TTEST) tTestWrapper else wilTestWrapper,
+          iplus=iplus, iminus = iminus, STATICResponse = STATICResponse)
+  }
+
+  if(PARALLEL){
+    physioMap <- matrix(parCapply(cl = cl, x = InputData,
+                                  FUN = SingleThreadOfPhysioCalc),
+                        ncol = ncol(InputData))
+  } else {
+    physioMap <- apply(X = InputData,
+                          MARGIN = 2, FUN = SingleThreadOfPhysioCalc)
+  }
+
   if(PARALLEL) stopCluster(cl)
 
   rownames(physioMap) = colnames(Space)

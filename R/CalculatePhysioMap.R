@@ -14,6 +14,8 @@
 #' has a direct relation to the relative magnitute of expressions and out noisy inputs need to be filtered out.
 #' GenesRatio should be a numerical value between 0 and 1. Default value is 0.05.
 #' @param PARALLEL Logical value indicating if calculations should be done in parallel. Default value is FALSE.
+#' It is not recomemnded to use PARALLEL=TRUE on small datasets since due to large overhead, it could take more time than
+#' using PARALLEL=FALSE.
 #' @param NumbrOfCores Number of cores to be used when 'PARALLEL' is TRUE. Default is NA which will result in the program using
 #' 'all available cores - 1'. Assigning a number higher that the value parallel::detectCores() returns will result in an error.
 #' @param TTEST Logical value indicating if t.test should be done in place of the default wilcoxon rank-sum test (more info can be found
@@ -21,8 +23,12 @@
 #' @param STATICResponse Logical value indicating if 'statistic' should be returned rather than the default 'signed p value'.
 #' Default value is FALSE.
 #' @param ImputationMethod Imputation method to use in case of missing values.
+#' @param ParallelMethod Parallel method to use when PARALLEL=TRUE. Two methods are implemented so far: "parCapply"
+#' which uses parCapply function of parallel package, and "foreach" which uses foreach package to process in parallel.
+#' Speed-wise, foreach has an edge on parCapply, but the latter is more stable. Hence we recommend parCapply.
+#' The default value for ParallelMethod is "parCapply".
 #'
-#' @import progress doParallel foreach parallel
+#' @import progress
 #'
 #' @details ToDo
 #'
@@ -45,7 +51,7 @@
 calculatePhysioMap <- function(InputData, Space, GenesRatio = 0.05,
                                PARALLEL = FALSE, NumbrOfCores=NA,
                                TTEST = FALSE, STATICResponse = FALSE,
-                               ImputationMethod = "PCA"){
+                               ImputationMethod = "PCA", ParallelMethod = "parCapply"){
   UseMethod("calculatePhysioMap", object = Space)
 }
 
@@ -55,7 +61,7 @@ calculatePhysioMap <- function(InputData, Space, GenesRatio = 0.05,
 calculatePhysioMap.default <- function(InputData, Space, GenesRatio = 0.05,
                                        PARALLEL = FALSE, NumbrOfCores=NA,
                                        TTEST = FALSE, STATICResponse = FALSE,
-                                       ImputationMethod = "PCA"){
+                                       ImputationMethod = "PCA", ParallelMethod = "parCapply"){
   #Initializing:
   inputChecker(InputData, Space, ImputationMethod)
   NGenes <- nrow(InputData)
@@ -66,27 +72,23 @@ calculatePhysioMap.default <- function(InputData, Space, GenesRatio = 0.05,
                          total = ifelse(PARALLEL,NSamples/length(cl),NSamples), clear = FALSE)
   #
   #Main:
-  suppressWarnings( #So dopar won't make a warning if PARALELL=F and cl doesn't exist
-    physioMap <-
-      foreach(SAMPEL=seq_len(NSamples), .combine='cbind', .final=as.matrix) %dopar% {
-        tempDiff <- InputData[, SAMPEL]
-        if (!is.null(GenesRatio)) {
-          numGenes = round(NGenes * GenesRatio)
-        } else{
-          stop("Don't have Number of genes to compare??!?!")
-        }
-        ordDiff = order(tempDiff)
-        if (!is.null(numGenes)) {
-          iplus = ordDiff[seq.int(from = (NGenes - numGenes + 1), to = NGenes)]
-          iminus = ordDiff[seq_len(numGenes)]
-        }
-        pb$tick()
-        apply(X = Space, MARGIN = 2, FUN = if(TTEST) tTestWrapper else wilTestWrapper,
-              iplus=iplus, iminus = iminus, STATICResponse = STATICResponse) # this apply can be written as simple for loop also, results
-        ## seems to be the same, but writing a nested foreach loop may speed up stuff -> will have to try later
-      }
-  )
-  if(PARALLEL) stopCluster(cl)
+  if(PARALLEL) {
+    if(ParallelMethod == "parCapply"){
+      physioMap <- calculatePhysioMapCore_parCapply(InputData, Space, NSamples,
+                                                    GenesRatio, NGenes, STATICResponse, pb, TTEST, cl)
+    } else if(ParallelMethod == "foreach"){
+      physioMap <- calculatePhysioMapCore_foreach(InputData, Space,
+                                                  NSamples, GenesRatio, NGenes, STATICResponse, pb, TTEST)
+    } else {
+      stop("The specified ParallelMethod is not implemented!")
+    }
+    stopCluster(cl)
+  } else {
+    physioMap <- apply(X = InputData,
+                       MARGIN = 2, FUN = singleThreadOfPhysioCalc, Space=Space,
+                       NSamples=NSamples, GenesRatio=GenesRatio, NGenes=NGenes,
+                       STATICResponse=STATICResponse, pb=pb, TTEST=TTEST)
+  }
 
   rownames(physioMap) = colnames(Space)
   colnames(physioMap) = colnames(InputData)
@@ -99,7 +101,7 @@ calculatePhysioMap.default <- function(InputData, Space, GenesRatio = 0.05,
 calculatePhysioMap.list <- function(InputData, Space, GenesRatio = 0.05,
                                     PARALLEL = FALSE, NumbrOfCores=NA,
                                     TTEST = FALSE, STATICResponse = FALSE,
-                                    ImputationMethod = "PCA"){
+                                    ImputationMethod = "PCA", ParallelMethod = "parCapply"){
 
   #Check the format of the input, and correct:(How can I move this function to its own .R file??)
   inputChecker <- function(InputData, Space){

@@ -6,7 +6,7 @@
 \usage{
 calculatePhysioMap(InputData, Space, GenesRatio = 0.05, PARALLEL = FALSE,
   NumbrOfCores = NA, TTEST = FALSE, STATICResponse = FALSE,
-  ImputationMethod = "PCA")
+  ImputationMethod = "PCA", ParallelMethod = "parCapply")
 }
 \arguments{
 \item{InputData}{A matrix of input gene expressions to be analyzed, with genes as rows and samples as columns. Corresponding Entrez Gene
@@ -22,7 +22,9 @@ GenesRatio*100 percent of values in each sample are used, since signal to noise 
 has a direct relation to the relative magnitute of expressions and out noisy inputs need to be filtered out.
 GenesRatio should be a numerical value between 0 and 1. Default value is 0.05.}
 
-\item{PARALLEL}{Logical value indicating if calculations should be done in parallel. Default value is FALSE.}
+\item{PARALLEL}{Logical value indicating if calculations should be done in parallel. Default value is FALSE.
+It is not recomemnded to use PARALLEL=TRUE on small datasets since due to large overhead, it could take more time than
+using PARALLEL=FALSE.}
 
 \item{NumbrOfCores}{Number of cores to be used when 'PARALLEL' is TRUE. Default is NA which will result in the program using
 'all available cores - 1'. Assigning a number higher that the value parallel::detectCores() returns will result in an error.}
@@ -34,6 +36,11 @@ in the original PhysioSpace: Lenz et. al., PLOS One 2013). Using t.test will spe
 Default value is FALSE.}
 
 \item{ImputationMethod}{Imputation method to use in case of missing values.}
+
+\item{ParallelMethod}{Parallel method to use when PARALLEL=TRUE. Two methods are implemented so far: "parCapply"
+which uses parCapply function of parallel package, and "foreach" which uses foreach package to process in parallel.
+Speed-wise, foreach has an edge on parCapply, but the latter is more stable. Hence we recommend parCapply.
+The default value for ParallelMethod is "parCapply".}
 }
 \value{
 Matrix of mapped 'InputData' values in 'Space', with rows corrisponding to axises of 'Space' and columns representing

@@ -68,7 +68,7 @@ calculatePhysioMap.default <- function(InputData, Space, GenesRatio = 0.05,
   #Main:
   suppressWarnings( #So dopar won't make a warning if PARALELL=F and cl doesn't exist
     physioMap <-
-      foreach(SAMPEL=seq_len(NSamples), .combine='cbind', .final=as.matrix, .export=c("tTestWrapper","wilTestWrapper"), .packages = "PhysioSpaceMethods") %dopar% {
+      foreach(SAMPEL=seq_len(NSamples), .combine='cbind', .final=as.matrix) %dopar% {
         tempDiff <- InputData[, SAMPEL]
         if (!is.null(GenesRatio)) {
           numGenes = round(NGenes * GenesRatio)

@@ -15,3 +15,7 @@ An object of class c("SOCKcluster", "cluster"), made by makeCluster of package p
 \description{
 parallelInitializer.SingleMachine is an internal function for parallelInitializer.
 }
+\examples{
+parallelInitializer.SingleMachine(NumbrOfCores = 2)
+
+}

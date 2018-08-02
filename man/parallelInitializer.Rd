@@ -17,6 +17,6 @@ parallelInitializer is an internal function used by calculatePhysioMap. It is ca
 run calculatePhysioMap in parallel.
 }
 \examples{
-parallelInitializer(NumbrOfCores = 4)
+parallelInitializer(NumbrOfCores = 2)
 
 }

@@ -86,7 +86,7 @@ calculatePhysioMap.default <- function(InputData, Space, GenesRatio = 0.05,
   } else {
     physioMap <- apply(X = InputData,
                        MARGIN = 2, FUN = singleThreadOfPhysioCalc, Space=Space,
-                       NSamples=NSamples, GenesRatio=GenesRatio, NGenes=NGenes,
+                       GenesRatio=GenesRatio, NGenes=NGenes,
                        STATICResponse=STATICResponse, pb=pb, TTEST=TTEST)
   }
 

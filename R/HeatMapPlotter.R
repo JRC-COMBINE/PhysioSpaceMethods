@@ -73,6 +73,7 @@ PhysioHeatmap <- function(PhysioResults, ColorLevels = 100, PDFFullName = NULL, 
                           main = "", PlotSize = NA, SymmetricColoring = FALSE, RowColCex = NA, KeyLabelCex = NA,
                           SpaceClustering = FALSE, Space = NA, ReducedPlotting = FALSE){
   if(!is.matrix(PhysioResults)) stop("PhysioResults is expected to be a matrix!")
+  if(is.null(colnames(PhysioResults))) colnames(PhysioResults) <- as.character(1:ncol(PhysioResults))
   if(ReducedPlotting){
     if(is.numeric(ReducedPlotting)){
       ReductionLevel <- round(ReducedPlotting/2)

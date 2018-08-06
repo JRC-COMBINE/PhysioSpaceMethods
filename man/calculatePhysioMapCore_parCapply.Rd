@@ -4,8 +4,8 @@
 \alias{calculatePhysioMapCore_parCapply}
 \title{Mapping new data into a physiological-space using parCapply of parallel package}
 \usage{
-calculatePhysioMapCore_parCapply(InputData, Space, NSamples, GenesRatio, NGenes,
-  STATICResponse, pb, TTEST, cl)
+calculatePhysioMapCore_parCapply(InputData, Space, NSamples, GenesRatio,
+  NGenes, STATICResponse, pb, TTEST, cl)
 }
 \arguments{
 \item{InputData}{A matrix of input gene expressions to be analyzed, with genes as rows and samples as columns.

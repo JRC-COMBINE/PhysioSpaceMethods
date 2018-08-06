@@ -4,8 +4,8 @@
 \alias{calculatePhysioMapCore_foreach}
 \title{Mapping new data into a physiological-space using foreach}
 \usage{
-calculatePhysioMapCore_foreach(InputData, Space, NSamples, GenesRatio, NGenes,
-  STATICResponse, pb, TTEST)
+calculatePhysioMapCore_foreach(InputData, Space, NSamples, GenesRatio,
+  NGenes, STATICResponse, pb, TTEST)
 }
 \arguments{
 \item{InputData}{A matrix of input gene expressions to be analyzed, with genes as rows and samples as columns.

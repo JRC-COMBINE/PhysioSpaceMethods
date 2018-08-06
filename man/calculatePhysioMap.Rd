@@ -4,9 +4,10 @@
 \alias{calculatePhysioMap}
 \title{Mapping new data into a physiological-space}
 \usage{
-calculatePhysioMap(InputData, Space, GenesRatio = 0.05, PARALLEL = FALSE,
-  NumbrOfCores = NA, TTEST = FALSE, STATICResponse = FALSE,
-  ImputationMethod = "PCA", ParallelMethod = "parCapply")
+calculatePhysioMap(InputData, Space, GenesRatio = 0.05,
+  PARALLEL = FALSE, NumbrOfCores = NA, TTEST = FALSE,
+  STATICResponse = FALSE, ImputationMethod = "PCA",
+  ParallelMethod = "parCapply")
 }
 \arguments{
 \item{InputData}{A matrix of input gene expressions to be analyzed, with genes as rows and samples as columns. Corresponding Entrez Gene

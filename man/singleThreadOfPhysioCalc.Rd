@@ -4,8 +4,8 @@
 \alias{singleThreadOfPhysioCalc}
 \title{Mapping one sample into a physiological-space}
 \usage{
-singleThreadOfPhysioCalc(INPT, Space, GenesRatio, NGenes, STATICResponse, pb,
-  TTEST)
+singleThreadOfPhysioCalc(INPT, Space, GenesRatio, NGenes, STATICResponse,
+  pb, TTEST)
 }
 \arguments{
 \item{INPT}{A sample (column) out of InputData.}

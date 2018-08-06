@@ -1,12 +1,13 @@
 #' @title Checking calculatePhysioMap Inputs
 #'
-#' @description inputChecker is an internal function used by calculatePhysioMap to ckeck the format of inputs, 'InputData' and 'Space' to be
+#' @description inputChecker is an internal function used by calculatePhysioMap to check the format of inputs, 'InputData' and 'Space' to be
 #' exact. It checks to see 1- both 'InputData' and 'Space' are matrices, 2- if 'InputData' or 'Space' contain any NA, and trying to impute
 #' using imputeMissingGeneExpression function if they do, and 3- it matches the rows of 'InputData' or 'Space' based on their row names.
 #'
 #' @param InputData Same InputData as in calculatePhysioMap. Check calculatePhysioMap's help for more info.
 #' @param Space Same Space as in calculatePhysioMap. Check calculatePhysioMap's help for more info.
-#' @param ImputationMethod Imputation method to use in case of missing values.
+#' @param ImputationMethod Imputation method to use in case of missing values. Available options are "PCA"
+#' and "KNN", with "PCA" being the default.
 #'
 #' @import stats
 #'

@@ -3,7 +3,7 @@
 #' @description parallelInitializer is an internal function used by calculatePhysioMap. It is called when user wants to
 #' run calculatePhysioMap in parallel.
 #'
-#' @param NumbrOfCores Number of cores (Threads) to use in parallel
+#' @param NumbrOfCores Number of cores (Threads) to use in parallel.
 # #' @param CLUSTER logical value, setting if the calculation should be done on a Cluster. Not implemented in this version of PhysioSpaceMethods.
 # #' @param machineAddresses Address of Cluster nodes, only relevant when CLUSTER==TRUE. Not implemented in this version of PhysioSpaceMethods.
 # #' @param rscript Location of rscript on each node of Cluster, only relevant when CLUSTER==TRUE. Not implemented in this version of PhysioSpaceMethods.
@@ -44,9 +44,9 @@ parallelInitializer <- function(NumbrOfCores){
 
 #' @title Initializing and Preparing for Parallel Processing on a Single Machine
 #'
-#' @description parallelInitializer.SingleMachine is an internal function for parallelInitializer.
+#' @description parallelInitializer.SingleMachine is an internal function of parallelInitializer.
 #'
-#' @param NumbrOfCores Number of cores (Threads) to use in parallel
+#' @param NumbrOfCores Number of cores (Threads) to use in parallel.
 #'
 #' @return An object of class c("SOCKcluster", "cluster"), made by makeCluster of package parallel.
 #'

@@ -7,9 +7,9 @@
 imputeMissingGeneExpression(InptGEX, METHOD = "PCA")
 }
 \arguments{
-\item{InptGEX}{Input matrix with missng values}
+\item{InptGEX}{Input matrix with missng values.}
 
-\item{METHOD}{Method to use in imputation.}
+\item{METHOD}{Method to use in imputation. Available methods are KNN and PCA. Default is 'PCA'.}
 }
 \value{
 A matrix with the same dimensions as InptGEX, with missing values imputed.

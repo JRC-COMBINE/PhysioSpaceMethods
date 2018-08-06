@@ -1,10 +1,10 @@
 #' @title Creates PhysioSpaces
 #'
 #' @description This function uses 'Big Data' to make robust 'Physiological Vectors' in N dimensions spaces,
-#' with which you will map new data to extract infromation from a big high dimensional confusing new data.
+#' with which you will map new data to extract information from a new data set.
 #'
 #' @param GeneExMatrix A matrix of input gene expressions, based on which the Physiological Space will be made.
-#' This matrix suppose to have genes as rows and samples as columns. Corresponding Entrez Gene
+#' This matrix supposed to have genes as rows and samples as columns. Corresponding Entrez Gene
 #' IDs must be assigned to 'rownames', and name of each sample should be written in 'colnames' of the matrix.
 #' Unless 'DESIGN' and 'CONTRASTs' inputs are provided by the user, spaceMaker presumes the label of the first column
 #' (colnames(GeneExMatrix)[1]) to be the reference of the experiment and uses all the samples with this label as
@@ -21,12 +21,12 @@
 #'
 #' @param Output A character specifying the output format of spaceMaker(). The default value is 'PhysioScore', which will
 #' return -log2(p value)*sign(fold change). It is also possible to obtain fold change by Output='FoldChange', or obtain
-#' the fitted model
+#' the fitted model by having Output ='Model'.
 #'
 #' @param LinearOrRNASeq A character which determines what type of modelling is ought to be used when making the PhysioSpace.
 #' If it's possible to do linear modelling on the data, e.g. data is log normal micro-array gene expression data or
 #' limma::voom-transformed RNA-seq data, then LinearOrRNASeq should be 'Linear'. In this case limma package is used in the
-#' calculations. But in case your GeneExMatrix input is a RNA-seq count matrix, you should use 'RNASeq' as LinearOrRNASeq. In
+#' calculations. But in case your GeneExMatrix input is an RNA-seq count matrix, you should use 'RNASeq' as LinearOrRNASeq. In
 #' this case DESeq2 package is used for calculations.
 #'
 #'
@@ -37,7 +37,7 @@
 #' a matrix is returned, with genes in rows and Physiological axes on the columns. In this case, values inside this matrix are
 #' PhysioScores (-log2(p value)*sign(fold change)). In case of Output = "FoldChange", a matrix of fold changes is returned. And
 #' if Output = "Model", the fitted model by limma::lmFit() or DESeq2::DESeq() is returned. REMEMBER that when user provides
-#' 'DESIGN' input argument, colnames of the returned matrix remains empty and is needed to be assigned by the user
+#' 'DESIGN' input argument, colnames of the returned matrix remains empty and are needed to be assigned by the user.
 #'
 #'
 #' @examples

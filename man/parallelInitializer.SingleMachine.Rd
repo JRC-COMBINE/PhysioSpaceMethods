@@ -7,13 +7,13 @@
 parallelInitializer.SingleMachine(NumbrOfCores)
 }
 \arguments{
-\item{NumbrOfCores}{Number of cores (Threads) to use in parallel}
+\item{NumbrOfCores}{Number of cores (Threads) to use in parallel.}
 }
 \value{
 An object of class c("SOCKcluster", "cluster"), made by makeCluster of package parallel.
 }
 \description{
-parallelInitializer.SingleMachine is an internal function for parallelInitializer.
+parallelInitializer.SingleMachine is an internal function of parallelInitializer.
 }
 \examples{
 parallelInitializer.SingleMachine(NumbrOfCores = 2)

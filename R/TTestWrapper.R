@@ -1,11 +1,11 @@
 #' @title T-testing Between Plus and Minus Genes
 #'
-#' @description tTestWrapper is an internal function used by calculatePhysioMap that does t-test between iplus and iminus indexed genes in
-#' ReferencesJ.
+#' @description tTestWrapper is an internal function used by calculatePhysioMap. It does a t-test between iplus and iminus
+#' indexed genes in ReferencesJ.
 #'
 #' @param ReferencesJ Vector of gene expressions to do statistical test on.
 #' @param iplus Index of first group of genes for statistical testing.
-#' @param iminus Index of first group of genes for statistical testing.
+#' @param iminus Index of second group of genes for statistical testing.
 #' @param STATICResponse Same STATICResponse as in calculatePhysioMap. Check calculatePhysioMap's help for more info.
 #'
 #' @import stats

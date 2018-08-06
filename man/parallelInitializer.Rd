@@ -7,7 +7,7 @@
 parallelInitializer(NumbrOfCores)
 }
 \arguments{
-\item{NumbrOfCores}{Number of cores (Threads) to use in parallel}
+\item{NumbrOfCores}{Number of cores (Threads) to use in parallel.}
 }
 \value{
 An object of class c("SOCKcluster", "cluster"), made by makeCluster of package parallel.

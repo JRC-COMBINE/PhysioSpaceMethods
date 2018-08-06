@@ -2,7 +2,7 @@
 % Please edit documentation in R/HeatMapPlotter.R
 \name{PhysioHeatmap}
 \alias{PhysioHeatmap}
-\title{Drawing Heatmap of CalculatePhysioMap()'s Output}
+\title{Drawing Heatmap of CalculatePhysioMap's Output}
 \usage{
 PhysioHeatmap(PhysioResults, ColorLevels = 100, PDFFullName = NULL,
   PDFWidth = 7, PDFHeight = 7, main = "", PlotSize = NA,
@@ -14,9 +14,10 @@ PhysioHeatmap(PhysioResults, ColorLevels = 100, PDFFullName = NULL,
 
 \item{ColorLevels}{An integer indicating how many colors to use when plotting the heatmap. Default is 100.}
 
-\item{PDFFullName}{NULL or Full name (including the path) of the PDF file in which the heatmap will be exported saved, e.g. "~/Desktop/outheat.pdf".
-For now only exporting to a PDF is supported. If PDFFullName is NULL, heatmap is plotted on the any 'active' device the user has set before
-calling PhysioHeatmap. Default is NULL.}
+\item{PDFFullName}{NULL or Full name (including the path) of the PDF file in which the heatmap will be exported and saved,
+e.g. "~/Desktop/outheat.pdf".
+For now only exporting to PDF is supported. If PDFFullName is NULL, heatmap is plotted on any 'active'
+device the user has set before calling PhysioHeatmap. Default is NULL.}
 
 \item{PDFWidth}{Width of the output PDF, in inches. Default is 7.}
 
@@ -24,27 +25,29 @@ calling PhysioHeatmap. Default is NULL.}
 
 \item{main}{The title of the heatmap. Default is an empty string (no title).}
 
-\item{PlotSize}{A numerical value with which you can zoom in and out of the heatmap. Default is NA, which makes PhysioHeatmap choose
-the PlotSize automatically.}
+\item{PlotSize}{A numerical value with which you can zoom in and out of the heatmap. Default is NA,
+which makes PhysioHeatmap choose the PlotSize automatically.}
 
-\item{SymmetricColoring}{Logical value that determines if color coding should distribute equally around 0. Default is false, which means
-colors will be distributed equally from minimum to maximum value of PhysioResults.}
+\item{SymmetricColoring}{Logical value that determines if color coding should distribute symmetrically around 0.
+Default is false, which means colors will be distributed from minimum to maximum value of PhysioResults.}
 
-\item{RowColCex}{Row and column cex (A numerical value giving the amount by which plotting text and symbols should be magnified relative
-to the default). Default is NA, in which case PhysioHeatmap itself assigns a value to RowColCex based on PhysioResults size.}
+\item{RowColCex}{Row and column cex (a numerical value giving the amount by which plotting text and symbols should be magnified).
+Default is NA, in which case PhysioHeatmap itself assigns a value to RowColCex based on PhysioResults size.}
 
-\item{KeyLabelCex}{Colorkey text labels cex (A numerical value giving the amount by which plotting text and symbols should be magnified relative
-to the default). Default is NA, in which case PhysioHeatmap itself assigns a value to KeyLabelCex based on PhysioResults size.}
+\item{KeyLabelCex}{Colorkey text labels cex (a numerical value giving the amount by which plotting text and symbols should
+be magnified relative). Default is NA, in which case PhysioHeatmap itself assigns a value to KeyLabelCex based
+on PhysioResults size.}
 
-\item{SpaceClustering}{Logical value for choosing if the rows of PhysioResults (Space axes) should be ordered using hierarchical clustering.
-Default is FALSE.}
+\item{SpaceClustering}{Logical value for choosing if the rows of PhysioResults (Space axes) should be ordered using
+hierarchical clustering. Default is FALSE.}
 
 \item{Space}{Space with which PhysioResults is calculated. It is needed if SpaceClustering is TRUE.}
 
 \item{ReducedPlotting}{Logical or numeric value indicating if only important rows in PhysioResults should be plotted. If
-ReducedPlotting is FALSE, all rows of PhysioResults are plotted, if ReducedPlotting is TRUE, for each sample (column in PhysioResults)
-only the 10 most important rows (axes in Space) are selected and plotted, and the case of ReducedPlotting being a numerical value, e.g. N,
-is similar to ReducedPlotting == TRUE, except rather than 10, the N most important rows are kept.}
+ReducedPlotting is FALSE, all rows of PhysioResults are plotted. If ReducedPlotting is TRUE, for each sample
+(column in PhysioResults) only the 10 most important rows (axes in Space) are selected and plotted. And
+the case of ReducedPlotting being a numerical value, e.g. N, is similar to ReducedPlotting == TRUE, except
+rather than 10, the N most important rows are kept.}
 }
 \value{
 PhysioHeatmap returns(Invisibly) PDFFullName.

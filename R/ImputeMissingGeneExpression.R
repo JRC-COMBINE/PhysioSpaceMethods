@@ -3,8 +3,8 @@
 #' @description imputeMissingGeneExpression is an internal function called by inputChecker. It uses different methods to impute
 #' any missing value of the InputData or Space (or else missing values would break the pipeline in calculatePhysioMap).
 #'
-#' @param InptGEX Input matrix with missng values
-#' @param METHOD Method to use in imputation.
+#' @param InptGEX Input matrix with missng values.
+#' @param METHOD Method to use in imputation. Available methods are KNN and PCA. Default is 'PCA'.
 #'
 #' @return A matrix with the same dimensions as InptGEX, with missing values imputed.
 #'

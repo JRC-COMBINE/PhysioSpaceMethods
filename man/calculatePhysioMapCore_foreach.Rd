@@ -9,39 +9,39 @@ calculatePhysioMapCore_foreach(InputData, Space, NSamples, GenesRatio,
 }
 \arguments{
 \item{InputData}{A matrix of input gene expressions to be analyzed, with genes as rows and samples as columns.
-Corresponding Entrez Gene IDs must be assigned to 'rownames' of the matrix, and name of each
-sample/column should be written in 'colnames'. REMEMBER that the gene expressions in 'InputData' should be
-relative; e.g. fold change or signed p value of a statistical test. Rows of InputData and Space must match.}
+Corresponding Entrez Gene
+IDs must be assigned to 'rownames' of the matrix, and name of each sample/column should be written in 'colnames'.
+REMEMBER that the gene
+expressions in 'InputData' should be relative; e.g. fold change or signed p value of a statistical test.}
 
 \item{Space}{The space in which the 'InputData' will be mapped. Just as 'InputData',
 it should be a matrix with genes as rows and samples as columns, with corresponding Entrez Gene
-IDs in 'rownames' of the matrix, and name of each axis of the space written in 'colnames'.
-Rows of InputData and Space must match.}
+IDs in 'rownames' of the matrix, and name of each axis of the space written in 'colnames'.}
 
-\item{NSamples}{Number of samples (columns) in InputData}
+\item{NSamples}{Number of samples (columns) in InputData.}
 
-\item{GenesRatio}{The ratio of gene expression values to be considered in the calculation. In the calculations only the highest and lowest
-GenesRatio*100 percent of values in each sample are used, since signal to noise ratio in gene expression values
-has a direct relation to the relative magnitute of expressions and out noisy inputs need to be filtered out.
+\item{GenesRatio}{The ratio of gene expression values to be considered in the calculation. In high dimensional omics data,
+signal to noise ratio has a direct relation with the relative magnitude of expressions. We aim to remove the noisy genes,
+hence we only keep the "GenesRatio*100" percent highest and lowest gene expression values of each sample.
 GenesRatio should be a numerical value between 0 and 1. Default value is 0.05.}
 
-\item{NGenes}{Number of genes (rows) in InputData or Space}
+\item{NGenes}{Number of genes (rows) in InputData or Space.}
 
 \item{STATICResponse}{Logical value indicating if 'statistic' should be returned rather than the default 'signed p value'.
 Default value is FALSE.}
 
-\item{pb}{Progress bar made with progress::progress_bar$new}
+\item{pb}{Progress bar made by progress::progress_bar$new.}
 
 \item{TTEST}{Logical value indicating if t.test should be done in place of the default wilcoxon rank-sum test (more info can be found
 in the original PhysioSpace: Lenz et. al., PLOS One 2013). Using t.test will speed up calculations. Default value is FALSE.}
 }
 \value{
-Matrix of mapped 'InputData' values in 'Space', with rows corrisponding to axises of 'Space' and columns representing
+Matrix of mapped 'InputData' values in 'Space', with rows corresponding to axes of 'Space' and columns representing
 samples in 'InputData'. Mapped values are signed p value when STATICResponse==FALSE, and are 'statistic' value when
-STATICResponse==TRUE (more info can be found in the original PhysioSpace: Lenz et. al., PLOS One 2013).
+STATICResponse==TRUE (more info can be found in the original PhysioSpace paper: Lenz et. al., PLOS One 2013).
 }
 \description{
 calculatePhysioMapCore_foreach is an internal function of calculatePhysioMap,
-computing the main mapping. It's not recommended to use calculatePhysioMapCore_foreach by the user outside of
-calculatePhysioMap.
+computing the main mapping using foreach form foreach package. We don't recommend the use of
+calculatePhysioMapCore_foreach outside of calculatePhysioMap.
 }

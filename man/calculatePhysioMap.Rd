@@ -10,25 +10,27 @@ calculatePhysioMap(InputData, Space, GenesRatio = 0.05,
   ParallelMethod = "parCapply")
 }
 \arguments{
-\item{InputData}{A matrix of input gene expressions to be analyzed, with genes as rows and samples as columns. Corresponding Entrez Gene
-IDs must be assigned to 'rownames' of the matrix, and name of each sample/column should be written in 'colnames'. REMEMBER that the gene
+\item{InputData}{A matrix of input gene expressions to be analyzed, with genes as rows and samples as columns.
+Corresponding Entrez Gene
+IDs must be assigned to 'rownames' of the matrix, and name of each sample/column should be written in 'colnames'.
+REMEMBER that the gene
 expressions in 'InputData' should be relative; e.g. fold change or signed p value of a statistical test.}
 
 \item{Space}{The space in which the 'InputData' will be mapped. Just as 'InputData',
 it should be a matrix with genes as rows and samples as columns, with corresponding Entrez Gene
 IDs in 'rownames' of the matrix, and name of each axis of the space written in 'colnames'.}
 
-\item{GenesRatio}{The ratio of gene expression values to be considered in the calculation. In the calculations only the highest and lowest
-GenesRatio*100 percent of values in each sample are used, since signal to noise ratio in gene expression values
-has a direct relation to the relative magnitute of expressions and out noisy inputs need to be filtered out.
+\item{GenesRatio}{The ratio of gene expression values to be considered in the calculation. In high dimensional omics data,
+signal to noise ratio has a direct relation with the relative magnitude of expressions. We aim to remove the noisy genes,
+hence we only keep the "GenesRatio*100" percent highest and lowest gene expression values of each sample.
 GenesRatio should be a numerical value between 0 and 1. Default value is 0.05.}
 
-\item{PARALLEL}{Logical value indicating if calculations should be done in parallel. Default value is FALSE.
-It is not recomemnded to use PARALLEL=TRUE on small datasets since due to large overhead, it could take more time than
+\item{PARALLEL}{Logical value indicating if calculation should be done in parallel. Default value is FALSE.
+It is not recommended to use PARALLEL=TRUE on small datasets since due to large overhead, it could take more time than
 using PARALLEL=FALSE.}
 
 \item{NumbrOfCores}{Number of cores to be used when 'PARALLEL' is TRUE. Default is NA which will result in the program using
-'all available cores - 1'. Assigning a number higher that the value parallel::detectCores() returns will result in an error.}
+'all available cores - 1'. Assigning a number higher than parallel::detectCores() will result in an error.}
 
 \item{TTEST}{Logical value indicating if t.test should be done in place of the default wilcoxon rank-sum test (more info can be found
 in the original PhysioSpace: Lenz et. al., PLOS One 2013). Using t.test will speed up calculations. Default value is FALSE.}
@@ -36,17 +38,17 @@ in the original PhysioSpace: Lenz et. al., PLOS One 2013). Using t.test will spe
 \item{STATICResponse}{Logical value indicating if 'statistic' should be returned rather than the default 'signed p value'.
 Default value is FALSE.}
 
-\item{ImputationMethod}{Imputation method to use in case of missing values.}
+\item{ImputationMethod}{Imputation method to use in case of missing values. Default is "PCA".}
 
 \item{ParallelMethod}{Parallel method to use when PARALLEL=TRUE. Two methods are implemented so far: "parCapply"
 which uses parCapply function of parallel package, and "foreach" which uses foreach package to process in parallel.
-Speed-wise, foreach has an edge on parCapply, but the latter is more stable. Hence we recommend parCapply.
+Speed-wise, foreach has an edge on parCapply, but the latter is more stable. Hence, we recommend to use parCapply.
 The default value for ParallelMethod is "parCapply".}
 }
 \value{
-Matrix of mapped 'InputData' values in 'Space', with rows corrisponding to axises of 'Space' and columns representing
+Matrix of mapped 'InputData' values in 'Space', with rows corresponding to axes of 'Space' and columns representing
 samples in 'InputData'. Mapped values are signed p value when STATICResponse==FALSE, and are 'statistic' value when
-STATICResponse==TRUE (more info can be found in the original PhysioSpace: Lenz et. al., PLOS One 2013).
+STATICResponse==TRUE (more info can be found in the original PhysioSpace paper: Lenz et. al., PLOS One 2013).
 }
 \description{
 calculatePhysioMap computes mapped values of each input sample inside of a space,
@@ -58,8 +60,8 @@ statistical method for relating high dimensional omics data sets from heterogene
 processes. It is designed to take advantage of the vast availability of public omics data, which in combination with
 statistical approaches makes a potent tool capable of analyzing heterogeneous biological data sets.
 'calculatePhysioMap' is the main analytical function of the package. It uses a nonlinear mapping function to relate the
-unknown input data with an physiological space. Physiological spaces are mathematical spaces build upon known
-physiological data, and built using the 'spaceMaker' function.
+unknown input data with a physiological space. Physiological spaces are mathematical spaces build upon known
+physiological data, using the 'spaceMaker' function.
 }
 \examples{
  SimulatedGeneExpressionData <- matrix(

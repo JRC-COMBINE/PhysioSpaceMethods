@@ -11,7 +11,7 @@ wilTestWrapper(ReferencesJ, iplus, iminus, STATICResponse)
 
 \item{iplus}{Index of first group of genes for statistical testing.}
 
-\item{iminus}{Index of first group of genes for statistical testing.}
+\item{iminus}{Index of second group of genes for statistical testing.}
 
 \item{STATICResponse}{Same STATICResponse as in calculatePhysioMap. Check calculatePhysioMap's help for more info.}
 }

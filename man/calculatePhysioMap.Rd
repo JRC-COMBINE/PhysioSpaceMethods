@@ -52,15 +52,44 @@ calculatePhysioMap computes mapped values of each input sample inside of a space
 calculated prior from a compendium of known samples.
 }
 \details{
-ToDo
+PhysioSpace is a robust
+statistical method for relating high dimensional omics data sets from heterogeneous sources using shared physiological
+processes. It is designed to take advantage of the vast availability of public omics data, which in combination with
+statistical approaches makes a potent tool capable of analyzing heterogeneous biological data sets.
+'calculatePhysioMap' is the main analytical function of the package. It uses a nonlinear mapping function to relate the
+unknown input data with an physiological space. Physiological spaces are mathematical spaces build upon known
+physiological data, and built using the 'spaceMaker' function.
 }
 \examples{
-SimulatedGeneExpressionData <- matrix(rnorm(n = 100000, mean = 0, sd = 100),ncol = 10, dimnames = list(1:10000,1:10))
-SimulatedReferenceSpace <- matrix(rnorm(n = 100000, mean = 0, sd = 100),ncol = 10, dimnames = list(1:10000,11:20))
-calculatePhysioMap(InputData = SimulatedGeneExpressionData, SimulatedReferenceSpace)
-if(parallel::detectCores()>1){ #More than one core is needed for parallel processing
-calculatePhysioMap(InputData = SimulatedGeneExpressionData, SimulatedReferenceSpace,
-PARALLEL=TRUE, NumbrOfCores=2, GenesRatio = 0.01, STATICResponse = FALSE, TTEST = TRUE)
-}
+ SimulatedGeneExpressionData <- matrix(
+   rnorm(n = 100000, mean = 0,
+         sd = 100),
+   ncol = 10,
+   dimnames = list(1:10000, 1:10)
+ )
+ SimulatedReferenceSpace <- matrix(
+   rnorm(n = 100000, mean = 0,
+         sd = 100),
+   ncol = 10,
+   dimnames = list(1:10000, 11:20)
+ )
+ calculatePhysioMap(InputData = SimulatedGeneExpressionData,
+                    Space = SimulatedReferenceSpace)
+ if (parallel::detectCores() > 1) {
+   #More than one core is needed for parallel processing
+   calculatePhysioMap(
+     InputData = SimulatedGeneExpressionData,
+     Space = SimulatedReferenceSpace,
+     PARALLEL = TRUE,
+     NumbrOfCores = 2,
+     GenesRatio = 0.01,
+     STATICResponse = FALSE,
+     TTEST = TRUE
+   )
+ }
 
+}
+\references{
+Lenz, M., Schuldt, B. M., Müller, F. J., & Schuppert, A. (2013). PhysioSpace: relating gene expression
+experiments from heterogeneous sources using shared physiological processes. PLoS One, 8(10), e77627.
 }

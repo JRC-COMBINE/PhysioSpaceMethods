@@ -19,9 +19,17 @@ imputeMissingGeneExpression is an internal function called by inputChecker. It u
 any missing value of the InputData or Space (or else missing values would break the pipeline in calculatePhysioMap).
 }
 \examples{
-MatToImpute <- matrix(rnorm(n = 100000, mean = 0, sd = 100),ncol = 10, dimnames = list(1:10000,1:10))
-MatToImpute[sample(x = 1:length(MatToImpute), size = length(MatToImpute)/20)] <- NA
-ImputedMat <- imputeMissingGeneExpression(InptGEX = MatToImpute, METHOD = "PCA")
-ImputedMat2 <- imputeMissingGeneExpression(InptGEX = MatToImpute, METHOD = "KNN")
+ MatToImpute <-
+   matrix(
+     rnorm(n = 100000, mean = 0, sd = 100),
+     ncol = 10,
+     dimnames = list(1:10000, 1:10)
+   )
+ MatToImpute[sample(x = 1:length(MatToImpute),
+                    size = length(MatToImpute) / 20)] <- NA
+ ImputedMat <-
+   imputeMissingGeneExpression(InptGEX = MatToImpute, METHOD = "PCA")
+ ImputedMat2 <-
+   imputeMissingGeneExpression(InptGEX = MatToImpute, METHOD = "KNN")
 
 }

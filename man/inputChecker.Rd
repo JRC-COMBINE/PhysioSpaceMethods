@@ -23,7 +23,13 @@ exact. It checks to see 1- both 'InputData' and 'Space' are matrices, 2- if 'Inp
 using imputeMissingGeneExpression function if they do, and 3- it matches the rows of 'InputData' or 'Space' based on their row names.
 }
 \examples{
-SimulatedGeneExpressionData <- matrix(rnorm(n = 100000, mean = 0, sd = 100),ncol = 10, dimnames = list(1:10000,1:10))
-inputChecker(InputData = SimulatedGeneExpressionData[,1:5], Space = SimulatedGeneExpressionData[sample(1:10000),6:10])
+ SimulatedGeneExpressionData <-
+   matrix(
+     rnorm(n = 100000, mean = 0, sd = 100),
+     ncol = 10,
+     dimnames = list(1:10000, 1:10)
+   )
+ inputChecker(InputData = SimulatedGeneExpressionData[, 1:5],
+              Space = SimulatedGeneExpressionData[sample(1:10000), 6:10])
 
 }

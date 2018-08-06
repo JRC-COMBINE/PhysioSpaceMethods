@@ -14,8 +14,14 @@
 #' (By assigning new matrices to parent.frame()).
 #'
 #' @examples
-#' SimulatedGeneExpressionData <- matrix(rnorm(n = 100000, mean = 0, sd = 100),ncol = 10, dimnames = list(1:10000,1:10))
-#' inputChecker(InputData = SimulatedGeneExpressionData[,1:5], Space = SimulatedGeneExpressionData[sample(1:10000),6:10])
+#'  SimulatedGeneExpressionData <-
+#'    matrix(
+#'      rnorm(n = 100000, mean = 0, sd = 100),
+#'      ncol = 10,
+#'      dimnames = list(1:10000, 1:10)
+#'    )
+#'  inputChecker(InputData = SimulatedGeneExpressionData[, 1:5],
+#'               Space = SimulatedGeneExpressionData[sample(1:10000), 6:10])
 #'
 #' @export inputChecker
 

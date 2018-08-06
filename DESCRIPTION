@@ -1,15 +1,17 @@
 Package: PhysioSpaceMethods
 Type: Package
-Title: Creates and Uses Physio Spaces as a dimension reduction mapping
-Version: 0.1.5
+Title: Creates and uses physio spaces as a dimension reduction mapping
+Version: 0.99.0
 Author: Ali H. Esfahani
 Maintainer: Ali H. Esfahani <ali.hadizadeh@rwth-aachen.de>
-Description: This package uses 'Big Data' to make robust 'Physiological Vectors' in N dimensions space, within which it is possible to map new unknown data. The calculation pipeline is a robust statistical method for relating high dimensional omics data sets from heterogeneous sources using shared physiological processes. It is designed to take advantage of the vast availability of public omics data, which in combination with statistical approaches makes a potent tool capable of analyzing heterogeneous biological data sets. 'calculatePhysioMap' is the main analytical function of the package. It uses a nonlinear mapping function to relate the unknown input data with an physiological space. Physiological spaces are mathematical spaces build upon known physiological data, and built using the 'spaceMaker' function.
+Description: This package uses 'Big Data' to make robust 'Physiological Vectors' in N dimensions space, within which it is possible to map new unknown data. The calculation pipeline is a robust statistical method for relating high dimensional omics data sets from heterogeneous sources using shared physiological processes. It is designed to take advantage of the vast availability of public omics data, which in combination with statistical approaches makes a potent tool capable of analyzing heterogeneous biological data sets. 'calculatePhysioMap' is the main analytical function of the package. It uses a nonlinear mapping function to relate the unknown input data with a physiological space. Physiological spaces are mathematical spaces build upon known physiological data, and built using the 'spaceMaker' function.
 biocViews: DimensionReduction, Clustering, GeneExpression, Software
 License: GPL-3
 Encoding: UTF-8
 LazyData: FALSE
 Imports: foreach, doParallel, progress, missMDA, DMwR, grDevices, graphics, parallel, stats, utils, DESeq2, limma
+BugReports: https://github.com/JRC-COMBINE/PhysioSpaceMethods/issues
+URL: https://github.com/JRC-COMBINE/PhysioSpaceMethods
 RoxygenNote: 6.1.0
 Suggests: knitr,
     rmarkdown,

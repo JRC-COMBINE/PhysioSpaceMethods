@@ -1,14 +1,20 @@
 #' @title Imputing Missing Data
 #'
-#' @description imputeMissingGeneExpression is an internal function called by inputChecker. It uses different methods to impute
-#' any missing value of the InputData or Space (or else missing values would break the pipeline in calculatePhysioMap).
+#' @description imputeMissingGeneExpression is an internal function called
+#' by inputChecker. It uses different methods to impute any missing value
+#' of the InputData or Space (or else missing values would break the
+#' pipeline in calculatePhysioMap).
 #'
 #' @param InptGEX Input matrix with missng values.
-#' @param METHOD Method to use in imputation. Available methods are KNN and PCA. Default is 'PCA'.
+#' @param METHOD Method to use in imputation. Available methods are
+#' KNN and PCA. Default is 'PCA'.
 #'
-#' @return A matrix with the same dimensions as InptGEX, with missing values imputed.
+#' @return A matrix with the same dimensions as InptGEX, with missing
+#' values imputed.
 #'
-#' @import missMDA DMwR utils
+#' @import utils
+#' @importFrom DMwR knnImputation
+#' @importFrom missMDA imputePCA
 #'
 #' @examples
 #'  MatToImpute <-
@@ -28,8 +34,10 @@
 
 imputeMissingGeneExpression <- function(InptGEX, METHOD="PCA"){
   if(METHOD=="KNN"){
-    ##KNN is shown to be among the worse but popular methods of gene expression imputation, I'll use it for now but have to change later
-    #Prob'ly won't work for RNA-seq either -> another reason to change to a better method
+    ##KNN is shown to be among the worse but popular methods of
+    #gene expression imputation, I'll use it for now but have to
+    #change later Prob'ly won't work for RNA-seq either -> another
+    #reason to change to a better method
     return(knnImputation(data = InptGEX))
   } else if(METHOD=="PCA") {
     res.comp <- imputePCA(InptGEX,ncp = estim_ncpPCA(InptGEX,ncp.max=7)$ncp)

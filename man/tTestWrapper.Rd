@@ -13,13 +13,16 @@ tTestWrapper(ReferencesJ, iplus, iminus, STATICResponse)
 
 \item{iminus}{Index of second group of genes for statistical testing.}
 
-\item{STATICResponse}{Same STATICResponse as in calculatePhysioMap. Check calculatePhysioMap's help for more info.}
+\item{STATICResponse}{Same STATICResponse as in calculatePhysioMap.
+Check calculatePhysioMap's help for more info.}
 }
 \value{
-Log2 signed p value of t-test if STATICResponse==FALSE, t-test statisitic if STATICResponse==TRUE.
+Log2 signed p value of t-test if STATICResponse==FALSE,
+t-test statisitic if STATICResponse==TRUE.
 }
 \description{
-tTestWrapper is an internal function used by calculatePhysioMap. It does a t-test between iplus and iminus
+tTestWrapper is an internal function used by
+calculatePhysioMap. It does a t-test between iplus and iminus
 indexed genes in ReferencesJ.
 }
 \examples{

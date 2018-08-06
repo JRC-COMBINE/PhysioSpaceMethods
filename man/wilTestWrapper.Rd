@@ -13,15 +13,19 @@ wilTestWrapper(ReferencesJ, iplus, iminus, STATICResponse)
 
 \item{iminus}{Index of second group of genes for statistical testing.}
 
-\item{STATICResponse}{Same STATICResponse as in calculatePhysioMap. Check calculatePhysioMap's help for more info.}
+\item{STATICResponse}{Same STATICResponse as in calculatePhysioMap.
+Check calculatePhysioMap's help for more info.}
 }
 \value{
-Log2 signed p value of Rank sum test if STATICResponse==FALSE, Rank sum statisitic normalized between -1 and 1
+Log2 signed p value of Rank sum test if STATICResponse==FALSE,
+Rank sum statisitic normalized between -1 and 1
 if STATICResponse==TRUE.
 }
 \description{
-wilTestWrapper is an internal function used by calculatePhysioMap that does rank sum test
-(equivalent to Mann-Whitney test) between iplus and iminus indexed genes in ReferencesJ.
+wilTestWrapper is an internal function used by
+calculatePhysioMap that does rank sum test
+(equivalent to Mann-Whitney test) between iplus and
+iminus indexed genes in ReferencesJ.
 }
 \examples{
  SimulatedReferenceSpace <-

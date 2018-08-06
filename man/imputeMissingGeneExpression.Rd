@@ -9,14 +9,18 @@ imputeMissingGeneExpression(InptGEX, METHOD = "PCA")
 \arguments{
 \item{InptGEX}{Input matrix with missng values.}
 
-\item{METHOD}{Method to use in imputation. Available methods are KNN and PCA. Default is 'PCA'.}
+\item{METHOD}{Method to use in imputation. Available methods are
+KNN and PCA. Default is 'PCA'.}
 }
 \value{
-A matrix with the same dimensions as InptGEX, with missing values imputed.
+A matrix with the same dimensions as InptGEX, with missing
+values imputed.
 }
 \description{
-imputeMissingGeneExpression is an internal function called by inputChecker. It uses different methods to impute
-any missing value of the InputData or Space (or else missing values would break the pipeline in calculatePhysioMap).
+imputeMissingGeneExpression is an internal function called
+by inputChecker. It uses different methods to impute any missing value
+of the InputData or Space (or else missing values would break the
+pipeline in calculatePhysioMap).
 }
 \examples{
  MatToImpute <-

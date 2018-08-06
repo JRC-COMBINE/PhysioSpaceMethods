@@ -10,10 +10,12 @@ parallelInitializer(NumbrOfCores)
 \item{NumbrOfCores}{Number of cores (Threads) to use in parallel.}
 }
 \value{
-An object of class c("SOCKcluster", "cluster"), made by makeCluster of package parallel.
+An object of class c("SOCKcluster", "cluster"), made by
+makeCluster of package parallel.
 }
 \description{
-parallelInitializer is an internal function used by calculatePhysioMap. It is called when user wants to
+parallelInitializer is an internal function used by
+calculatePhysioMap. It is called when user wants to
 run calculatePhysioMap in parallel.
 }
 \examples{

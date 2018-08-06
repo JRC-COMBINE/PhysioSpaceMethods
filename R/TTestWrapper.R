@@ -1,16 +1,19 @@
 #' @title T-testing Between Plus and Minus Genes
 #'
-#' @description tTestWrapper is an internal function used by calculatePhysioMap. It does a t-test between iplus and iminus
+#' @description tTestWrapper is an internal function used by
+#' calculatePhysioMap. It does a t-test between iplus and iminus
 #' indexed genes in ReferencesJ.
 #'
 #' @param ReferencesJ Vector of gene expressions to do statistical test on.
 #' @param iplus Index of first group of genes for statistical testing.
 #' @param iminus Index of second group of genes for statistical testing.
-#' @param STATICResponse Same STATICResponse as in calculatePhysioMap. Check calculatePhysioMap's help for more info.
+#' @param STATICResponse Same STATICResponse as in calculatePhysioMap.
+#' Check calculatePhysioMap's help for more info.
 #'
 #' @import stats
 #'
-#' @return Log2 signed p value of t-test if STATICResponse==FALSE, t-test statisitic if STATICResponse==TRUE.
+#' @return Log2 signed p value of t-test if STATICResponse==FALSE,
+#' t-test statisitic if STATICResponse==TRUE.
 #'
 #' @examples
 #'  SimulatedReferenceSpace <-
@@ -39,7 +42,9 @@ tTestWrapper <- function(ReferencesJ,iplus,iminus,STATICResponse){
   tTestTemp <- t.test(ReferencesJ[iplus], ReferencesJ[iminus])
   if(STATICResponse) {
     Stats <- tTestTemp$statistic
-    MaxStat <- t.test(sort(ReferencesJ,decreasing = TRUE)[seq_along(iplus)], sort(ReferencesJ)[seq_along(iminus)])$statistic
+    MaxStat <-
+      t.test(sort(ReferencesJ, decreasing = TRUE)[seq_along(iplus)],
+             sort(ReferencesJ)[seq_along(iminus)])$statistic
     return(Stats/MaxStat)
   }
   sgn <- -sign(tTestTemp$statistic)

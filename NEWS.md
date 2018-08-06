@@ -1,6 +1,4 @@
-# PhysioSpaceMethods 0.1.5
+# PhysioSpaceMethods 0.99.0 (6.8.2018)
 
-* Added a `NEWS.md` file to track changes to the package.
-
-
-
+* Documentation updated, removed bugs and some notes from 'check's.
+* Submitted to Bioconductor.

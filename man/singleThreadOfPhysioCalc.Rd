@@ -10,33 +10,43 @@ singleThreadOfPhysioCalc(INPT, Space, GenesRatio, NGenes, STATICResponse,
 \arguments{
 \item{INPT}{A sample (column) out of InputData.}
 
-\item{Space}{The space in which the 'InputData' will be mapped. Just as 'InputData',
-it should be a matrix with genes as rows and samples as columns, with corresponding Entrez Gene
-IDs in 'rownames' of the matrix, and name of each axis of the space written in 'colnames'.
+\item{Space}{The space in which the 'InputData' will be mapped.
+Just as 'InputData', it should be a matrix with genes as rows and
+samples as columns, with corresponding Entrez Gene IDs in 'rownames'
+of the matrix, and name of each axis of the space written in 'colnames'.
 Rows of InputData and Space must match.}
 
-\item{GenesRatio}{The ratio of gene expression values to be considered in the calculation. In high dimensional omics data,
-signal to noise ratio has a direct relation with the relative magnitude of expressions. We aim to remove the noisy genes,
-hence we only keep the "GenesRatio*100" percent highest and lowest gene expression values of each sample.
-GenesRatio should be a numerical value between 0 and 1. Default value is 0.05.}
+\item{GenesRatio}{The ratio of gene expression values to be considered
+in the calculation. In high dimensional omics data, signal to noise
+ratio has a direct relation with the relative magnitude of expressions.
+We aim to remove the noisy genes, hence we only keep the
+"GenesRatio*100" percent highest and lowest gene expression values of
+each sample. GenesRatio should be a numerical value between 0 and 1.
+Default value is 0.05.}
 
 \item{NGenes}{Number of genes (rows) in Space.}
 
-\item{STATICResponse}{Logical value indicating if 'statistic' should be returned rather than the default 'signed p value'.
+\item{STATICResponse}{Logical value indicating if 'statistic' should
+be returned rather than the default 'signed p value'.
 Default value is FALSE.}
 
 \item{pb}{Progress bar made by progress::progress_bar$new.}
 
-\item{TTEST}{Logical value indicating if t.test should be done in place of the default wilcoxon rank-sum test (more info can be found
-in the original PhysioSpace: Lenz et. al., PLOS One 2013). Using t.test will speed up calculations. Default value is FALSE.}
+\item{TTEST}{Logical value indicating if t.test should be done in
+place of the default wilcoxon rank-sum test (more info can be found
+in the original PhysioSpace: Lenz et. al., PLOS One 2013).
+Using t.test will speed up calculations. Default value is FALSE.}
 }
 \value{
-Vector of mapped 'INPT' values in 'Space'. Mapped values are signed p value when STATICResponse==FALSE,
-and are 'statistic' value when STATICResponse==TRUE (more info can be found in the original PhysioSpace:
+Vector of mapped 'INPT' values in 'Space'.
+Mapped values are signed p value when STATICResponse==FALSE,
+and are 'statistic' value when STATICResponse==TRUE
+(more info can be found in the original PhysioSpace:
 Lenz et. al., PLOS One 2013).
 }
 \description{
-SingleThreadOfPhysioCalc is an internal function of calculatePhysioMap,
-computing the main mapping. We don't recommend the use of
-SingleThreadOfPhysioCalc outside of calculatePhysioMap.
+SingleThreadOfPhysioCalc is an internal function
+of calculatePhysioMap, computing the main mapping. We don't
+recommend the use of SingleThreadOfPhysioCalc outside of
+calculatePhysioMap.
 }

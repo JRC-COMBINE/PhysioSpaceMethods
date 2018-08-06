@@ -7,21 +7,29 @@
 inputChecker(InputData, Space, ImputationMethod)
 }
 \arguments{
-\item{InputData}{Same InputData as in calculatePhysioMap. Check calculatePhysioMap's help for more info.}
+\item{InputData}{Same InputData as in calculatePhysioMap.
+Check calculatePhysioMap's help for more info.}
 
-\item{Space}{Same Space as in calculatePhysioMap. Check calculatePhysioMap's help for more info.}
+\item{Space}{Same Space as in calculatePhysioMap.
+Check calculatePhysioMap's help for more info.}
 
-\item{ImputationMethod}{Imputation method to use in case of missing values. Available options are "PCA"
+\item{ImputationMethod}{Imputation method to use in case of
+missing values. Available options are "PCA"
 and "KNN", with "PCA" being the default.}
 }
 \value{
-inputChecker returns corrected 'InputData' and 'Space' directly to the environment it was called from
+inputChecker returns corrected 'InputData' and 'Space'
+directly to the environment it was called from
 (By assigning new matrices to parent.frame()).
 }
 \description{
-inputChecker is an internal function used by calculatePhysioMap to check the format of inputs, 'InputData' and 'Space' to be
-exact. It checks to see 1- both 'InputData' and 'Space' are matrices, 2- if 'InputData' or 'Space' contain any NA, and trying to impute
-using imputeMissingGeneExpression function if they do, and 3- it matches the rows of 'InputData' or 'Space' based on their row names.
+inputChecker is an internal function used by
+calculatePhysioMap to check the format of inputs, 'InputData'
+and 'Space' to be exact. It checks to see 1- both 'InputData'
+and 'Space' are matrices, 2- if 'InputData' or 'Space' contain
+any NA, and trying to impute using imputeMissingGeneExpression
+function if they do, and 3- it matches the rows of 'InputData'
+or 'Space' based on their row names.
 }
 \examples{
  SimulatedGeneExpressionData <-

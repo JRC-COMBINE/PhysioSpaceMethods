@@ -14,7 +14,7 @@
 #'
 #' @import utils
 #' @importFrom DMwR knnImputation
-#' @importFrom missMDA imputePCA
+#' @importFrom missMDA imputePCA estim_ncpPCA
 #'
 #' @examples
 #'  MatToImpute <-

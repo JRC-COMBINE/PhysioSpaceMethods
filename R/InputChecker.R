@@ -57,11 +57,11 @@ inputChecker <- function(InputData, Space, ImputationMethod){
         matchedIndxes <- match(rownames(InputData), rownames(Space))
         commonRowsSum <- sum(!is.na(matchedIndxes))
         if(commonRowsSum < 0.1*min(nrow(InputData), nrow(Space))) {
-            stop("Less than 10% of rows could be match! aborting...")
+            stop("Less than 10% of rows could be matched! aborting...")
         }
         if(commonRowsSum < 200) {
             stop(paste(
-                "Less than 200 rows could be match!",
+                "Less than 200 rows could be matched!",
                 "which is not enough for PhysioSpace, aborting..."
             ))
         }

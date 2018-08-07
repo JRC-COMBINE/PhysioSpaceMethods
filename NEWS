@@ -1,3 +1,9 @@
+# PhysioSpaceMethods 0.99.1 (6.8.2018)
+
+* Fixed as much bugs and notes from 'checks' as possible.
+* Ready for bioconductor submission.
+
+
 # PhysioSpaceMethods 0.99.0 (6.8.2018)
 
 * Documentation updated, removed bugs and some notes from 'check's.

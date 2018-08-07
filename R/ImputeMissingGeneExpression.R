@@ -33,16 +33,16 @@
 #' @export imputeMissingGeneExpression
 
 imputeMissingGeneExpression <- function(InptGEX, METHOD="PCA"){
-  if(METHOD=="KNN"){
-    ##KNN is shown to be among the worse but popular methods of
-    #gene expression imputation, I'll use it for now but have to
-    #change later Prob'ly won't work for RNA-seq either -> another
-    #reason to change to a better method
-    return(knnImputation(data = InptGEX))
-  } else if(METHOD=="PCA") {
-    res.comp <- imputePCA(InptGEX,ncp = estim_ncpPCA(InptGEX,ncp.max=7)$ncp)
-    return(res.comp$completeObs)
-  } else {
-    stop(paste("Imputation method",METHOD,"not implemented!"))
-  }
+    if(METHOD=="KNN"){
+        ##KNN is shown to be among the worse but popular methods of
+        #gene expression imputation, I'll use it for now but have to
+        #change later Prob'ly won't work for RNA-seq either -> another
+        #reason to change to a better method
+        return(knnImputation(data = InptGEX))
+    } else if(METHOD=="PCA") {
+        res.comp <- imputePCA(InptGEX,ncp = estim_ncpPCA(InptGEX,ncp.max=7)$ncp)
+        return(res.comp$completeObs)
+    } else {
+        stop(paste("Imputation method",METHOD,"not implemented!"))
+    }
 }

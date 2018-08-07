@@ -84,125 +84,131 @@
 #'
 #' @export
 spaceMaker <- function(GeneExMatrix, DESIGN = NA, CONTRASTs = NA,
-                       Output = "PhysioScore", LinearOrRNASeq = "Linear"){
+                        Output = "PhysioScore", LinearOrRNASeq = "Linear"){
 
-  ## Linearly SpaceMaker:
-  spaceMaker.Linear <- function(GeneExMatrix, DESIGN, CONTRASTs, Output){
+    ## Linearly SpaceMaker:
+    spaceMaker.Linear <- function(GeneExMatrix, DESIGN, CONTRASTs, Output){
 
-    UserDefinedDesign <- TRUE
+        UserDefinedDesign <- TRUE
 
-    if(is.na(DESIGN)){
-      #Making the 'design' from colnames of GeneExMatrix:
-      DESIGN <- model.matrix(object = ~0+factor(x = colnames(GeneExMatrix),
+        if(is.na(DESIGN)){
+            #Making the 'design' from colnames of GeneExMatrix:
+            DESIGN <- model.matrix(object =
+                                    ~0+factor(x = colnames(GeneExMatrix),
                                     levels = unique(colnames(GeneExMatrix))))
-                              #made a factor with first column as first level
-      colnames(DESIGN) <- unique(colnames(GeneExMatrix))
-      UserDefinedDesign <- FALSE
+            #made a factor with first column as first level
+            colnames(DESIGN) <- unique(colnames(GeneExMatrix))
+            UserDefinedDesign <- FALSE
+        }
+
+        if(is.na(CONTRASTs)){
+            #Making the 'contrast's from colnames of GeneExMatrix:
+            CONTRASTs <- paste(colnames(DESIGN)[-1],
+                                colnames(DESIGN)[1], sep = "-")
+        }
+
+        FITMain <- lmFit(GeneExMatrix, DESIGN)
+        cont.matrix <- makeContrasts(contrasts = CONTRASTs, levels=DESIGN)
+        FITCont <- contrasts.fit(FITMain, cont.matrix)
+        FITCont <- eBayes(FITCont)
+        FITGenes <- list()
+        pb <- progress_bar$new(format = "(:spin) [:bar] :percent eta: :eta",
+                                total = length(CONTRASTs), clear = FALSE)
+        for(Const in CONTRASTs){
+            FITGenes[[Const]] <- topTable(fit = FITCont,
+                                            coef = Const, adjust.method="BH",
+                                            number = Inf, sort.by = "none")
+            pb$tick()
+        }
+
+        if(Output == "PhysioScore"){
+            Outi <- vapply(X = FITGenes,
+                            function(x) -log2(x$adj.P.Val)*sign(x$logFC),
+                            FUN.VALUE = numeric(length = nrow(GeneExMatrix)))
+        } else if(Output == "FoldChange"){
+            Outi <- vapply(X = FITGenes, function(x) x$logFC,
+                            FUN.VALUE = numeric(length = nrow(GeneExMatrix)))
+        } else if(Output == "Model"){
+            return(FITMain)
+        }
+        rownames(Outi) <- rownames(GeneExMatrix)
+        if(!UserDefinedDesign) colnames(Outi) <- colnames(DESIGN)[-1]
+        return(Outi)
     }
 
-    if(is.na(CONTRASTs)){
-      #Making the 'contrast's from colnames of GeneExMatrix:
-      CONTRASTs <- paste(colnames(DESIGN)[-1], colnames(DESIGN)[1], sep = "-")
-    }
+    ## SpaceMaker for RNAseq Data:
+    spaceMaker.RNAseq <- function(GeneExMatrix, DESIGN, CONTRASTs, Output){
 
-    FITMain <- lmFit(GeneExMatrix, DESIGN)
-    cont.matrix <- makeContrasts(contrasts = CONTRASTs, levels=DESIGN)
-    FITCont <- contrasts.fit(FITMain, cont.matrix)
-    FITCont <- eBayes(FITCont)
-    FITGenes <- list()
-    pb <- progress_bar$new(format = "(:spin) [:bar] :percent eta: :eta",
-                           total = length(CONTRASTs), clear = FALSE)
-    for(Const in CONTRASTs){
-      FITGenes[[Const]] <- topTable(fit = FITCont,
-                                    coef = Const, adjust.method="BH",
-                                    number = Inf, sort.by = "none")
-      pb$tick()
-    }
+        UserDefinedDesign <- TRUE
 
-    if(Output == "PhysioScore"){
-      Outi <- vapply(X = FITGenes,
-                     function(x) -log2(x$adj.P.Val)*sign(x$logFC),
-                     FUN.VALUE = numeric(length = nrow(GeneExMatrix)))
-    } else if(Output == "FoldChange"){
-      Outi <- vapply(X = FITGenes, function(x) x$logFC,
-                     FUN.VALUE = numeric(length = nrow(GeneExMatrix)))
-    } else if(Output == "Model"){
-      return(FITMain)
-    }
-    rownames(Outi) <- rownames(GeneExMatrix)
-    if(!UserDefinedDesign) colnames(Outi) <- colnames(DESIGN)[-1]
-    return(Outi)
-  }
-
-  ## SpaceMaker for RNAseq Data:
-  spaceMaker.RNAseq <- function(GeneExMatrix, DESIGN, CONTRASTs, Output){
-
-    UserDefinedDesign <- TRUE
-
-    if(is.na(DESIGN)){
-      #Making the 'design' from colnames of GeneExMatrix:
-      DESIGN <- model.matrix(object = ~0+factor(x = colnames(GeneExMatrix),
+        if(is.na(DESIGN)){
+            #Making the 'design' from colnames of GeneExMatrix:
+            DESIGN <- model.matrix(object =
+                                    ~0+factor(x = colnames(GeneExMatrix),
                                     levels = unique(colnames(GeneExMatrix))))
-                              #made a factor with first column as first level
-      colnames(DESIGN) <- unique(colnames(GeneExMatrix))
-      UserDefinedDesign <- FALSE
+            #made a factor with first column as first level
+            colnames(DESIGN) <- unique(colnames(GeneExMatrix))
+            UserDefinedDesign <- FALSE
+        }
+
+
+        #Making colData for DESeqDataSetFromMatrix:
+        colDataForDESeqModel = data.frame("CONDITION" = colnames(GeneExMatrix))
+        colnames(GeneExMatrix) <- make.names(colnames(GeneExMatrix),
+                                                unique = TRUE)
+        ##Because DESeqDataSetFromMatrix forces colnames of countData as
+        #rownames to colData, and colData is a data.frame so repeat
+        #in those names mean error.
+
+        if(is.na(CONTRASTs)){
+            #Making the 'contrast's from colnames of GeneExMatrix:
+            CONTRASTs <- list()
+            for(K in 2:ncol(DESIGN)){
+                CONTRASTs[[colnames(DESIGN)[K]]] <-
+                    list(colnames(DESIGN)[K],
+                            colnames(DESIGN)[1])
+            }
+        }
+
+        MODELStructured <- DESeqDataSetFromMatrix(countData = GeneExMatrix,
+                                                colData = colDataForDESeqModel,
+                                                    design = DESIGN)
+        MODELCalculated <- DESeq(MODELStructured, quiet = TRUE)
+
+        MODELResults <- list()
+        pb <- progress_bar$new(format = "(:spin) [:bar] :percent eta: :eta",
+                                total = length(CONTRASTs), clear = FALSE)
+        for(Const in CONTRASTs){
+            MODELResults[[length(MODELResults) + 1]] <-
+                results(object = MODELCalculated,
+                        pAdjustMethod = "BH",
+                        contrast = Const)
+            pb$tick()
+        }
+
+        if(Output == "PhysioScore"){
+            Outi <- vapply(X = MODELResults,
+                            function(x) -log2(x$padj)*sign(x$log2FoldChange),
+                            FUN.VALUE = numeric(length = nrow(GeneExMatrix)))
+        } else if(Output == "FoldChange"){
+            Outi <- vapply(X = MODELResults, function(x) x$log2FoldChange,
+                            FUN.VALUE = numeric(length = nrow(GeneExMatrix)))
+        } else if(Output == "Model"){
+            return(MODELCalculated)
+        }
+        rownames(Outi) <- rownames(GeneExMatrix)
+        if(!UserDefinedDesign) colnames(Outi) <- colnames(DESIGN)[-1]
+        return(Outi)
     }
 
-
-    #Making colData for DESeqDataSetFromMatrix:
-    colDataForDESeqModel = data.frame("CONDITION" = colnames(GeneExMatrix))
-    colnames(GeneExMatrix) <- make.names(colnames(GeneExMatrix),
-                                         unique = TRUE)
-    ##Because DESeqDataSetFromMatrix forces colnames of countData as
-    #rownames to colData, and colData is a data.frame so repeat
-    #in those names mean error.
-
-    if(is.na(CONTRASTs)){
-      #Making the 'contrast's from colnames of GeneExMatrix:
-      CONTRASTs <- list()
-      for(K in 2:ncol(DESIGN)) CONTRASTs[[colnames(DESIGN)[K]]] <-
-          list(colnames(DESIGN)[K], colnames(DESIGN)[1])
+    ##Main function:
+    if(!is.matrix(GeneExMatrix)) stop("'GeneExMatrix' should be a matrix!")
+    if(LinearOrRNASeq == "Linear"){
+        return(spaceMaker.Linear(GeneExMatrix, DESIGN, CONTRASTs, Output))
+    } else if(LinearOrRNASeq == "RNASeq"){
+        return(spaceMaker.RNAseq(GeneExMatrix, DESIGN, CONTRASTs, Output))
+    } else {
+        stop("'LinearOrRNASeq' input should be either 'Linear' or 'RNASeq'")
     }
-
-    MODELStructured <- DESeqDataSetFromMatrix(countData = GeneExMatrix,
-                                              colData = colDataForDESeqModel,
-                                              design = DESIGN)
-    MODELCalculated <- DESeq(MODELStructured, quiet = TRUE)
-
-    MODELResults <- list()
-    pb <- progress_bar$new(format = "(:spin) [:bar] :percent eta: :eta",
-                           total = length(CONTRASTs), clear = FALSE)
-    for(Const in CONTRASTs){
-      MODELResults[[length(MODELResults) + 1]] <-
-        results(object = MODELCalculated,
-                pAdjustMethod = "BH",
-                contrast = Const)
-      pb$tick()
-    }
-
-    if(Output == "PhysioScore"){
-      Outi <- vapply(X = MODELResults,
-                     function(x) -log2(x$padj)*sign(x$log2FoldChange),
-                     FUN.VALUE = numeric(length = nrow(GeneExMatrix)))
-    } else if(Output == "FoldChange"){
-      Outi <- vapply(X = MODELResults, function(x) x$log2FoldChange,
-                     FUN.VALUE = numeric(length = nrow(GeneExMatrix)))
-    } else if(Output == "Model"){
-      return(MODELCalculated)
-    }
-    rownames(Outi) <- rownames(GeneExMatrix)
-    if(!UserDefinedDesign) colnames(Outi) <- colnames(DESIGN)[-1]
-    return(Outi)
-  }
-
-  ##Main function:
-  if(!is.matrix(GeneExMatrix)) stop("'GeneExMatrix' should be a matrix!")
-  if(LinearOrRNASeq == "Linear"){
-    return(spaceMaker.Linear(GeneExMatrix, DESIGN, CONTRASTs, Output))
-  } else if(LinearOrRNASeq == "RNASeq"){
-    return(spaceMaker.RNAseq(GeneExMatrix, DESIGN, CONTRASTs, Output))
-  } else {
-    stop("'LinearOrRNASeq' input should be either 'Linear' or 'RNASeq'")
-  }
 }
 

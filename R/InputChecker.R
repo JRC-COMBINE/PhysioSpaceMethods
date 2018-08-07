@@ -36,41 +36,43 @@
 
 #
 inputChecker <- function(InputData, Space, ImputationMethod){
-  #In case inputs were vectors
-  if(!is.matrix(InputData))
-    stop("'calculatePhysioMap' expects a matrix for InputData"
-    )
-  if(!is.matrix(Space))
-    stop("'calculatePhysioMap' expects a matrix for Space"
-    )
-  #Imputing missing values:
-  if(anyNA(InputData)) InputData <- imputeMissingGeneExpression(InputData,
-                                                    METHOD=ImputationMethod)
-  if(anyNA(Space)) Space <- imputeMissingGeneExpression(Space,
-                                                    METHOD=ImputationMethod)
-  #Other checks:
-  if (!identical(rownames(InputData), rownames(Space))) {
-    message("Rows of InputData doesn't match rows of Space,
-             trying to match them...")
-    matchedIndxes <- match(rownames(InputData), rownames(Space))
-    commonRowsSum <- sum(!is.na(matchedIndxes))
-    if(commonRowsSum < 0.1*min(nrow(InputData), nrow(Space))) {
-      stop("Less than 10% of rows could be match! aborting...")
+    #In case inputs were vectors
+    if(!is.matrix(InputData))
+        stop("'calculatePhysioMap' expects a matrix for InputData"
+        )
+    if(!is.matrix(Space))
+        stop("'calculatePhysioMap' expects a matrix for Space"
+        )
+    #Imputing missing values:
+    if(anyNA(InputData)) InputData <-
+            imputeMissingGeneExpression(InputData,
+                                        METHOD=ImputationMethod)
+    if(anyNA(Space)) Space <-
+            imputeMissingGeneExpression(Space,
+                                        METHOD=ImputationMethod)
+    #Other checks:
+    if (!identical(rownames(InputData), rownames(Space))) {
+        message("Rows of InputData doesn't match rows of Space,
+                trying to match them...")
+        matchedIndxes <- match(rownames(InputData), rownames(Space))
+        commonRowsSum <- sum(!is.na(matchedIndxes))
+        if(commonRowsSum < 0.1*min(nrow(InputData), nrow(Space))) {
+            stop("Less than 10% of rows could be match! aborting...")
+        }
+        if(commonRowsSum < 200) {
+            stop(paste(
+                "Less than 200 rows could be match!",
+                "which is not enough for PhysioSpace, aborting..."
+            ))
+        }
+        InputData <- InputData[!is.na(matchedIndxes),]
+        Space <- Space[na.omit(matchedIndxes),]
+        message(paste("Matching done, with",nrow(Space),
+                        "common rows between InputData and Space."))
     }
-    if(commonRowsSum < 200) {
-      stop(paste(
-        "Less than 200 rows could be match!",
-        "which is not enough for PhysioSpace, aborting..."
-      ))
-    }
-    InputData <- InputData[!is.na(matchedIndxes),]
-    Space <- Space[na.omit(matchedIndxes),]
-    message(paste("Matching done, with",nrow(Space),
-                  "common rows between InputData and Space."))
-  }
-  if (min(InputData, na.rm = TRUE) >= 0)
-    warning("You didn't provide relative values in InputData??!")
-  #Returning new datasets:
-  assign("InputData", value = InputData, envir = parent.frame())
-  assign("Space", value = Space, envir = parent.frame())
+    if (min(InputData, na.rm = TRUE) >= 0)
+        warning("You didn't provide relative values in InputData??!")
+    #Returning new datasets:
+    assign("InputData", value = InputData, envir = parent.frame())
+    assign("Space", value = Space, envir = parent.frame())
 }

@@ -48,11 +48,11 @@
 #'
 # #' @export #Not exporting since it's an internal function
 calculatePhysioMapCore_parCapply <- function(InputData, Space,
-                                             NSamples, GenesRatio,
-                                             NGenes, STATICResponse,
-                                             pb, TTEST, cl){
-  matrix(parCapply(cl = cl, x = InputData, FUN = singleThreadOfPhysioCalc,
-                   Space=Space, GenesRatio=GenesRatio, NGenes=NGenes,
-                   STATICResponse=STATICResponse, pb=pb, TTEST=TTEST),
-         ncol = ncol(InputData))
+                                                NSamples, GenesRatio,
+                                                NGenes, STATICResponse,
+                                                pb, TTEST, cl){
+    matrix(parCapply(cl = cl, x = InputData, FUN = singleThreadOfPhysioCalc,
+                        Space=Space, GenesRatio=GenesRatio, NGenes=NGenes,
+                        STATICResponse=STATICResponse, pb=pb, TTEST=TTEST),
+            ncol = ncol(InputData))
 }

@@ -72,39 +72,39 @@ Draws a custom heatmap based on the result matrix generated
 by CalculatePhysioMap() function.
 }
 \examples{
- randMatInpt <-
+randMatInpt <-
    matrix(data = rnorm(n = 4000, mean = 10, sd = 20), nrow = 400)
- rownames(randMatInpt) <- paste("ROWS", 1:400)
- colnames(randMatInpt) <- paste("Sample", 1:10)
+rownames(randMatInpt) <- paste("ROWS", 1:400)
+colnames(randMatInpt) <- paste("Sample", 1:10)
 
- randMatRef <-
+randMatRef <-
    matrix(data = rnorm(n = 12000, mean = 10, sd = 20), nrow = 400)
- rownames(randMatRef) <- paste("ROWS", 1:400)
- colnames(randMatRef) <- paste("Space", 1:30)
+rownames(randMatRef) <- paste("ROWS", 1:400)
+colnames(randMatRef) <- paste("Space", 1:30)
 
- res <-
+res <-
    calculatePhysioMap(InputData = randMatInpt, Space = randMatRef)
 
- PhysioHeatmap(PhysioResults = res,
-               PDFFullName = "outheat.pdf",
-               main = "Heatmap Testing")
- PhysioHeatmap(
+PhysioHeatmap(PhysioResults = res,
+             PDFFullName = "outheat.pdf",
+             main = "Heatmap Testing")
+PhysioHeatmap(
    PhysioResults = res,
    PDFFullName = "outheatLowColorLevel.pdf",
    main = "Heatmap Testing",
    ColorLevels = 3
- )
- PhysioHeatmap(
+)
+PhysioHeatmap(
    PhysioResults = res,
    PDFFullName = "outheatClusteredRows.pdf",
    main = "Heatmap Testing",
    SpaceClustering = TRUE,
    Space = randMatRef
- )
- PhysioHeatmap(
+)
+PhysioHeatmap(
    PhysioResults = res,
    PDFFullName = "outheatReducedRows.pdf",
    main = "Heatmap Testing",
    ReducedPlotting = 2
- )
+)
 }

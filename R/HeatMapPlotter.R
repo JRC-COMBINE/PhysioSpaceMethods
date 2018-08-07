@@ -50,187 +50,190 @@
 #' @return PhysioHeatmap returns(Invisibly) PDFFullName.
 #'
 #' @examples
-#'  randMatInpt <-
+#'randMatInpt <-
 #'    matrix(data = rnorm(n = 4000, mean = 10, sd = 20), nrow = 400)
-#'  rownames(randMatInpt) <- paste("ROWS", 1:400)
-#'  colnames(randMatInpt) <- paste("Sample", 1:10)
+#'rownames(randMatInpt) <- paste("ROWS", 1:400)
+#'colnames(randMatInpt) <- paste("Sample", 1:10)
 #'
-#'  randMatRef <-
+#'randMatRef <-
 #'    matrix(data = rnorm(n = 12000, mean = 10, sd = 20), nrow = 400)
-#'  rownames(randMatRef) <- paste("ROWS", 1:400)
-#'  colnames(randMatRef) <- paste("Space", 1:30)
+#'rownames(randMatRef) <- paste("ROWS", 1:400)
+#'colnames(randMatRef) <- paste("Space", 1:30)
 #'
-#'  res <-
+#'res <-
 #'    calculatePhysioMap(InputData = randMatInpt, Space = randMatRef)
 #'
-#'  PhysioHeatmap(PhysioResults = res,
-#'                PDFFullName = "outheat.pdf",
-#'                main = "Heatmap Testing")
-#'  PhysioHeatmap(
+#'PhysioHeatmap(PhysioResults = res,
+#'              PDFFullName = "outheat.pdf",
+#'              main = "Heatmap Testing")
+#'PhysioHeatmap(
 #'    PhysioResults = res,
 #'    PDFFullName = "outheatLowColorLevel.pdf",
 #'    main = "Heatmap Testing",
 #'    ColorLevels = 3
-#'  )
-#'  PhysioHeatmap(
+#')
+#'PhysioHeatmap(
 #'    PhysioResults = res,
 #'    PDFFullName = "outheatClusteredRows.pdf",
 #'    main = "Heatmap Testing",
 #'    SpaceClustering = TRUE,
 #'    Space = randMatRef
-#'  )
-#'  PhysioHeatmap(
+#')
+#'PhysioHeatmap(
 #'    PhysioResults = res,
 #'    PDFFullName = "outheatReducedRows.pdf",
 #'    main = "Heatmap Testing",
 #'    ReducedPlotting = 2
-#'  )
+#')
 #' @export PhysioHeatmap
 
 #
-PhysioHeatmap <- function(PhysioResults, ColorLevels = 100,
-                          PDFFullName = NULL, PDFWidth = 7, PDFHeight = 7,
-                          main = "", PlotSize = NA, SymmetricColoring = FALSE,
-                          RowColCex = NA, KeyLabelCex = NA,
-                          SpaceClustering = FALSE, Space = NA,
-                          ReducedPlotting = FALSE){
-  if(!is.matrix(PhysioResults)){
-    stop("PhysioResults is expected to be a matrix!")
-  }
-  if(is.null(colnames(PhysioResults))) colnames(PhysioResults) <-
-      as.character(seq_len(ncol(PhysioResults)))
-  if(ReducedPlotting){
-    if(is.numeric(ReducedPlotting)){
-      ReductionLevel <- round(ReducedPlotting/2)
-    } else if(is.logical(ReducedPlotting)){
-      ReductionLevel <- 5
-    } else {
-      stop("'ReducedPlotting' is supposed to be Logical or a numeric value!")
+PhysioHeatmap <- function(PhysioResults, ColorLevels = 100, PDFFullName = NULL,
+                            PDFWidth = 7, PDFHeight = 7, main = "",
+                            PlotSize = NA, SymmetricColoring = FALSE,
+                            RowColCex = NA, KeyLabelCex = NA,
+                            SpaceClustering = FALSE,  Space = NA,
+                            ReducedPlotting = FALSE){
+    if(!is.matrix(PhysioResults)){
+        stop("PhysioResults is expected to be a matrix!")
     }
-    SingleReductionsIndices <- apply(PhysioResults,
-                                     MARGIN = 2,
-                                     function(X)
-                                       order(X)[c(seq_len(ReductionLevel),
+    if(is.null(colnames(PhysioResults))) colnames(PhysioResults) <-
+            as.character(seq_len(ncol(PhysioResults)))
+    if(ReducedPlotting){
+        if(is.numeric(ReducedPlotting)){
+            ReductionLevel <- round(ReducedPlotting/2)
+        } else if(is.logical(ReducedPlotting)){
+            ReductionLevel <- 5
+        } else {
+            stop(paste("'ReducedPlotting' is supposed to",
+                        "be Logical or a numeric value!"))
+        }
+        SingleReductionsIndices <- apply(PhysioResults,
+                                    MARGIN = 2,
+                                    function(X)
+                                    order(X)[c(seq_len(ReductionLevel),
                                             seq.int(from = (length(X) -
                                                         ReductionLevel + 1),
-                                                          to = length(X)))])
-    CombinedReductionIndices <- unique(c(SingleReductionsIndices))
-    PhysioResults <- PhysioResults[CombinedReductionIndices,]
-    if(!identical(Space,NA)) Space <- Space[,CombinedReductionIndices]
-  }
-  if(is.na(PlotSize)) PlotSize <- max(dim(PhysioResults)) + 10
-  if(is.na(RowColCex)) RowColCex <- 0.6*min((50/PlotSize),1)
-  if(is.na(KeyLabelCex)) KeyLabelCex <- 0.6*min((50/PlotSize),1)
+                                            to = length(X)))])
+        CombinedReductionIndices <- unique(c(SingleReductionsIndices))
+        PhysioResults <- PhysioResults[CombinedReductionIndices,]
+        if(!identical(Space,NA)) Space <- Space[,CombinedReductionIndices]
+    }
+    if(is.na(PlotSize)) PlotSize <- max(dim(PhysioResults)) + 10
+    if(is.na(RowColCex)) RowColCex <- 0.6*min((50/PlotSize),1)
+    if(is.na(KeyLabelCex)) KeyLabelCex <- 0.6*min((50/PlotSize),1)
 
-  #Check to see if PhysioResults is too big for PlotSize:
-  if(max(dim(PhysioResults)) > PlotSize-9){
-    warning(paste("PlotSize is probably too small for PhysioResults,",
-                  "try increasing PlotSize if the output plot is clipped"))
-  }
-  PlotWidth <- (PDFWidth/max(PDFHeight,PDFWidth))*PlotSize
-  #Check to see if it's gonna clip thru the heatmap(less likely):
-  if(PlotWidth < ncol(PhysioResults)){
-    warning("PDFWidth is too small, heatmap may not be plotted completely")
-  }
-  PlotHeight <- (PDFHeight/max(PDFHeight,PDFWidth))*PlotSize
-  #Check to see if it's gonna clip thru the heatmap(more likely):
-  if(PlotHeight < nrow(PhysioResults)){
-    warning("PDFHeight is too small, heatmap may not be plotted completely")
-  }
+    #Check to see if PhysioResults is too big for PlotSize:
+    if(max(dim(PhysioResults)) > PlotSize-9){
+        warning(paste("PlotSize is probably too small for PhysioResults,",
+                        "try increasing PlotSize if",
+                        "the output plot is clipped"))
+    }
+    PlotWidth <- (PDFWidth/max(PDFHeight,PDFWidth))*PlotSize
+    #Check to see if it's gonna clip thru the heatmap(less likely):
+    if(PlotWidth < ncol(PhysioResults)){
+        warning("PDFWidth is too small, heatmap may not be plotted completely")
+    }
+    PlotHeight <- (PDFHeight/max(PDFHeight,PDFWidth))*PlotSize
+    #Check to see if it's gonna clip thru the heatmap(more likely):
+    if(PlotHeight < nrow(PhysioResults)){
+        warning("PDFHeight is too small, heatmap may not be plotted completely")
+    }
 
-  if(SymmetricColoring){ #Want to have symmetric coloring around zero, or
-                         #from zero if all values are postive (or all
-                         #are negative)
-    if(all(PhysioResults>=0)) {
-      Mn <- 0
-      Mx <- max(PhysioResults)
-    } else if(all(PhysioResults<=0)){
-      Mn <- min(PhysioResults)
-      Mx <- 0
+    if(SymmetricColoring){ #Want to have symmetric coloring around zero, or
+        #from zero if all values are postive (or all
+        #are negative)
+        if(all(PhysioResults>=0)) {
+            Mn <- 0
+            Mx <- max(PhysioResults)
+        } else if(all(PhysioResults<=0)){
+            Mn <- min(PhysioResults)
+            Mx <- 0
+        } else {
+            Mn <- min(min(PhysioResults),-max(PhysioResults))
+            Mx <- max(-min(PhysioResults),max(PhysioResults))
+        }
     } else {
-      Mn <- min(min(PhysioResults),-max(PhysioResults))
-      Mx <- max(-min(PhysioResults),max(PhysioResults))
+        Mn <- min(PhysioResults)
+        Mx <- max(PhysioResults)
     }
-  } else {
-    Mn <- min(PhysioResults)
-    Mx <- max(PhysioResults)
-  }
-  PhysioResultsMorghed <- ceiling(ColorLevels*(PhysioResults-(Mn-0.00000001)) /
-                                    (Mx-Mn))
-  # -0.00000001 so values start at 1 not 0, so indexing of COLORInterpolated
-  #won't break.
-  # Also wanted to have integers from 1 (or more in case all
-  #(PhysioResults>=0)) to ColorLevels.
+    PhysioResultsMorghed <- ceiling(ColorLevels*
+                                        (PhysioResults-(Mn-0.00000001)) /
+                                        (Mx-Mn))
+    # -0.00000001 so values start at 1 not 0, so indexing of COLORInterpolated
+    #won't break.
+    # Also wanted to have integers from 1 (or more in case all
+    #(PhysioResults>=0)) to ColorLevels.
 
-  if(SpaceClustering){
-    if(identical(Space,NA)){
-      stop(paste("For SpaceClustering==TRUE,",
-                 "'Space' is needed and should be provided!"))
+    if(SpaceClustering){
+        if(identical(Space,NA)){
+            stop(paste("For SpaceClustering==TRUE,",
+                        "'Space' is needed and should be provided!"))
+        }
+        PhysioResultsMorghed <-
+            PhysioResultsMorghed[hclust(d = as.dist(1 - cor(Space)))$order, ]
     }
-    PhysioResultsMorghed <-
-      PhysioResultsMorghed[hclust(d = as.dist(1 - cor(Space)))$order, ]
-  }
 
-  COLORInterpolated <-
-    colorRampPalette(colors = c(
-      rgb(red = 0, green = 0, blue = 1),
-      rgb(red = 1, green = 1, blue = 0.8),
-      rgb(red = 1, green = 0, blue = 0)
-    ))(n = ColorLevels + 1)
-  if(!is.null(PDFFullName)) {
-    pdf(PDFFullName, width = PDFWidth, height = PDFHeight)
-  }
-  plot.new()
-  plot.window(xlim = c(0,PlotWidth), ylim = c(0,PlotHeight))
-  #Number here limits the maximum number of boxes that can be drawn
-  #in each direction
-
-  Xoffset <- (PlotWidth/2) - ncol(PhysioResults)/2
-  #ifelse(test = SpaceClustering, no = (PlotWidth/2) -
-  #ncol(PhysioResults)/2, yes = (3*PlotWidth/4) - ncol(PhysioResults)/2)
-
-  Yoffset <- (PlotHeight/2) - (nrow(PhysioResults)/2) +
-    max(nchar(colnames(PhysioResults)))/20
-  ColLabelYoffset <- Yoffset
-  ColLabelXoffset <- Xoffset + (seq_len(ncol(PhysioResultsMorghed))) + 0.5
-  RowLabelXoffset <- Xoffset
-
-  text(labels = colnames(PhysioResultsMorghed),
-       y = ColLabelYoffset, x = ColLabelXoffset,
-       cex = RowColCex, srt=90, font = 2, adj = 1)
-  text(labels = rownames(PhysioResultsMorghed),
-       y = Yoffset+0.5+(seq_len(nrow(PhysioResultsMorghed))),
-       x = RowLabelXoffset, cex = RowColCex, font = 2, adj = 1)
-  title(main = main)
-
-  for(ROW in seq_len(nrow(PhysioResultsMorghed))){
-    for(COL in seq_len(ncol(PhysioResultsMorghed))){
-      rect(xleft = Xoffset+COL,xright = Xoffset+COL+1,
-           ybottom = Yoffset+ROW,ytop = Yoffset+ROW+1,
-           col = COLORInterpolated[PhysioResultsMorghed[ROW,COL]],
-           lty = 0, border= "grey")
+    COLORInterpolated <-
+        colorRampPalette(colors = c(
+            rgb(red = 0, green = 0, blue = 1),
+            rgb(red = 1, green = 1, blue = 0.8),
+            rgb(red = 1, green = 0, blue = 0)
+        ))(n = ColorLevels + 1)
+    if(!is.null(PDFFullName)) {
+        pdf(PDFFullName, width = PDFWidth, height = PDFHeight)
     }
-  }
+    plot.new()
+    plot.window(xlim = c(0,PlotWidth), ylim = c(0,PlotHeight))
+    #Number here limits the maximum number of boxes that can be drawn
+    #in each direction
 
-  #Making the color key:
-  rect(xleft = seq(Xoffset+ncol(PhysioResults),
-                   Xoffset+ncol(PhysioResults)+1.8,length.out = 10),
-       xright = seq(Xoffset+ncol(PhysioResults)+0.2,
-                    Xoffset+ncol(PhysioResults)+2,length.out = 10),
-       ybottom = rep(Yoffset+nrow(PhysioResults)+2,10),
-       ytop = rep(Yoffset+nrow(PhysioResults)+3,10),
-       col = colorRampPalette(colors = c(
-         rgb(red = 0, green = 0, blue = 1),
-         rgb(red = 1, green = 1, blue = 0.8),
-         rgb(red = 1, green = 0, blue = 0)
-       ))(n = 10),
-       border = NA)
-  text(x = Xoffset+ncol(PhysioResults), y = Yoffset+nrow(PhysioResults)+3,
-       labels = round(Mn), adj = 0, cex = KeyLabelCex, srt=90)
-  text(x = Xoffset+ncol(PhysioResults)+2, y = Yoffset+nrow(PhysioResults)+3,
-       labels = round(Mx), adj = 0, cex = KeyLabelCex, srt=90)
-  #
+    Xoffset <- (PlotWidth/2) - ncol(PhysioResults)/2
+    #ifelse(test = SpaceClustering, no = (PlotWidth/2) -
+    #ncol(PhysioResults)/2, yes = (3*PlotWidth/4) - ncol(PhysioResults)/2)
 
-  if(!is.null(PDFFullName)) dev.off()
-  invisible(PDFFullName)
+    Yoffset <- (PlotHeight/2) - (nrow(PhysioResults)/2) +
+        max(nchar(colnames(PhysioResults)))/20
+    ColLabelYoffset <- Yoffset
+    ColLabelXoffset <- Xoffset + (seq_len(ncol(PhysioResultsMorghed))) + 0.5
+    RowLabelXoffset <- Xoffset
+
+    text(labels = colnames(PhysioResultsMorghed),
+            y = ColLabelYoffset, x = ColLabelXoffset,
+            cex = RowColCex, srt=90, font = 2, adj = 1)
+    text(labels = rownames(PhysioResultsMorghed),
+            y = Yoffset+0.5+(seq_len(nrow(PhysioResultsMorghed))),
+            x = RowLabelXoffset, cex = RowColCex, font = 2, adj = 1)
+    title(main = main)
+
+    for(ROW in seq_len(nrow(PhysioResultsMorghed))){
+        for(COL in seq_len(ncol(PhysioResultsMorghed))){
+            rect(xleft = Xoffset+COL,xright = Xoffset+COL+1,
+                    ybottom = Yoffset+ROW,ytop = Yoffset+ROW+1,
+                    col = COLORInterpolated[PhysioResultsMorghed[ROW,COL]],
+                    lty = 0, border= "grey")
+        }
+    }
+
+    #Making the color key:
+    rect(xleft = seq(Xoffset+ncol(PhysioResults),
+                        Xoffset+ncol(PhysioResults)+1.8,length.out = 10),
+            xright = seq(Xoffset+ncol(PhysioResults)+0.2,
+                        Xoffset+ncol(PhysioResults)+2,length.out = 10),
+            ybottom = rep(Yoffset+nrow(PhysioResults)+2,10),
+            ytop = rep(Yoffset+nrow(PhysioResults)+3,10),
+            col = colorRampPalette(colors = c(
+                rgb(red = 0, green = 0, blue = 1),
+                rgb(red = 1, green = 1, blue = 0.8),
+                rgb(red = 1, green = 0, blue = 0)
+            ))(n = 10),
+            border = NA)
+    text(x = Xoffset+ncol(PhysioResults), y = Yoffset+nrow(PhysioResults)+3,
+            labels = round(Mn), adj = 0, cex = KeyLabelCex, srt=90)
+    text(x = Xoffset+ncol(PhysioResults)+2, y = Yoffset+nrow(PhysioResults)+3,
+            labels = round(Mx), adj = 0, cex = KeyLabelCex, srt=90)
+    #
+
+    if(!is.null(PDFFullName)) dev.off()
+    invisible(PDFFullName)
 }

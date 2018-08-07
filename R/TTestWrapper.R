@@ -39,15 +39,15 @@
 
 #
 tTestWrapper <- function(ReferencesJ,iplus,iminus,STATICResponse){
-  tTestTemp <- t.test(ReferencesJ[iplus], ReferencesJ[iminus])
-  if(STATICResponse) {
-    Stats <- tTestTemp$statistic
-    MaxStat <-
-      t.test(sort(ReferencesJ, decreasing = TRUE)[seq_along(iplus)],
-             sort(ReferencesJ)[seq_along(iminus)])$statistic
-    return(Stats/MaxStat)
-  }
-  sgn <- -sign(tTestTemp$statistic)
-  pval = tTestTemp$p.value
-  return(log2(pval) * sgn)
+    tTestTemp <- t.test(ReferencesJ[iplus], ReferencesJ[iminus])
+    if(STATICResponse) {
+        Stats <- tTestTemp$statistic
+        MaxStat <-
+            t.test(sort(ReferencesJ, decreasing = TRUE)[seq_along(iplus)],
+                    sort(ReferencesJ)[seq_along(iminus)])$statistic
+        return(Stats/MaxStat)
+    }
+    sgn <- -sign(tTestTemp$statistic)
+    pval = tTestTemp$p.value
+    return(log2(pval) * sgn)
 }

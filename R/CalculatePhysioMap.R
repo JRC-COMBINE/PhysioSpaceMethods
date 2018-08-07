@@ -114,58 +114,64 @@
 #' @export
 #Pre-function for dispaching the calculating to the write function:
 calculatePhysioMap <- function(InputData, Space, GenesRatio = 0.05,
-                               PARALLEL = FALSE, NumbrOfCores=NA,
-                               TTEST = FALSE, STATICResponse = FALSE,
-                               ImputationMethod = "PCA",
-                               ParallelMethod = "parCapply"){
-  UseMethod("calculatePhysioMap")
+                                PARALLEL = FALSE, NumbrOfCores=NA,
+                                TTEST = FALSE, STATICResponse = FALSE,
+                                ImputationMethod = "PCA",
+                                ParallelMethod = "parCapply"){
+    UseMethod("calculatePhysioMap")
 }
 
 
 ##The main function for calculating PhysioScores:
 #' @export
 calculatePhysioMap.default <- function(InputData, Space, GenesRatio = 0.05,
-                                       PARALLEL = FALSE, NumbrOfCores=NA,
-                                       TTEST = FALSE, STATICResponse = FALSE,
-                                       ImputationMethod = "PCA",
-                                       ParallelMethod = "parCapply"){
-  #Initializing:
-  inputChecker(InputData, Space, ImputationMethod)
-  NGenes <- nrow(InputData)
-  NSamples <- ncol(InputData)
-  physioMap <- matrix(NA, ncol(Space), NSamples)
-  if(PARALLEL) cl <- parallelInitializer(NumbrOfCores=NumbrOfCores)
-  pb <- progress_bar$new(format = "(:spin) [:bar] :percent eta: :eta",
-                         total = ifelse(PARALLEL,NSamples/length(cl),NSamples),
-                         clear = FALSE)
-  #
-  #Main:
-  if(PARALLEL) {
-    if(ParallelMethod == "parCapply"){
-      physioMap <- calculatePhysioMapCore_parCapply(InputData, Space,
-                                                    NSamples, GenesRatio,
-                                                    NGenes, STATICResponse,
-                                                    pb, TTEST, cl)
-    } else if(ParallelMethod == "foreach"){
-      physioMap <- calculatePhysioMapCore_foreach(InputData, Space,
-                                                  NSamples, GenesRatio,
-                                                  NGenes, STATICResponse,
-                                                  pb, TTEST)
+                                        PARALLEL = FALSE, NumbrOfCores=NA,
+                                        TTEST = FALSE, STATICResponse = FALSE,
+                                        ImputationMethod = "PCA",
+                                        ParallelMethod = "parCapply"){
+    #Initializing:
+    inputChecker(InputData, Space, ImputationMethod)
+    NGenes <- nrow(InputData)
+    NSamples <- ncol(InputData)
+    physioMap <- matrix(NA, ncol(Space), NSamples)
+    if(PARALLEL) cl <- parallelInitializer(NumbrOfCores=NumbrOfCores)
+    pb <- progress_bar$new(format = "(:spin) [:bar] :percent eta: :eta",
+                            total = ifelse(PARALLEL,NSamples/length(cl),
+                                            NSamples),
+                            clear = FALSE)
+    #
+    #Main:
+    if(PARALLEL) {
+        if(ParallelMethod == "parCapply"){
+            physioMap <- calculatePhysioMapCore_parCapply(InputData,
+                                                            Space,
+                                                            NSamples,
+                                                            GenesRatio,
+                                                            NGenes,
+                                                            STATICResponse,
+                                                            pb,
+                                                            TTEST,
+                                                            cl)
+        } else if(ParallelMethod == "foreach"){
+            physioMap <- calculatePhysioMapCore_foreach(InputData, Space,
+                                                        NSamples, GenesRatio,
+                                                        NGenes, STATICResponse,
+                                                        pb, TTEST)
+        } else {
+            stop("The specified ParallelMethod is not implemented!")
+        }
+        stopCluster(cl)
     } else {
-      stop("The specified ParallelMethod is not implemented!")
+        physioMap <- apply(X = InputData,
+                            MARGIN = 2, FUN = singleThreadOfPhysioCalc,
+                            Space=Space, GenesRatio=GenesRatio,
+                            NGenes=NGenes, STATICResponse=STATICResponse,
+                            pb=pb, TTEST=TTEST)
     }
-    stopCluster(cl)
-  } else {
-    physioMap <- apply(X = InputData,
-                       MARGIN = 2, FUN = singleThreadOfPhysioCalc,
-                       Space=Space, GenesRatio=GenesRatio,
-                       NGenes=NGenes, STATICResponse=STATICResponse,
-                       pb=pb, TTEST=TTEST)
-  }
 
-  rownames(physioMap) = colnames(Space)
-  colnames(physioMap) = colnames(InputData)
-  return(physioMap)
+    rownames(physioMap) = colnames(Space)
+    colnames(physioMap) = colnames(InputData)
+    return(physioMap)
 }
 
 
@@ -176,17 +182,18 @@ calculatePhysioMap.list <- function(InputData, Space, GenesRatio = 0.05,
                                     TTEST = FALSE, STATICResponse = FALSE,
                                     ImputationMethod = "PCA",
                                     ParallelMethod = "parCapply"){
-  UpIndx <- na.omit(match(InputData[[1]],rownames(Space)))
-  DownIndx <- na.omit(match(InputData[[2]],rownames(Space)))
-  if(length(UpIndx) < 2){
-    stop(paste("Not enough up regulated genes were",
-               "found in rownames of Space"))
-  }
-  if(length(DownIndx) < 2) {
-    stop(paste("Not enough down regulated genes",
-               "were found in rownames of Space"))
-  }
-  as.matrix(apply(X = Space, MARGIN = 2,
-        FUN = if(TTEST) tTestWrapper else wilTestWrapper,
-        iplus=UpIndx, iminus = DownIndx, STATICResponse = STATICResponse))
+    UpIndx <- na.omit(match(InputData[[1]],rownames(Space)))
+    DownIndx <- na.omit(match(InputData[[2]],rownames(Space)))
+    if(length(UpIndx) < 2){
+        stop(paste("Not enough up regulated genes were",
+                    "found in rownames of Space"))
+    }
+    if(length(DownIndx) < 2) {
+        stop(paste("Not enough down regulated genes",
+                    "were found in rownames of Space"))
+    }
+    as.matrix(apply(X = Space, MARGIN = 2,
+                    FUN = if(TTEST) tTestWrapper else wilTestWrapper,
+                    iplus=UpIndx, iminus = DownIndx,
+                    STATICResponse = STATICResponse))
 }

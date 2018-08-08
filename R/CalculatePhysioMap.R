@@ -185,12 +185,12 @@ calculatePhysioMap.list <- function(InputData, Space, GenesRatio = 0.05,
     UpIndx <- na.omit(match(InputData[[1]],rownames(Space)))
     DownIndx <- na.omit(match(InputData[[2]],rownames(Space)))
     if(length(UpIndx) < 2){
-        stop(paste("Not enough up regulated genes were",
-                    "found in rownames of Space"))
+        stop("Not enough up regulated genes were",
+                    "found in rownames of Space")
     }
     if(length(DownIndx) < 2) {
-        stop(paste("Not enough down regulated genes",
-                    "were found in rownames of Space"))
+        stop("Not enough down regulated genes",
+                    "were found in rownames of Space")
     }
     as.matrix(apply(X = Space, MARGIN = 2,
                     FUN = if(TTEST) tTestWrapper else wilTestWrapper,

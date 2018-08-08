@@ -70,14 +70,10 @@ parallelInitializer_SingleMachine <- function(NumbrOfCores){
         #In case the computer is single core
     }
     if(NumbrOfCores > detectCores())
-        stop(
-            paste(
-                "'NumbrOfCores' can not be higher than",
+        stop("'NumbrOfCores' can not be higher than",
                 "the available number of cores, which is",
                 as.character(detectCores())
-            )
-
-        )
+             )
     cl <- makeCluster(NumbrOfCores, outfile="")
     #outfile is for having progressbar working in foreach
     return(cl)

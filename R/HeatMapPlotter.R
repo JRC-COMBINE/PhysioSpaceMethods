@@ -105,8 +105,8 @@ PhysioHeatmap <- function(PhysioResults, ColorLevels = 100, PDFFullName = NULL,
         } else if(is.logical(ReducedPlotting)){
             ReductionLevel <- 5
         } else {
-            stop(paste("'ReducedPlotting' is supposed to",
-                        "be Logical or a numeric value!"))
+            stop("'ReducedPlotting' is supposed to",
+                        "be Logical or a numeric value!")
         }
         SingleReductionsIndices <- apply(PhysioResults,
                                     MARGIN = 2,
@@ -125,9 +125,9 @@ PhysioHeatmap <- function(PhysioResults, ColorLevels = 100, PDFFullName = NULL,
 
     #Check to see if PhysioResults is too big for PlotSize:
     if(max(dim(PhysioResults)) > PlotSize-9){
-        warning(paste("PlotSize is probably too small for PhysioResults,",
-                        "try increasing PlotSize if",
-                        "the output plot is clipped"))
+        warning("PlotSize is probably too small for PhysioResults,",
+                                        "try increasing PlotSize if",
+                                        "the output plot is clipped")
     }
     PlotWidth <- (PDFWidth/max(PDFHeight,PDFWidth))*PlotSize
     #Check to see if it's gonna clip thru the heatmap(less likely):
@@ -167,8 +167,8 @@ PhysioHeatmap <- function(PhysioResults, ColorLevels = 100, PDFFullName = NULL,
 
     if(SpaceClustering){
         if(identical(Space,NA)){
-            stop(paste("For SpaceClustering==TRUE,",
-                        "'Space' is needed and should be provided!"))
+            stop("For SpaceClustering==TRUE,",
+                    "'Space' is needed and should be provided!")
         }
         PhysioResultsMorghed <-
             PhysioResultsMorghed[hclust(d = as.dist(1 - cor(Space)))$order, ]

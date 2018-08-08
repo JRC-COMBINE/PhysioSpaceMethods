@@ -60,15 +60,15 @@ inputChecker <- function(InputData, Space, ImputationMethod){
             stop("Less than 10% of rows could be matched! aborting...")
         }
         if(commonRowsSum < 200) {
-            stop(paste(
+            stop(
                 "Less than 200 rows could be matched!",
                 "which is not enough for PhysioSpace, aborting..."
-            ))
+            )
         }
         InputData <- InputData[!is.na(matchedIndxes),]
         Space <- Space[na.omit(matchedIndxes),]
-        message(paste("Matching done, with",nrow(Space),
-                        "common rows between InputData and Space."))
+        message("Matching done, with ", nrow(Space),
+                        " common rows between InputData and Space.")
     }
     if (min(InputData, na.rm = TRUE) >= 0)
         warning("You didn't provide relative values in InputData??!")

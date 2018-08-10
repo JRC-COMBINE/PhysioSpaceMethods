@@ -1,3 +1,7 @@
+# PhysioSpaceMethods 0.99.2 (10.8.2018)
+
+* Added SummarizedExperiment compatibility.
+
 # PhysioSpaceMethods 0.99.1 (6.8.2018)
 
 * Fixed as much bugs and notes from 'checks' as possible.

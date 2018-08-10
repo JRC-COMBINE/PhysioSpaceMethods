@@ -7,15 +7,20 @@
 inputChecker(InputData, Space, ImputationMethod)
 }
 \arguments{
-\item{InputData}{Same InputData as in calculatePhysioMap.
-Check calculatePhysioMap's help for more info.}
+\item{InputData}{A matrix, SummarizedExperiment object or a list,
+based on the gene expression data (or any other type of high
+dimnesional, e.g. protein abundance, SNP, Methylation, etc.),
+to be analysed. InputData has to have a specific format to be
+properly analysed, these requirements are thoroughly explained
+in the 'Details' section.}
 
-\item{Space}{Same Space as in calculatePhysioMap.
-Check calculatePhysioMap's help for more info.}
+\item{Space}{The space in which the 'InputData' will be mapped. Just as
+'InputData', it should be a matrix with genes as rows and samples as
+columns, with corresponding Entrez Gene IDs in 'rownames' of the matrix,
+and name of each axis of the space written in 'colnames'.}
 
-\item{ImputationMethod}{Imputation method to use in case of
-missing values. Available options are "PCA"
-and "KNN", with "PCA" being the default.}
+\item{ImputationMethod}{Imputation method to use in case of missing
+values. Available methods are "PCA" and "KNN". Default is "PCA".}
 }
 \value{
 inputChecker returns corrected 'InputData' and 'Space'

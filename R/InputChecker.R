@@ -8,13 +8,7 @@
 #' function if they do, and 3- it matches the rows of 'InputData'
 #' or 'Space' based on their row names.
 #'
-#' @param InputData Same InputData as in calculatePhysioMap.
-#' Check calculatePhysioMap's help for more info.
-#' @param Space Same Space as in calculatePhysioMap.
-#' Check calculatePhysioMap's help for more info.
-#' @param ImputationMethod Imputation method to use in case of
-#' missing values. Available options are "PCA"
-#' and "KNN", with "PCA" being the default.
+#' @inheritParams calculatePhysioMap
 #'
 #' @import stats
 #'
@@ -32,14 +26,10 @@
 #'  inputChecker(InputData = SimulatedGeneExpressionData[, 1:5],
 #'               Space = SimulatedGeneExpressionData[sample(1:10000), 6:10])
 #'
-#' @export inputChecker
-
+#' @export
 #
 inputChecker <- function(InputData, Space, ImputationMethod){
-    #In case inputs were vectors
-    if(!is.matrix(InputData))
-        stop("'calculatePhysioMap' expects a matrix for InputData"
-        )
+    #Space Checking:
     if(!is.matrix(Space))
         stop("'calculatePhysioMap' expects a matrix for Space"
         )
@@ -50,10 +40,12 @@ inputChecker <- function(InputData, Space, ImputationMethod){
     if(anyNA(Space)) Space <-
             imputeMissingGeneExpression(Space,
                                         METHOD=ImputationMethod)
+    #Setting up and preparing InputData as a Matrix (if needed):
+    InputData <- inputPreparer(InputData)
     #Other checks:
     if (!identical(rownames(InputData), rownames(Space))) {
-        message("Rows of InputData doesn't match rows of Space,
-                trying to match them...")
+        message("Rows of InputData doesn't match rows of Space,",
+                " trying to match them...")
         matchedIndxes <- match(rownames(InputData), rownames(Space))
         commonRowsSum <- sum(!is.na(matchedIndxes))
         if(commonRowsSum < 0.1*min(nrow(InputData), nrow(Space))) {
@@ -62,7 +54,7 @@ inputChecker <- function(InputData, Space, ImputationMethod){
         if(commonRowsSum < 200) {
             stop(
                 "Less than 200 rows could be matched!",
-                "which is not enough for PhysioSpace, aborting..."
+                " which is not enough for PhysioSpace, aborting..."
             )
         }
         InputData <- InputData[!is.na(matchedIndxes),]

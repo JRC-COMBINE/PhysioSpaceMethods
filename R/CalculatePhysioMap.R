@@ -4,20 +4,12 @@
 #' inside of a space,
 #' calculated prior from a compendium of known samples.
 #'
-#' @param InputData A matrix of input gene expressions to be analyzed, with
-#' genes as rows and samples as columns. Corresponding Entrez Gene
-#' IDs must be assigned to 'rownames' of the matrix, and name of each
-#' sample/column should be written in 'colnames'. REMEMBER that the gene
-#' expressions in 'InputData' should be relative; e.g. fold change or signed
-#' p value of a statistical test.
-#' In case user has their own list of significantly up and down regulated
-#' genes, it is also possible for InputData to be a list, containing
-#' Entrez IDs (or any other identifier which is used as rownames
-#' in 'Space') of up regulated genes in InputData[[1]] and
-#' Entrez IDs (or any other identifier which is used as rownames
-#' in 'Space') of down regulated genes in InputData[[2]].
-#' Having a list InputData is usually slow and restrictive, hence,
-#' mainly it is not recommended.
+#' @param InputData A matrix, SummarizedExperiment object or a list,
+#' based on the gene expression data (or any other type of high
+#' dimnesional, e.g. protein abundance, SNP, Methylation, etc.),
+#' to be analysed. InputData has to have a specific format to be
+#' properly analysed, these requirements are thoroughly explained
+#' in the 'Details' section.
 #' @param Space The space in which the 'InputData' will be mapped. Just as
 #' 'InputData', it should be a matrix with genes as rows and samples as
 #' columns, with corresponding Entrez Gene IDs in 'rownames' of the matrix,
@@ -28,12 +20,11 @@
 #' We aim to remove the noisy genes, hence we only keep the "GenesRatio*100"
 #' percent highest and lowest gene expression values of each sample.
 #' GenesRatio should be a numerical value between 0 and 1. Default value
-#' is 0.05. This input is only applicable when InputData is a matrix.
+#' is 0.05.
 #' @param PARALLEL Logical value indicating if calculation should be done in
 #' parallel. Default value is FALSE.
 #' It is not recommended to use PARALLEL=TRUE on small datasets since due to
 #' large overhead, it could take more time than using PARALLEL=FALSE.
-#' This input is only applicable when InputData is a matrix.
 #' @param NumbrOfCores Number of cores to be used when 'PARALLEL' is TRUE.
 #' Default is NA which will result in the program using
 #' 'all available cores - 1'. Assigning a number higher than
@@ -46,7 +37,6 @@
 #' returned rather than the default 'signed p value'. Default value is FALSE.
 #' @param ImputationMethod Imputation method to use in case of missing
 #' values. Available methods are "PCA" and "KNN". Default is "PCA".
-#' This input is only applicable when InputData is a matrix.
 #' @param ParallelMethod Parallel method to use when PARALLEL=TRUE.
 #' Two methods are implemented so far: "parCapply"
 #' which uses parCapply function of parallel package, and "foreach" which
@@ -54,7 +44,6 @@
 #' Speed-wise, foreach has an edge on parCapply, but the latter
 #' is more stable. Hence, we recommend to use parCapply.
 #' The default value for ParallelMethod is "parCapply".
-#' This input is only applicable when InputData is a matrix.
 #'
 #' @import progress
 #'
@@ -70,6 +59,35 @@
 #' unknown input data with a physiological space. Physiological spaces
 #' are mathematical spaces build upon known
 #' physiological data, using the 'spaceMaker' function.
+#'
+#' When preparing the InputData, specific requirements need to be met.
+#'
+#' 1- In case of a matrix, InputData is supposed to be the
+#' gene expressions matrix to be analyzed, with genes as rows and samples
+#' as columns. Corresponding Entrez Gene IDs must be assigned to
+#' 'rownames' of the matrix, and name of each sample/column should be
+#' written in 'colnames'. REMEMBER that the gene expressions in
+#' 'InputData' should be relative; e.g. fold change or signed
+#' p value of a statistical test.
+#'
+#' 2- In case of a SummarizedExperiment object, InputData must have a
+#' component named 'EntrezID' in its rowData. It is also expected
+#' (but not mandatory) for InputData to have a component named
+#' 'SampleName' in its colData. The gene expressions
+#' in 'InputData' is extracted by the function 'assay()', meaning in
+#' case 'InputData' contains multiple assays, only the first one is
+#' used. REMEMBER that the assay should contain relative gene
+#' expression data; e.g. fold change or signed p value of a
+#' statistical test.
+#'
+#' 3- In case user has their own list of significantly up and down
+#' regulated genes, it is also possible for InputData to be a list,
+#' containing Entrez IDs (or any other identifier which is used as
+#' rownames in 'Space') of up regulated genes in InputData[[1]] and
+#' Entrez IDs (or any other identifier which is used as rownames
+#' in 'Space') of down regulated genes in InputData[[2]].
+#' Having a list InputData is usually slow and restrictive, hence,
+#' mainly it is not recommended.
 #'
 #' @return Matrix of mapped 'InputData' values in 'Space', with rows
 #' corresponding to axes of 'Space' and columns representing
@@ -111,8 +129,19 @@
 #'    )
 #'  }
 #'
+#'  library(SummarizedExperiment)
+#'  SimulatedGeneExpressionData_SE <- SummarizedExperiment(
+#'      assays = list(GEX = SimulatedGeneExpressionData),
+#'      rowData = data.frame("EntrezID" =
+#'                               rownames(SimulatedGeneExpressionData)),
+#'      colData = data.frame("SampleName" =
+#'                               colnames(SimulatedGeneExpressionData))
+#'  )
+#'  calculatePhysioMap(InputData = SimulatedGeneExpressionData_SE,
+#'                      Space = SimulatedReferenceSpace)
+#'
 #' @export
-#Pre-function for dispaching the calculating to the write function:
+#Pre-function for dispaching the calculating to the right function:
 calculatePhysioMap <- function(InputData, Space, GenesRatio = 0.05,
                                 PARALLEL = FALSE, NumbrOfCores=NA,
                                 TTEST = FALSE, STATICResponse = FALSE,
@@ -197,3 +226,4 @@ calculatePhysioMap.list <- function(InputData, Space, GenesRatio = 0.05,
                     iplus=UpIndx, iminus = DownIndx,
                     STATICResponse = STATICResponse))
 }
+

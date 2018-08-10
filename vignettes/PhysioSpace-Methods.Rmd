@@ -31,13 +31,13 @@ easily accessible tool for R users.
 
 
 
-#### Table of Contents
+### Table of Contents
 **[Installation Instructions](#installation-instructions)**<br>
 **[Usage Instructions](#usage-instructions)**<br>
-**[SessionInfo](#SessionInfo)**<br>
+**[Session Info](#sessioninfo)**<br>
 
-### Installation Instructions
-#### Installing via Devtools (Recommended method):
+## Installation Instructions
+### Installing via Devtools (Recommended method):
 Easiest way to install PhysioSpaceMethods is via <a
 href="https://cran.r-project.org/web/packages/devtools/">devtools</a> package.
 After installing devtools from cran, you can install PhysioSpaceMethods by:
@@ -46,7 +46,7 @@ devtools::install_github(repo = "JRC-COMBINE/PhysioSpaceMethods",
 build_vignettes = TRUE)
 ```
 
-#### Alternative installation methods (Manual download):
+### Alternative installation methods (Manual download):
 In case you encountered any problem while installing PhysioSpaceMethods, you
 can download the repository directly and 
 install the package from downloaded local files.
@@ -62,12 +62,12 @@ R -e "devtools::install_local('./PhysioSpaceMethods/', build_vignettes =
 TRUE)"
 ```
 
-### Usage Instructions
+## Usage Instructions
 PhysioSpaceMethods can map user samples inside a physiological space,
 calculated beforehand from a compendium of known samples. Few examples are
 provided here to demonstrate how to use this package.
 
-#### Example One: E-MTAB-2836 Analysis
+### Example One: E-MTAB-2836 Analysis
 With the first example we will show how PhysioSpace can relate RNA-seq data to
 data generated with micro-array.
 The data set used in this example is <a
@@ -95,16 +95,40 @@ using "calculatePhysioMap()" function. It is important to note that
 'InputData' of this function has specific format requirements which are needed
 to be met for the function to perform properly. Detailed description of input
 requirements can be found in calculatePhysioMap's help page. In short,
-'InputData' has to be <sup>1-</sup> a matrix, with <sup>2-</sup> genes in
-rows, <sup>3-</sup> identified by Entrez IDs which are stored in 'rownames' of
-the matrix, and <sup>4-</sup> samples in columns, <sup>5-</sup> identified by
-sample names stored in 'colnames' of the matrix. Lastly, <sup>6-</sup> values
-of InputData matrix should be relative, e.g. fold changes of genes, rather
-than pure gene expressions. In our example, we prepare the InputData by taking
-four steps listed as follows:
 
-* **Converting gene expression data into a matrix:** PhysioSpaceMethods
-expects a matrix as input. In this example 
+1. In case InputData is a **matrix**, it should be:
+    a. a matrix,
+    b. with genes in rows, identified by Entrez IDs which are stored in 
+    'rownames' of the matrix. And
+    c. samples in columns, identified by sample names stored in 'colnames' 
+    of the matrix. Lastly, 
+    d. values of InputData matrix should be **relative**, e.g. fold changes of 
+    genes, rather than pure gene expressions. 
+    
+2. In case InputData is a **SummarizedExperiment object**, it is supposed to
+have:
+    a. a component named 'EntrezID' in its rowData, containing Entrez IDs of 
+    rows in the object. And
+    b. a component named 'SampleName' in its colData, containing name or the
+    main annotation of the samples in the object. Lastly,
+    c. the assay in the SummarizedExperiment object (accessible by using 
+    SummarizedExperiment::assay(obj)) has to have **relative** values, e.g. 
+    fold changes of genes, rather than pure gene expressions.
+    
+3. In case user has their own list of significantly up and down regulated 
+genes, it is also possible for InputData to be a list: 
+    a. containing Entrez IDs (or any other identifier which is used as 
+    rownames in 'Space') of up regulated genes in InputData[[1]], and 
+    b. Entrez IDs (or any other identifier which is used as rownames 
+    in 'Space') of down regulated genes in InputData[[2]].
+
+For demonstration purposes, in this example we prepare the InputData as 
+a matrix, and as a SummarizedExperiment.
+
+#### E-MTAB-2836 InputData as a matrix:
+We prepare E-MTAB-2836 for calculatePhysioMap() in four steps:
+
+* **Converting gene expression data into a matrix:** In this example 
 E-MTAB-2836-atlasExperimentSummary.Rdata contains a RangedSummarizedExperiment
 object, from which we have to extract a gene expression matrix:
 ```r
@@ -146,12 +170,11 @@ EMTAB2836CountMatrix <-
           #We remove the IDs that couldn't be converted and turned into NAs.
 ```
 
-* **Writing sample names in colnames:** this step is not necessary for proper
+* **Writing sample names in colnames:** This step is not necessary for proper
 calculation, but it is highly recommended as it helps in proper inference of
 the result matrix. Sample names should be short, and to the point. Since in
-this example we aim to 
-match RNA-seq counts of different human tissues to their corresponding tissues
-in a micro-array compendium, we use the tissue 
+this example we aim to match RNA-seq counts of different human tissues to 
+their corresponding tissues in a micro-array compendium, we use the tissue 
 names as colnames of EMTAB2836CountMatrix:
 ```r
 #Assigning colnames:
@@ -183,12 +206,73 @@ one example could be to use the signed p value of a statistical test in
 logarithm scale (which will come later for the other example
 in this vignette).
 
+#### E-MTAB-2836 InputData as a SummarizedExperiment object:
+As an alternative, InputData could be a SummarizedExperiment object when
+passed to the calculatePhysioMap() function. Here, we prepare the object
+in three steps:
+
+* **Setting up 'EntrezID' component in rowData:** After loading E-MTAB-2836
+into working environment, we have to add a component named 'EntrezID' to
+row data of the loaded object. This new added component should contain
+Entrez IDs of the rows of data in the SummarizedExperiment object:
+```r
+#Loading the object into R:
+suppressPackageStartupMessages(library(SummarizedExperiment))
+load("E-MTAB-2836-atlasExperimentSummary.Rdata")
+EMTAB2836_SEObj <- experimentSummary$rnaseq
+#
+#Converting Ensembl to Entrez IDs, and making EntrezID in rowData:
+library(biomaRt)
+humaRt <- useMart(biomart = "ENSEMBL_MART_ENSEMBL", 
+                                  dataset = "hsapiens_gene_ensembl")
+ConvTabelle <- getBM(attributes = c("ensembl_gene_id","entrezgene"),
+                     filters = "ensembl_gene_id", 
+                     values = rownames(EMTAB2836_SEObj),
+                     mart = humaRt)
+rowData(EMTAB2836_SEObj) <- data.frame("EntrezID" = 
+              ConvTabelle$entrezgene[match(rownames(EMTAB2836_SEObj),
+              ConvTabelle$ensembl_gene_id)])
+EMTAB2836_SEObj <-
+          EMTAB2836_SEObj[!is.na(rowData(EMTAB2836_SEObj)$EntrezID),] 
+          #We remove the rows with Entrez IDs that couldn't be 
+          #converted and turned into NAs.
+```
+We used <a 
+href="https://bioconductor.org/packages/release/bioc/html/biomaRt.html">
+biomaRt's package</a> for converting Ensembl to Entrez IDs.
+
+* **Setting up 'SampleName' component in colData:** This step is not 
+necessary for proper calculation, but it is highly recommended as it 
+helps in proper inference of the result matrix. We have to assign a 
+component named 'SampleName' to col data of the object, which contains
+the main annotation of samples in the data set under analysis. 
+In this example, we aim to detect the tissue type of samples in 
+E-MTAB-2836. So our target annotation is the source tissue name of each
+sample, already available as 'organism_part' component of col data.
+We just have to rename 'organism_part' to 'SampleName':
+```r
+#Assigning SampleName:
+names(colData(EMTAB2836_SEObj))[names(colData(EMTAB2836_SEObj)) == 
+                                    "organism_part"] <- "SampleName"
+```
+
+* **Having _RELATIVE_ values in Assay:** PhysioSpace method expects
+relative values is assay of SummarizedExperiment input object, i.e. 
+it assumes the most positive values correspond to up-regulated genes 
+and most negative values correspond to down-regulated genes. 
+As mentioned above, in this example we use universal mean as control 
+and calculate fold changes based on that reference:
+```r
+#Calculating Fold-Changes:
+assay(EMTAB2836_SEObj) <- assay(EMTAB2836_SEObj) - 
+                                        apply(assay(EMTAB2836_SEObj),1,mean)
+```
 
 Having the proper format for the input, the main calculation can be done
 easily by the function calculatePhysioMap.
 
 calculatePhysioMap() has two required input arguments: InputData, which is the
-relative gene expression matrix, and Space, 
+relative gene expression matrix (or SummarizedExperiment obj.), and Space, 
 which is the Physiological Space in which we want to map our input data. In
 this example we use 
 [LUKK](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2974261/) space from
@@ -200,12 +284,23 @@ library(HumanPhysioSpace) # you can install this package from
                           #https://github.com/JRC-COMBINE/HumanPhysioSpace
 RESULTS <- calculatePhysioMap(InputData = EMTAB2836CountMatrixRelativ, 
                                                     Space = HS_LUKK_Space)
+#Main calculation, for SummarizedExperiment input obj.:
+RESULTS_SE <- calculatePhysioMap(InputData = EMTAB2836_SEObj, 
+                                                    Space = HS_LUKK_Space)
 ```
 For more information about the available Spaces in HumanPhysioSpace package,
 detail explanation about
 HS_LUKK_Space and information about other input options of
 calculatePhysioMap(), we recommend the reader to check the documentation
 of this package and HumanPhysioSpace.
+
+```r
+#Check to see if the results are the same, regardless of input format:
+identical(RESULTS, RESULTS_SE)
+```
+As expected, results are the same for both input types of matrix and
+SummarizedExperiment obj.. In this vignette from here onward, we do 
+all the calculations in the matrix format.
 
 In cases with large number of input samples, we recommend running
 calculatePhysioMap() in parallel:
@@ -234,9 +329,9 @@ PhysioHeatmap(PhysioResults = RESULTS5Random, main = "RNA-seq vs Microarray",
             SymmetricColoring = T, SpaceClustering = T, Space = HS_LUKK_Space,
                                                           ReducedPlotting = 5)
 ```
-![Figure 1. Similarities Heatmap of RNA-seq 
+![Figure 1. Similarities heat map of RNA-seq 
 tissue samples of E-MTAB-2836 vs. Lukk et al. Space made from 
-microarray tissue samples](RESULTSHeatmap.png "RESULTS Heatmap")
+micro-array tissue samples](RESULTSHeatmap.png "RESULTS Heatmap")
 
 As shown in Fig 1, we expect to have the highest values (most red) in the
 intersection of
@@ -255,7 +350,7 @@ that the sample is smooth muscle tissue from a female adult human, based on
 our results it is highly probable that the smooth muscle sample is acquired
 from uterus.
 
-#### Example Two: GSE106635
+### Example Two: GSE106635
 To show the application of PhysioSpace in plant stress analysis, we will
 analyse <a 
 href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE106635">
@@ -287,13 +382,13 @@ GSE106635ESet <-
 
 After downloading and normalising, we need to prepare the data before using 
 it as InputData of calculatePhysioMap function. 
-Unlike the last example, in this one we use signed p values:
+In this example we use signed p values as relative values in InputData:
 
 * **Convert gene expression data into a matrix of signed p values:** we
 calculate the signed p value of Student's t-test using the 
 <a href="https://bioconductor.org/packages/release/bioc/html/limma.html">
 limma</a> package (for more information about linear 
-modelling and stattistical testing, you can check limma package
+modelling and statistical testing, you can check limma package
 documentation).
 ```r
 #Converting expression set to matrix:
@@ -381,12 +476,12 @@ PhysioHeatmap(PhysioResults = RESULTS, main = "Stress Analysis of GSE106635",
 SymmetricColoring = T, SpaceClustering = T, Space = AT_Stress_Space, 
                                                               PlotSize = 21)
 ```
-![Figure 2. Similarities Heatmap of cold stressed A.thaliana samples 
+![Figure 2. Similarities heat map of cold stressed A.thaliana samples 
 of GSE106635 vs. AT_Stress_Space](RESULTSGSE106635.png "RESULTS Heatmap")
 
 As shown in Fig. 2, samples of GSE106635 are detected as plants under cold
 stress. Looking deeper into the RESULTS, analysis points toward a higher cold
-stress response in wild type arabidopsis, in comparison to
+stress response in wild type Arabidopsis, in comparison to
 TabZIP6-overexpressed ecotype (RESULTS[4,1] > RESULTS[4,2]). This conclusion
 is in line with the conclusion published by the cited paper of GSE106635^[Cai
 W, Yang Y, Wang W, Guo G et al. Overexpression of a wheat (Triticum aestivum
@@ -395,7 +490,7 @@ of transgenic Arabidopsis seedlings by down-regulating the expression of CBFs.
 Plant Physiol Biochem 2018 Mar;124:100-111.].
 
 
-### SessionInfo
+## SessionInfo()
 ####
 R version 3.5.1 (2018-07-02) 
 
@@ -419,40 +514,62 @@ locale:
 attached base packages:
 
 [1] parallel  stats4    stats     graphics  grDevices utils     datasets 
-methods   base     
+[8] methods   base
 
 ####
 other attached packages:
 
- [1] PlantPhysioSpace_0.9.0      limma_3.37.3                ath1121501cdf_2.18.0        affy_1.59.0                
- [5] HumanPhysioSpace_0.0.0.9000 PhysioSpaceMethods_0.99.0   biomaRt_2.37.3              SummarizedExperiment_1.11.6
- [9] DelayedArray_0.7.24         BiocParallel_1.15.8         matrixStats_0.54.0          Biobase_2.41.2             
-[13] GenomicRanges_1.33.13       GenomeInfoDb_1.17.1         IRanges_2.15.16             S4Vectors_0.19.19          
-[17] BiocGenerics_0.27.1        
+ [1] PlantPhysioSpace_0.9.0      limma_3.37.3               
+ [3] ath1121501cdf_2.18.0        affy_1.59.0                
+ [5] HumanPhysioSpace_0.0.0.9000 biomaRt_2.37.3             
+ [7] SummarizedExperiment_1.11.6 DelayedArray_0.7.24        
+ [9] BiocParallel_1.15.8         matrixStats_0.54.0         
+[11] Biobase_2.41.2              GenomicRanges_1.33.13      
+[13] GenomeInfoDb_1.17.1         IRanges_2.15.16            
+[15] S4Vectors_0.19.19           BiocGenerics_0.27.1        
+[17] PhysioSpaceMethods_0.99.1  
+
 
 ####
 loaded via a namespace (and not attached):
 
-  [1] minqa_1.2.4            colorspace_1.3-2       class_7.3-14           htmlTable_1.12         XVector_0.21.3        
-  [6] base64enc_0.1-3        rstudioapi_0.7         mice_3.3.0             affyio_1.51.0          bit64_0.9-7           
- [11] mvtnorm_1.0-8          AnnotationDbi_1.43.1   missMDA_1.13           codetools_0.2-15       splines_3.5.1         
- [16] leaps_3.0              doParallel_1.0.11      geneplotter_1.59.0     knitr_1.20             DMwR_0.4.1            
- [21] Formula_1.2-3          nloptr_1.0.4           broom_0.5.0            annotate_1.59.1        cluster_2.0.7-1       
- [26] compiler_3.5.1         httr_1.3.1             backports_1.1.2        assertthat_0.2.0       Matrix_1.2-14         
- [31] lazyeval_0.2.1         acepack_1.4.1          htmltools_0.3.6        prettyunits_1.0.2      tools_3.5.1           
- [36] bindrcpp_0.2.2         gtable_0.2.0           glue_1.3.0             GenomeInfoDbData_1.1.0 dplyr_0.7.6           
- [41] FactoMineR_1.41        Rcpp_0.12.18           preprocessCore_1.43.0  gdata_2.18.0           nlme_3.1-137          
- [46] iterators_1.0.10       stringr_1.3.1          lme4_1.1-17            gtools_3.8.1           XML_3.98-1.13         
- [51] pan_1.6                zlibbioc_1.27.0        MASS_7.3-50            zoo_1.8-3              scales_0.5.0          
- [56] BiocInstaller_1.31.1   hms_0.4.2              RColorBrewer_1.1-2     yaml_2.2.0             quantmod_0.4-13       
- [61] curl_3.2               memoise_1.1.0          gridExtra_2.3          ggplot2_3.0.0          rpart_4.1-13          
- [66] latticeExtra_0.6-28    stringi_1.2.4          RSQLite_2.1.1          genefilter_1.63.0      foreach_1.4.4         
- [71] checkmate_1.8.5        TTR_0.23-3             caTools_1.17.1.1       rlang_0.2.1            pkgconfig_2.0.1       
- [76] bitops_1.0-6           lattice_0.20-35        ROCR_1.0-7             purrr_0.2.5            bindr_0.1.1           
- [81] htmlwidgets_1.2        bit_1.1-14             tidyselect_0.2.4       plyr_1.8.4             magrittr_1.5          
- [86] DESeq2_1.21.12         R6_2.2.2               gplots_3.0.1           Hmisc_4.1-1            mitml_0.3-6           
- [91] DBI_1.0.0              pillar_1.3.0           foreign_0.8-71         xts_0.11-0             survival_2.42-6       
- [96] scatterplot3d_0.3-41   abind_1.4-5            RCurl_1.95-4.11        nnet_7.3-12            tibble_1.4.2          
-[101] crayon_1.3.4           jomo_2.6-3             KernSmooth_2.23-15     progress_1.2.0         locfit_1.5-9.1        
-[106] grid_3.5.1             data.table_1.11.4      blob_1.1.1             digest_0.6.15          flashClust_1.01-2     
-[111] xtable_1.8-2           tidyr_0.8.1            munsell_0.5.0         
+ [1] minqa_1.2.4            colorspace_1.3-2       class_7.3-14          
+  [4] rprojroot_1.3-2        htmlTable_1.12         XVector_0.21.3        
+  [7] base64enc_0.1-3        rstudioapi_0.7         mice_3.3.0            
+ [10] affyio_1.51.0          bit64_0.9-7            mvtnorm_1.0-8         
+ [13] AnnotationDbi_1.43.1   missMDA_1.13           codetools_0.2-15      
+ [16] splines_3.5.1          leaps_3.0              doParallel_1.0.11     
+ [19] geneplotter_1.59.0     knitr_1.20             DMwR_0.4.1            
+ [22] Formula_1.2-3          nloptr_1.0.4           broom_0.5.0           
+ [25] annotate_1.59.1        cluster_2.0.7-1        httr_1.3.1            
+ [28] compiler_3.5.1         backports_1.1.2        assertthat_0.2.0      
+ [31] Matrix_1.2-14          lazyeval_0.2.1         acepack_1.4.1         
+ [34] htmltools_0.3.6        prettyunits_1.0.2      tools_3.5.1           
+ [37] bindrcpp_0.2.2         gtable_0.2.0           glue_1.3.0            
+ [40] GenomeInfoDbData_1.1.0 dplyr_0.7.6            FactoMineR_1.41       
+ [43] Rcpp_0.12.18           preprocessCore_1.43.0  gdata_2.18.0          
+ [46] nlme_3.1-137           iterators_1.0.10       stringr_1.3.1         
+ [49] lme4_1.1-17            gtools_3.8.1           XML_3.98-1.13         
+ [52] pan_1.6                zlibbioc_1.27.0        MASS_7.3-50           
+ [55] zoo_1.8-3              scales_0.5.0           BiocInstaller_1.31.1  
+ [58] hms_0.4.2              RColorBrewer_1.1-2     yaml_2.2.0            
+ [61] quantmod_0.4-13        curl_3.2               memoise_1.1.0         
+ [64] gridExtra_2.3          ggplot2_3.0.0          rpart_4.1-13          
+ [67] latticeExtra_0.6-28    stringi_1.2.4          RSQLite_2.1.1         
+ [70] genefilter_1.63.0      foreach_1.4.4          checkmate_1.8.5       
+ [73] TTR_0.23-3             caTools_1.17.1.1       rlang_0.2.1           
+ [76] pkgconfig_2.0.1        bitops_1.0-6           evaluate_0.11         
+ [79] lattice_0.20-35        ROCR_1.0-7             purrr_0.2.5           
+ [82] bindr_0.1.1            htmlwidgets_1.2        bit_1.1-14            
+ [85] tidyselect_0.2.4       plyr_1.8.4             magrittr_1.5          
+ [88] DESeq2_1.21.12         R6_2.2.2               gplots_3.0.1          
+ [91] Hmisc_4.1-1            mitml_0.3-6            DBI_1.0.0             
+ [94] pillar_1.3.0           foreign_0.8-71         xts_0.11-0            
+ [97] survival_2.42-6        scatterplot3d_0.3-41   abind_1.4-5           
+[100] RCurl_1.95-4.11        nnet_7.3-12            tibble_1.4.2          
+[103] crayon_1.3.4           jomo_2.6-3             KernSmooth_2.23-15    
+[106] rmarkdown_1.10         progress_1.2.0         locfit_1.5-9.1        
+[109] grid_3.5.1             data.table_1.11.4      blob_1.1.1            
+[112] digest_0.6.15          flashClust_1.01-2      xtable_1.8-2          
+[115] tidyr_0.8.1            munsell_0.5.0         
+

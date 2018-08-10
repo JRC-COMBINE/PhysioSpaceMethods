@@ -4,15 +4,27 @@
 #' 'Physiological Vectors' in N dimensions spaces, with which you
 #' will map new data to extract information from a new data set.
 #'
-#' @param GeneExMatrix A matrix of input gene expressions, based on
-#' which the Physiological Space will be made. This matrix supposed
-#' to have genes as rows and samples as columns. Corresponding Entrez Gene
-#' IDs must be assigned to 'rownames', and name of each sample should
-#' be written in 'colnames' of the matrix. Unless 'DESIGN' and
-#' 'CONTRASTs' inputs are provided by the user, spaceMaker presumes
-#' the label of the first column (colnames(GeneExMatrix)[1]) to be
-#' the reference of the experiment and uses all the samples with
-#' this label as control.
+#' @param GeneExMatrix A matrix of input gene expressions or a
+#' SummarizedExperiment object, based on which the Physiological
+#' Space will be made.
+#'
+#' In case of a matrix, GeneExMatrix is supposed to have genes
+#' as rows and samples as columns. Corresponding Entrez Gene
+#' IDs must be assigned to 'rownames', and name of each sample
+#' should be written in 'colnames' of the matrix.
+#'
+#' In case of a SummarizedExperiment object, GeneExMatrix
+#' must have a component named 'EntrezID' in its rowData.
+#' It is also expected (but not mandatory) for GeneExMatrix
+#' to have a component named 'SampleName' in its colData.
+#' The gene expressions in GeneExMatrix is extracted by the
+#' function assay(), meaning in case GeneExMatrix contains
+#' multiple assays, only the first one is used.
+#'
+#' Unless 'DESIGN' and 'CONTRASTs' inputs are provided by the
+#' user, spaceMaker presumes the label of the first column
+#' (colnames(GeneExMatrix)[1]) to be the reference of the
+#' experiment and uses all the samples with this label as control.
 #'
 #' @param DESIGN (Optional) Design matrix of GeneExMatrix, made by
 #' the function model.matrix(). If it's not provided, spaceMaker()
@@ -82,12 +94,29 @@
 #'  NotLinearSpaceOfINPTMatRNASeq <-
 #'    spaceMaker(GeneExMatrix = INPTMatRNASeq, LinearOrRNASeq = "RNASeq")
 #'
+#'
+#'  library(SummarizedExperiment)
+#'  INPTMat_SE <- SummarizedExperiment(
+#'      assays = list(GEX = INPTMat),
+#'      rowData = data.frame("EntrezID" = rownames(INPTMat)),
+#'      colData = data.frame("SampleName" = colnames(INPTMat))
+#'  ) #Simulated DNA-array gene expression SummarizedExperiment obj.
+#'  LinearSpaceOfINPTMat_SE <- spaceMaker(GeneExMatrix = INPTMat_SE)
+#'
+#'  INPTMatRNASeq_SE <- SummarizedExperiment(
+#'      assays = list(counts = INPTMatRNASeq),
+#'      rowData = data.frame("EntrezID" = rownames(INPTMatRNASeq)),
+#'      colData = data.frame("SampleName" = colnames(INPTMatRNASeq))
+#'  ) #Simulated RNA-seq gene expression SummarizedExperiment obj.
+#'  NotLinearSpaceOfINPTMatRNASeq_SE <-
+#'      spaceMaker(GeneExMatrix = INPTMatRNASeq_SE, LinearOrRNASeq = "RNASeq")
+#'
 #' @export
 spaceMaker <- function(GeneExMatrix, DESIGN = NA, CONTRASTs = NA,
                         Output = "PhysioScore", LinearOrRNASeq = "Linear"){
 
     ## Linearly SpaceMaker:
-    spaceMaker.Linear <- function(GeneExMatrix, DESIGN, CONTRASTs, Output){
+    spaceMaker_Linear <- function(GeneExMatrix, DESIGN, CONTRASTs, Output){
 
         UserDefinedDesign <- TRUE
 
@@ -137,7 +166,7 @@ spaceMaker <- function(GeneExMatrix, DESIGN = NA, CONTRASTs = NA,
     }
 
     ## SpaceMaker for RNAseq Data:
-    spaceMaker.RNAseq <- function(GeneExMatrix, DESIGN, CONTRASTs, Output){
+    spaceMaker_RNAseq <- function(GeneExMatrix, DESIGN, CONTRASTs, Output){
 
         UserDefinedDesign <- TRUE
 
@@ -202,11 +231,11 @@ spaceMaker <- function(GeneExMatrix, DESIGN = NA, CONTRASTs = NA,
     }
 
     ##Main function:
-    if(!is.matrix(GeneExMatrix)) stop("'GeneExMatrix' should be a matrix!")
+    GeneExMatrix <- inputPreparer(InputData = GeneExMatrix)
     if(LinearOrRNASeq == "Linear"){
-        return(spaceMaker.Linear(GeneExMatrix, DESIGN, CONTRASTs, Output))
+        return(spaceMaker_Linear(GeneExMatrix, DESIGN, CONTRASTs, Output))
     } else if(LinearOrRNASeq == "RNASeq"){
-        return(spaceMaker.RNAseq(GeneExMatrix, DESIGN, CONTRASTs, Output))
+        return(spaceMaker_RNAseq(GeneExMatrix, DESIGN, CONTRASTs, Output))
     } else {
         stop("'LinearOrRNASeq' input should be either 'Linear' or 'RNASeq'")
     }

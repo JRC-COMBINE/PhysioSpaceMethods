@@ -73,7 +73,7 @@ parallelInitializer_SingleMachine <- function(NumbrOfCores){
         stop("'NumbrOfCores' can not be higher than",
                 "the available number of cores, which is",
                 as.character(detectCores())
-             )
+                )
     cl <- makeCluster(NumbrOfCores, outfile="")
     #outfile is for having progressbar working in foreach
     return(cl)

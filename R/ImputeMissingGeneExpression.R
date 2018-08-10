@@ -27,8 +27,6 @@
 #'                     size = length(MatToImpute) / 20)] <- NA
 #'  ImputedMat <-
 #'    imputeMissingGeneExpression(InptGEX = MatToImpute, METHOD = "PCA")
-#'  ImputedMat2 <-
-#'    imputeMissingGeneExpression(InptGEX = MatToImpute, METHOD = "KNN")
 #'
 #' @export imputeMissingGeneExpression
 

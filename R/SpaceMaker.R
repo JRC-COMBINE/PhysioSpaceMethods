@@ -103,13 +103,6 @@
 #'  ) #Simulated DNA-array gene expression SummarizedExperiment obj.
 #'  LinearSpaceOfINPTMat_SE <- spaceMaker(GeneExMatrix = INPTMat_SE)
 #'
-#'  INPTMatRNASeq_SE <- SummarizedExperiment(
-#'      assays = list(counts = INPTMatRNASeq),
-#'      rowData = data.frame("EntrezID" = rownames(INPTMatRNASeq)),
-#'      colData = data.frame("SampleName" = colnames(INPTMatRNASeq))
-#'  ) #Simulated RNA-seq gene expression SummarizedExperiment obj.
-#'  NotLinearSpaceOfINPTMatRNASeq_SE <-
-#'      spaceMaker(GeneExMatrix = INPTMatRNASeq_SE, LinearOrRNASeq = "RNASeq")
 #'
 #' @export
 spaceMaker <- function(GeneExMatrix, DESIGN = NA, CONTRASTs = NA,

@@ -116,8 +116,8 @@ PhysioHeatmap <- function(PhysioResults, ColorLevels = 100, PDFFullName = NULL,
                                                         ReductionLevel + 1),
                                             to = length(X)))])
         CombinedReductionIndices <- unique(c(SingleReductionsIndices))
-        PhysioResults <- PhysioResults[CombinedReductionIndices,]
-        if(!identical(Space,NA)) Space <- Space[,CombinedReductionIndices]
+        PhysioResults <- PhysioResults[CombinedReductionIndices,,drop = FALSE]
+        if(!is.na(Space)) Space <- Space[,CombinedReductionIndices]
     }
     if(is.na(PlotSize)) PlotSize <- max(dim(PhysioResults)) + 10
     if(is.na(RowColCex)) RowColCex <- 0.6*min((50/PlotSize),1)

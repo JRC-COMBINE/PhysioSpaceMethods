@@ -1,3 +1,7 @@
+# PhysioSpaceMethods 0.99.22 (22.8.2018)
+
+* Added EnrichmentBrowser ID conversion to the vignette.
+
 # PhysioSpaceMethods 0.99.21 (10.8.2018)
 
 * Removed some examples to make building faster.

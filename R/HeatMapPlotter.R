@@ -171,7 +171,7 @@ PhysioHeatmap <- function(PhysioResults, ColorLevels = 100, PDFFullName = NULL,
                     "'Space' is needed and should be provided!")
         }
         PhysioResultsMorghed <-
-            PhysioResultsMorghed[hclust(d = as.dist(1 - cor(Space)))$order, ]
+            PhysioResultsMorghed[hclust(d = as.dist(1 - cor(Space)))$order, ,drop=FALSE]
     }
 
     COLORInterpolated <-
@@ -211,7 +211,7 @@ PhysioHeatmap <- function(PhysioResults, ColorLevels = 100, PDFFullName = NULL,
             rect(xleft = Xoffset+COL,xright = Xoffset+COL+1,
                     ybottom = Yoffset+ROW,ytop = Yoffset+ROW+1,
                     col = COLORInterpolated[PhysioResultsMorghed[ROW,COL]],
-                    lty = 0, border= "grey")
+                    lty = 1, border= "grey")
         }
     }
 

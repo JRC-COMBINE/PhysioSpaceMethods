@@ -101,7 +101,7 @@ PhysioHeatmap <- function(PhysioResults, ColorLevels = 100, PDFFullName = NULL,
             as.character(seq_len(ncol(PhysioResults)))
     if(ReducedPlotting){
         if(is.numeric(ReducedPlotting)){
-            ReductionLevel <- round(ReducedPlotting/2)
+            ReductionLevel <- ceiling(ReducedPlotting/2)
         } else if(is.logical(ReducedPlotting)){
             ReductionLevel <- 5
         } else {
@@ -165,7 +165,7 @@ PhysioHeatmap <- function(PhysioResults, ColorLevels = 100, PDFFullName = NULL,
     # Also wanted to have integers from 1 (or more in case all
     #(PhysioResults>=0)) to ColorLevels.
 
-    if(SpaceClustering){
+    if(SpaceClustering & nrow(PhysioResultsMorghed)>1){
         if(identical(Space,NA)){
             stop("For SpaceClustering==TRUE,",
                     "'Space' is needed and should be provided!")

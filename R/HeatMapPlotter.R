@@ -108,16 +108,18 @@ PhysioHeatmap <- function(PhysioResults, ColorLevels = 100, PDFFullName = NULL,
             stop("'ReducedPlotting' is supposed to",
                         "be Logical or a numeric value!")
         }
-        SingleReductionsIndices <- apply(PhysioResults,
-                                    MARGIN = 2,
-                                    function(X)
-                                    order(X)[c(seq_len(ReductionLevel),
-                                            seq.int(from = (length(X) -
-                                                        ReductionLevel + 1),
-                                            to = length(X)))])
-        CombinedReductionIndices <- unique(c(SingleReductionsIndices))
-        PhysioResults <- PhysioResults[CombinedReductionIndices,,drop = FALSE]
-        if(!identical(Space,NA)) Space <- Space[,CombinedReductionIndices]
+        if(nrow(PhysioResults) > 2*ReductionLevel){
+            SingleReductionsIndices <- apply(PhysioResults,
+                                             MARGIN = 2,
+                                             function(X)
+                                                 order(X)[c(seq_len(ReductionLevel),
+                                                            seq.int(from = (length(X) -
+                                                                                ReductionLevel + 1),
+                                                                    to = length(X)))])
+            CombinedReductionIndices <- unique(c(SingleReductionsIndices))
+            PhysioResults <- PhysioResults[CombinedReductionIndices,,drop = FALSE]
+            if(!identical(Space,NA)) Space <- Space[,CombinedReductionIndices,drop=FALSE]
+        }
     }
     if(is.na(PlotSize)) PlotSize <- max(dim(PhysioResults)) + 10
     if(is.na(RowColCex)) RowColCex <- 0.6*min((50/PlotSize),1)

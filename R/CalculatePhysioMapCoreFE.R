@@ -45,9 +45,9 @@ calculatePhysioMapCoreFE <- function(InputData, Space,
                     X = Space,
                     MARGIN = 2,
                     FUN = if (TTEST)
-                        tTestWrapper
+                        tTestWrpr
                     else
-                        wilTestWrapper,
+                        wilTestWrpr,
                     iplus = iplus,
                     iminus = iminus,
                     STATICResponse = STATICResponse

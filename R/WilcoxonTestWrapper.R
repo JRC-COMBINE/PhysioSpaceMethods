@@ -1,6 +1,6 @@
 #' @title Wilcoxon Rank Sum testing Between Plus and Minus Genes
 #'
-#' @description wilTestWrapper is an internal function used by
+#' @description wilTestWrpr is an internal function used by
 #' calculatePhysioMap that does rank sum test
 #' (equivalent to Mann-Whitney test) between iplus and
 #' iminus indexed genes in ReferencesJ.
@@ -24,7 +24,7 @@
 #'      ncol = 10,
 #'      dimnames = list(1:10000, 11:20)
 #'    )
-#'  wilTestWrapper(
+#'  wilTestWrpr(
 #'    ReferencesJ = SimulatedReferenceSpace[, 9],
 #'    iplus = sample(
 #'      1:nrow(SimulatedReferenceSpace),
@@ -37,9 +37,9 @@
 #'    STATICResponse = FALSE
 #'  )
 #'
-#' @export wilTestWrapper
+#' @export wilTestWrpr
 
-wilTestWrapper <- function(ReferencesJ,iplus,iminus,STATICResponse){
+wilTestWrpr <- function(ReferencesJ,iplus,iminus,STATICResponse){
     wilTestTemp <- wilcox.test(ReferencesJ[iplus], ReferencesJ[iminus])
     if(STATICResponse) {
         return(2*((wilTestTemp$statistic/(length(iplus)*length(iminus)))-0.5))

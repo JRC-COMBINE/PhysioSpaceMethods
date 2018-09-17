@@ -222,7 +222,7 @@ calculatePhysioMap.list <- function(InputData, Space, GenesRatio = 0.05,
                     "were found in rownames of Space")
     }
     as.matrix(apply(X = Space, MARGIN = 2,
-                    FUN = if(TTEST) tTestWrapper else wilTestWrapper,
+                    FUN = if(TTEST) tTestWrpr else wilTestWrpr,
                     iplus=UpIndx, iminus = DownIndx,
                     STATICResponse = STATICResponse))
 }

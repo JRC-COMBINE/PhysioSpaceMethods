@@ -1,6 +1,6 @@
 #' @title T-testing Between Plus and Minus Genes
 #'
-#' @description tTestWrapper is an internal function used by
+#' @description tTestWrpr is an internal function used by
 #' calculatePhysioMap. It does a t-test between iplus and iminus
 #' indexed genes in ReferencesJ.
 #'
@@ -22,7 +22,7 @@
 #'      ncol = 10,
 #'      dimnames = list(1:10000, 11:20)
 #'    )
-#'  tTestWrapper(
+#'  tTestWrpr(
 #'    ReferencesJ = SimulatedReferenceSpace[, 4],
 #'    iplus = sample(
 #'      1:nrow(SimulatedReferenceSpace),
@@ -35,10 +35,10 @@
 #'    STATICResponse = FALSE
 #'  )
 #'
-#' @export tTestWrapper
+#' @export tTestWrpr
 
 #
-tTestWrapper <- function(ReferencesJ,iplus,iminus,STATICResponse){
+tTestWrpr <- function(ReferencesJ,iplus,iminus,STATICResponse){
     tTestTemp <- t.test(ReferencesJ[iplus], ReferencesJ[iminus])
     if(STATICResponse) {
         Stats <- tTestTemp$statistic

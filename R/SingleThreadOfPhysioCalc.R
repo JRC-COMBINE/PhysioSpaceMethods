@@ -35,6 +35,6 @@ singleThreadOfPhysioCalc <- function(INPT, Space, GenesRatio,
     }
     pb$tick()
     apply(X = Space, MARGIN = 2,
-            FUN = if(TTEST) tTestWrapper else wilTestWrapper,
+            FUN = if(TTEST) tTestWrpr else wilTestWrpr,
             iplus=iplus, iminus = iminus, STATICResponse = STATICResponse)
 }

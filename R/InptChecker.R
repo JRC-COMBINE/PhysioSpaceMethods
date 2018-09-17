@@ -1,6 +1,6 @@
 #' @title Checking calculatePhysioMap Inputs
 #'
-#' @description inputChecker is an internal function used by
+#' @description inptChecker is an internal function used by
 #' calculatePhysioMap to check the format of inputs, 'InputData'
 #' and 'Space' to be exact. It checks to see 1- both 'InputData'
 #' and 'Space' are matrices, 2- if 'InputData' or 'Space' contain
@@ -12,7 +12,7 @@
 #'
 #' @import stats
 #'
-#' @return inputChecker returns corrected 'InputData' and 'Space'
+#' @return inptChecker returns corrected 'InputData' and 'Space'
 #' directly to the environment it was called from
 #' (By assigning new matrices to parent.frame()).
 #'
@@ -23,12 +23,12 @@
 #'      ncol = 10,
 #'      dimnames = list(1:10000, 1:10)
 #'    )
-#'  inputChecker(InputData = SimulatedGeneExpressionData[, 1:5],
+#'  inptChecker(InputData = SimulatedGeneExpressionData[, 1:5],
 #'               Space = SimulatedGeneExpressionData[sample(1:10000), 6:10])
 #'
 #' @export
 #
-inputChecker <- function(InputData, Space, ImputationMethod){
+inptChecker <- function(InputData, Space, ImputationMethod){
     #Space Checking:
     if(!is.matrix(Space))
         stop("'calculatePhysioMap' expects a matrix for Space"
@@ -41,7 +41,7 @@ inputChecker <- function(InputData, Space, ImputationMethod){
             imputeMissingGeneExpression(Space,
                                         METHOD=ImputationMethod)
     #Setting up and preparing InputData as a Matrix (if needed):
-    InputData <- inputPreparer(InputData)
+    InputData <- inptPreparer(InputData)
     #Other checks:
     if (!identical(rownames(InputData), rownames(Space))) {
         message("Rows of InputData doesn't match rows of Space,",

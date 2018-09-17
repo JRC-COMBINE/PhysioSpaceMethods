@@ -159,7 +159,7 @@ calculatePhysioMap.default <- function(InputData, Space, GenesRatio = 0.05,
                                         ImputationMethod = "PCA",
                                         ParallelMethod = "parCapply"){
     #Initializing:
-    inputChecker(InputData, Space, ImputationMethod)
+    inptChecker(InputData, Space, ImputationMethod)
     NGenes <- nrow(InputData)
     NSamples <- ncol(InputData)
     physioMap <- matrix(NA, ncol(Space), NSamples)

@@ -1,10 +1,10 @@
 #' @title Mapping new data into a physiological-space using parCapply
 #' of parallel package
 #'
-#' @description calculatePhysioMapCore_parCapply is an internal
+#' @description calculatePhysioMapCorePC (PC: parCapply) is an internal
 #' function of calculatePhysioMap, computing the main mapping using
 #' pacCapply of parallel package. We don't recommend the use of
-#' calculatePhysioMapCore_parCapply outside of calculatePhysioMap.
+#' calculatePhysioMapCorePC outside of calculatePhysioMap.
 #'
 #' @import progress parallel
 #'
@@ -23,7 +23,7 @@
 #' PhysioSpace paper: Lenz et. al., PLOS One 2013).
 #'
 # #' @export #Not exporting since it's an internal function
-calculatePhysioMapCore_parCapply <- function(InputData, Space,
+calculatePhysioMapCorePC <- function(InputData, Space,
                                                 NSamples, GenesRatio,
                                                 NGenes, STATICResponse,
                                                 pb, TTEST, cl){

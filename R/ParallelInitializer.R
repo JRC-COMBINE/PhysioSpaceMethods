@@ -24,7 +24,7 @@ parallelInitializer <- function(NumbrOfCores){
     # if(CLUSTER) {
     #   cl <- parallelInitializer.Cluster(machineAddresses, rscript)
     # } else {
-    cl <- parallelInitializer_SingleMachine(NumbrOfCores)
+    cl <- parallelInitializerSolo(NumbrOfCores)
     registerDoParallel(cl)
     return(cl)
 }
@@ -51,7 +51,7 @@ parallelInitializer <- function(NumbrOfCores){
 
 #' @title Initializing and Preparing for Parallel Processing on a Single Machine
 #'
-#' @description parallelInitializer_SingleMachine is an internal
+#' @description parallelInitializerSolo is an internal
 #' function of parallelInitializer.
 #'
 #' @param NumbrOfCores Number of cores (Threads) to use in parallel.
@@ -59,10 +59,10 @@ parallelInitializer <- function(NumbrOfCores){
 #' @return An object of class c("SOCKcluster", "cluster"), made by
 #' makeCluster of package parallel.
 #'
-#' @examples parallelInitializer_SingleMachine(NumbrOfCores = 2)
+#' @examples parallelInitializerSolo(NumbrOfCores = 2)
 #'
 #' @export
-parallelInitializer_SingleMachine <- function(NumbrOfCores){
+parallelInitializerSolo <- function(NumbrOfCores){
     if(is.na(NumbrOfCores)) {
         NumbrOfCores=detectCores()-1
         #not to overload your computer

@@ -172,7 +172,7 @@ calculatePhysioMap.default <- function(InputData, Space, GenesRatio = 0.05,
     #Main:
     if(PARALLEL) {
         if(ParallelMethod == "parCapply"){
-            physioMap <- calculatePhysioMapCore_parCapply(InputData,
+            physioMap <- calculatePhysioMapCorePC(InputData,
                                                             Space,
                                                             NSamples,
                                                             GenesRatio,
@@ -182,7 +182,7 @@ calculatePhysioMap.default <- function(InputData, Space, GenesRatio = 0.05,
                                                             TTEST,
                                                             cl)
         } else if(ParallelMethod == "foreach"){
-            physioMap <- calculatePhysioMapCore_foreach(InputData, Space,
+            physioMap <- calculatePhysioMapCoreFE(InputData, Space,
                                                         NSamples, GenesRatio,
                                                         NGenes, STATICResponse,
                                                         pb, TTEST)

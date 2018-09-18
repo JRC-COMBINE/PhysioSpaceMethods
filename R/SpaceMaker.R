@@ -108,18 +108,24 @@
 spaceMaker <- function(GeneExMatrix, DESIGN = NA, CONTRASTs = NA,
                         Output = "PhysioScore", LinearOrRNASeq = "Linear"){
 
+    # DESIGNMaker (internal function for spaceMakerLinear/RNAseq):
+    DESIGNMaker <- function(GeneExMat){
+        #Making the 'design' from colnames of GeneExMat:
+        DESIGN <- model.matrix(object =
+                                   ~0+factor(x = colnames(GeneExMat),
+                                             levels = unique(colnames(GeneExMat))))
+        #made a factor with first column as first level
+        colnames(DESIGN) <- unique(colnames(GeneExMat))
+        return(DESIGN)
+    }
+
     ## Linearly SpaceMaker:
-    spaceMaker_Linear <- function(GeneExMatrix, DESIGN, CONTRASTs, Output){
+    spaceMakerLinear <- function(GeneExMatrix, DESIGN, CONTRASTs, Output){
 
         UserDefinedDesign <- TRUE
 
         if(is.na(DESIGN)){
-            #Making the 'design' from colnames of GeneExMatrix:
-            DESIGN <- model.matrix(object =
-                                    ~0+factor(x = colnames(GeneExMatrix),
-                                    levels = unique(colnames(GeneExMatrix))))
-            #made a factor with first column as first level
-            colnames(DESIGN) <- unique(colnames(GeneExMatrix))
+            DESIGN <- DESIGNMaker(GeneExMatrix)
             UserDefinedDesign <- FALSE
         }
 
@@ -159,17 +165,12 @@ spaceMaker <- function(GeneExMatrix, DESIGN = NA, CONTRASTs = NA,
     }
 
     ## SpaceMaker for RNAseq Data:
-    spaceMaker_RNAseq <- function(GeneExMatrix, DESIGN, CONTRASTs, Output){
+    spaceMakerRNAseq <- function(GeneExMatrix, DESIGN, CONTRASTs, Output){
 
         UserDefinedDesign <- TRUE
 
         if(is.na(DESIGN)){
-            #Making the 'design' from colnames of GeneExMatrix:
-            DESIGN <- model.matrix(object =
-                                    ~0+factor(x = colnames(GeneExMatrix),
-                                    levels = unique(colnames(GeneExMatrix))))
-            #made a factor with first column as first level
-            colnames(DESIGN) <- unique(colnames(GeneExMatrix))
+            DESIGN <- DESIGNMaker(GeneExMatrix)
             UserDefinedDesign <- FALSE
         }
 
@@ -224,11 +225,11 @@ spaceMaker <- function(GeneExMatrix, DESIGN = NA, CONTRASTs = NA,
     }
 
     ##Main function:
-    GeneExMatrix <- inputPreparer(InputData = GeneExMatrix)
+    GeneExMatrix <- inptPreparer(InputData = GeneExMatrix)
     if(LinearOrRNASeq == "Linear"){
-        return(spaceMaker_Linear(GeneExMatrix, DESIGN, CONTRASTs, Output))
+        return(spaceMakerLinear(GeneExMatrix, DESIGN, CONTRASTs, Output))
     } else if(LinearOrRNASeq == "RNASeq"){
-        return(spaceMaker_RNAseq(GeneExMatrix, DESIGN, CONTRASTs, Output))
+        return(spaceMakerRNAseq(GeneExMatrix, DESIGN, CONTRASTs, Output))
     } else {
         stop("'LinearOrRNASeq' input should be either 'Linear' or 'RNASeq'")
     }

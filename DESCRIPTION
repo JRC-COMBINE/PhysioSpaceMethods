@@ -37,6 +37,7 @@ BugReports: https://github.com/JRC-COMBINE/PhysioSpaceMethods/issues
 URL: https://github.com/JRC-COMBINE/PhysioSpaceMethods
 RoxygenNote: 6.1.0
 Suggests: knitr,
+    BiocStyle,
     rmarkdown,
     testthat
 VignetteBuilder: knitr

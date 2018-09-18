@@ -41,6 +41,6 @@ imputeMissingGeneExpression <- function(InptGEX, METHOD="PCA"){
         res.comp <- imputePCA(InptGEX,ncp = estim_ncpPCA(InptGEX,ncp.max=7)$ncp)
         return(res.comp$completeObs)
     } else {
-        stop("Imputation method ", METHOD," not implemented!")
+        stop("Imputation method ", METHOD," is not implemented.")
     }
 }

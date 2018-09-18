@@ -26,7 +26,7 @@ singleThreadOfPhysioCalc <- function(INPT, Space, GenesRatio,
     if (!is.null(GenesRatio)) {
         numGenes = round(NGenes * GenesRatio)
     } else{
-        stop("Don't have Number of genes to compare??!?!")
+        stop("'GenesRatio' must be provided.")
     }
     ordDiff = order(INPT)
     if (!is.null(numGenes)) {

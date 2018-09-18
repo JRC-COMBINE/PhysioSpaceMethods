@@ -63,7 +63,9 @@ inptChecker <- function(InputData, Space, ImputationMethod){
                         " common rows between InputData and Space.")
     }
     if (min(InputData, na.rm = TRUE) >= 0)
-        warning("You didn't provide relative values in InputData??!")
+        warning("'calculatePhysioMap' expects relative values in",
+                " InputData, please make sure values in 'InputData'",
+                " are actually relative values.")
     #Returning new datasets:
     assign("InputData", value = InputData, envir = parent.frame())
     assign("Space", value = Space, envir = parent.frame())

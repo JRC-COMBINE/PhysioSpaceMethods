@@ -108,7 +108,7 @@ PhysioHeatmap <- function(PhysioResults, ColorLevels = 100,
                                                                     to = length(X)))])
             CombinedReductionIndices <- unique(c(SingleReductionsIndices))
             PhysioResults <- PhysioResults[CombinedReductionIndices,,drop = FALSE]
-            if(!identical(Space,NA)) Space <- Space[,CombinedReductionIndices,drop=FALSE]
+            if(!all(is.na(Space))) Space <- Space[,CombinedReductionIndices,drop=FALSE]
         }
     }
     if(is.na(PlotSize)) PlotSize <- max(dim(PhysioResults)) + 10
@@ -158,7 +158,7 @@ PhysioHeatmap <- function(PhysioResults, ColorLevels = 100,
     #(PhysioResults>=0)) to ColorLevels.
 
     if(SpaceClustering & nrow(PhysioResultsMorghed)>1){
-        if(identical(Space,NA)){
+        if(all(is.na(Space))){
             stop("For SpaceClustering==TRUE,",
                     "'Space' is needed and should be provided!")
         }

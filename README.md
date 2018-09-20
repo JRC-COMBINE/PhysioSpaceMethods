@@ -4,30 +4,12 @@ PhysioSpace is a robust statistical method for relating high dimensional omics d
 PhysioSpaceMethods is a R package which provides an implementation of PhysioSpace method alongside other handy functions for making PhysioSpace an accessible tool for R users.
 
 
-
-#### Table of Contents
-**[Installation Instructions](#installation-instructions)**<br>
-**[Usage Instructions](#usage-instructions)**<br>
-
 ### Installation Instructions
-#### Installing via Devtools (Recommended method):
-Easiest way to install PhysioSpaceMethods is via <a href="https://cran.r-project.org/web/packages/devtools/">Devtools</a>.
-After installing Devtools from cran, you can install PhysioSpaceMethods by:
+You can install this package by:
 ```r
-devtools::install_github(repo = "JRC-COMBINE/PhysioSpaceMethods", build_vignettes = TRUE)
-```
-
-#### Alternative installation methods (Manual download):
-In case you encountered any problem while installing PhysioSpaceMethods, you can download the repository first and 
-install the package locally.
-In your terminal, first clone the repository in your desired directory:
-```Shell
-cd [Your desired directory]
-git clone https://github.com/JRC-COMBINE/PhysioSpaceMethods.git
-```
-Then install the downloaded package using <a href="https://cran.r-project.org/web/packages/devtools/">Devtools</a>:
-```Shell
-R -e "devtools::install_local('./PhysioSpaceMethods/', build_vignettes = TRUE)"
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("PhysioSpaceMethods", version = "devel")
 ```
 
 ### Usage Instructions

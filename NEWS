@@ -1,3 +1,8 @@
+# PhysioSpaceMethods 0.99.32 (21.9.2018)
+
+* Fixed some bugs (specially in PhysioHeatmap())
+* Correction made to pass Bioconductor review
+
 # PhysioSpaceMethods 0.99.22 (22.8.2018)
 
 * Added EnrichmentBrowser ID conversion to the vignette.

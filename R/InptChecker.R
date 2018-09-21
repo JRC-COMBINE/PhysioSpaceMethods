@@ -28,7 +28,7 @@
 #'
 #' @export
 #
-inptChecker <- function(InputData, Space, ImputationMethod){
+inptChecker <- function(InputData, Space, ImputationMethod = "PCA"){
     #Space Checking:
     if(!is.matrix(Space))
         stop("'calculatePhysioMap' expects a matrix for Space"

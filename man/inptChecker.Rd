@@ -4,7 +4,7 @@
 \alias{inptChecker}
 \title{Checking calculatePhysioMap Inputs}
 \usage{
-inptChecker(InputData, Space, ImputationMethod)
+inptChecker(InputData, Space, ImputationMethod = "PCA")
 }
 \arguments{
 \item{InputData}{A matrix, SummarizedExperiment object or a list,

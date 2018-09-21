@@ -56,15 +56,7 @@ library(PlantPhysioSpace) # you can install this package from
                           #https://github.com/JRC-COMBINE/PlantPhysioSpace
 library(PhysioSpaceMethods) #Main package
 ```
-```{r echo=FALSE}
-suppressPackageStartupMessages(library(limma))
-suppressPackageStartupMessages(library(SummarizedExperiment))
-suppressPackageStartupMessages(library(HumanPhysioSpace))
-suppressPackageStartupMessages(library(biomaRt))
-suppressPackageStartupMessages(library(GEOquery))
-suppressPackageStartupMessages(library(PlantPhysioSpace))
-suppressPackageStartupMessages(library(PhysioSpaceMethods))
-```
+
 ## Example One: E-MTAB-2836 Analysis
 With the first example we will show how PhysioSpace can relate RNA-seq data to
 data generated with micro-array.
@@ -81,7 +73,7 @@ can download the data set manually from
 page (the "Summary of the expression results for this experiment ready to view
 in R"" link)](https://www.ebi.ac.uk/gxa/experiments/E-MTAB-2836/Downloads), 
 or use the following command in R:
-```{r}
+```r
 #Download:
 download.file(url = "https://www.ebi.ac.uk/gxa/experiments-content/E-MTAB-2836/static/E-MTAB-2836-atlasExperimentSummary.Rdata",
               destfile= "E-MTAB-2836-atlasExperimentSummary.Rdata") # We're
@@ -130,7 +122,7 @@ We prepare E-MTAB-2836 for calculatePhysioMap() in four steps:
 * **Converting gene expression data into a matrix:** In this example 
 E-MTAB-2836-atlasExperimentSummary.Rdata contains a RangedSummarizedExperiment
 object, from which we have to extract a gene expression matrix:
-```{r}
+```r
 #Making the gene expression matrix:
 load("E-MTAB-2836-atlasExperimentSummary.Rdata") #Loading the object into R
 EMTAB2836CountMatrix <- assay(experimentSummary$rnaseq)
@@ -148,7 +140,7 @@ Ensembl's [BioMart](https://www.ensembl.org/biomart/martview/) or
 [biomaRt's package](
 https://bioconductor.org/packages/release/bioc/html/biomaRt.html) in R.
 Here we used biomaRt's package:
-```{r}
+```r
 #Converting Ensembl to Entrez IDs:
 humaRt <- useMart(biomart = "ENSEMBL_MART_ENSEMBL", 
                                   dataset = "hsapiens_gene_ensembl")
@@ -170,7 +162,7 @@ the result matrix. Sample names should be short, and to the point. Since in
 this example we aim to match RNA-seq counts of different human tissues to 
 their corresponding tissues in a micro-array compendium, we use the tissue 
 names as colnames of EMTAB2836CountMatrix:
-```{r}
+```r
 #Assigning colnames:
 colnames(EMTAB2836CountMatrix) <-
                             colData(experimentSummary$rnaseq)$organism_part
@@ -183,7 +175,7 @@ correspond to down-regulated genes. Easiest way to
 calculate this relative value is by calculating fold change, although more
 proper statistical tests could result in better performance.
 In this specific example we use fold change:
-```{r}
+```r
 #Calculating Fold-Changes:
 EMTAB2836CountMatrixRelativ <- EMTAB2836CountMatrix -
                                         apply(EMTAB2836CountMatrix,1,mean)
@@ -209,7 +201,7 @@ in three steps:
 into working environment, we have to add a component named 'EntrezID' to
 row data of the loaded object. This new added component should contain
 Entrez IDs of the rows of data in the SummarizedExperiment object:
-```{r message=FALSE}
+```r
 #Loading the object into R:
 load("E-MTAB-2836-atlasExperimentSummary.Rdata")
 EMTAB2836_SEObj <- experimentSummary$rnaseq
@@ -227,7 +219,7 @@ for converting Ensembl to Entrez IDs.
 Alternatively, we could use
 [biomaRt's package](
 https://bioconductor.org/packages/release/bioc/html/biomaRt.html):
-```{r}
+```r
 #Loading the object into R:
 load("E-MTAB-2836-atlasExperimentSummary.Rdata")
 EMTAB2836_SEObj <- experimentSummary$rnaseq
@@ -257,7 +249,7 @@ In this example, we aim to detect the tissue type of samples in
 E-MTAB-2836. So our target annotation is the source tissue name of each
 sample, already available as 'organism_part' component of col data.
 We just have to rename 'organism_part' to 'SampleName':
-```{r}
+```r
 #Assigning SampleName:
 names(colData(EMTAB2836_SEObj))[names(colData(EMTAB2836_SEObj)) == 
                                     "organism_part"] <- "SampleName"
@@ -269,7 +261,7 @@ it assumes the most positive values correspond to up-regulated genes
 and most negative values correspond to down-regulated genes. 
 As mentioned above, in this example we use universal mean as control 
 and calculate fold changes based on that reference:
-```{r}
+```r
 #Calculating Fold-Changes:
 assay(EMTAB2836_SEObj) <- assay(EMTAB2836_SEObj) - 
                                         apply(assay(EMTAB2836_SEObj),1,mean)
@@ -287,7 +279,7 @@ this example we use
 Also in our example there are 200 samples. We randomly choose 5 samples out 
 of 200 and show the matching between RNA-seq input 
 data set to micro-array reference compendium is successful:
-```{r message=FALSE}
+```r
 #Choosing 5 random samples:
 set.seed(seed = 0) #So results would be reproducible 
 Samples5Random <- sample(x = 1:ncol(EMTAB2836CountMatrixRelativ), size = 5)
@@ -306,7 +298,7 @@ HS_LUKK_Space and information about other input options of
 calculatePhysioMap(), we recommend the reader to check the documentation
 of this package and HumanPhysioSpace.
 
-```{r}
+```r
 #Check to see if the results are the same, regardless of input format:
 identical(RESULTS5, RESULTS5_SE)
 ```
@@ -316,7 +308,7 @@ all the calculations in the matrix format.
 
 In cases with large number of input samples, we recommend running
 calculatePhysioMap() in parallel:
-```{r message=FALSE}
+```r
 #Main calculation in parallel:
 RESULTS5 <- calculatePhysioMap(
     InputData = EMTAB2836CountMatrixRelativ[,Samples5Random], 
@@ -330,7 +322,7 @@ samples in 'InputData', and the same number of rows as the number of axes
 value in row M and Column N in RESULTS is the mapped values of N<sup>th</sup>
 sample on M<sup>th</sup> axis of the Space.
 
-```{r fig.width=10, fig.asp=1}
+```r
 #Plotting the results:
 PhysioHeatmap(PhysioResults = RESULTS5, main = "RNA-seq vs Microarray",
             SymmetricColoring = TRUE, SpaceClustering = TRUE, 
@@ -364,7 +356,7 @@ as our second example.
 There are numerous ways to acquire a data set from GEO, for example by using
 [GEOquery](
 https://bioconductor.org/packages/release/bioc/html/GEOquery.html):
-```{r message=FALSE}
+```r
 #Downloading GSE106635:
 GSE106635 <- getGEO(GEO = "GSE106635", getGPL = FALSE)
 
@@ -383,7 +375,7 @@ calculate the signed p value of Student's t-test using the
 package (for more information about linear 
 modelling and statistical testing, you can check limma package
 documentation).
-```{r}
+```r
 #Converting expression set to matrix:
 GSE106635ESetExp <- exprs(GSE106635ESet)
 #Modelling and statistical testing:
@@ -409,7 +401,7 @@ rownames(GSE106635SignedPValues) <- rownames(GSE106635ESetExp)
 For converting the Affymetrix ATH1 probe IDs to Entrez IDs
 we use [biomaRt's package](
 https://bioconductor.org/packages/release/bioc/html/biomaRt.html):
-```{r}
+```r
 #Converting AffyID to EntrezID:
 planaRt <- useMart(biomart = "plants_mart", host = "plants.ensembl.org",
                                             dataset = "athaliana_eg_gene")
@@ -432,14 +424,14 @@ relative.
 column corresponds to wild type Col-0 response to cold stress, and second
 column to TabZIP6-overexpressed Arabidopsis line (L20) response to cold
 stress. We will name samples as follows:
-```{r}
+```r
 #Writing names into colnames:
 colnames(GSE106635SignedPValues) <- c("WT_Cold","Mut_Cold")
 ```
 
 Now that we prepared the input, the main calculation can be done using the
 function calculatePhysioMap():
-```{r message=FALSE}
+```r
 #Main calculation:
 RESULTS <- calculatePhysioMap(InputData = GSE106635SignedPValues, 
                                               Space = AT_Stress_Space)
@@ -457,7 +449,7 @@ recommend the reader to check the documentation of the
 All samples in GSE106635 are under cold stress condition, so we expect to see
 high values (similarities) on the 'Cold' dimension of 
 the AT_Stress_Space:
-```{r fig.width=6.5, fig.asp=1, message=FALSE, warning=FALSE}
+```r
 #Plotting the results:
 PhysioHeatmap(PhysioResults = RESULTS, main = "Stress Analysis of GSE106635",
 SymmetricColoring = TRUE, SpaceClustering = TRUE, Space = AT_Stress_Space, 
@@ -476,6 +468,6 @@ Plant Physiol Biochem 2018 Mar;124:100-111.].
 
 
 # SessionInfo
-```{r}
+```r
 sessionInfo()
 ```

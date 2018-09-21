@@ -100,15 +100,17 @@ PhysioHeatmap <- function(PhysioResults, ColorLevels = 100,
         }
         if(nrow(PhysioResults) > 2*ReductionLevel){
             SingleReductionsIndices <- apply(PhysioResults,
-                                             MARGIN = 2,
-                                             function(X)
-                                                 order(X)[c(seq_len(ReductionLevel),
-                                                            seq.int(from = (length(X) -
-                                                                                ReductionLevel + 1),
-                                                                    to = length(X)))])
+                                                MARGIN = 2,
+                                                function(X)
+                                            order(X)[c(seq_len(ReductionLevel),
+                                                    seq.int(from = (length(X) -
+                                                            ReductionLevel + 1),
+                                                            to = length(X)))])
             CombinedReductionIndices <- unique(c(SingleReductionsIndices))
-            PhysioResults <- PhysioResults[CombinedReductionIndices,,drop = FALSE]
-            if(!all(is.na(Space))) Space <- Space[,CombinedReductionIndices,drop=FALSE]
+            PhysioResults <- PhysioResults[CombinedReductionIndices,,
+                                            drop = FALSE]
+            if(!all(is.na(Space))) Space <- Space[,CombinedReductionIndices,
+                                                    drop=FALSE]
         }
     }
     if(is.na(PlotSize)) PlotSize <- max(dim(PhysioResults)) + 10
@@ -163,7 +165,8 @@ PhysioHeatmap <- function(PhysioResults, ColorLevels = 100,
                     "'Space' is needed and should be provided!")
         }
         PhysioResultsMorghed <-
-            PhysioResultsMorghed[hclust(d = as.dist(1 - cor(Space)))$order, ,drop=FALSE]
+            PhysioResultsMorghed[hclust(d = as.dist(1 - cor(Space)))$order, ,
+                                    drop=FALSE]
     }
 
     COLORInterpolated <-

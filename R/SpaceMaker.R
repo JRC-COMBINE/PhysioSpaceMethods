@@ -112,8 +112,8 @@ spaceMaker <- function(GeneExMatrix, DESIGN = NA, CONTRASTs = NA,
     DESIGNMaker <- function(GeneExMat){
         #Making the 'design' from colnames of GeneExMat:
         DESIGN <- model.matrix(object =
-                                   ~0+factor(x = colnames(GeneExMat),
-                                             levels = unique(colnames(GeneExMat))))
+                                    ~0+factor(x = colnames(GeneExMat),
+                                        levels = unique(colnames(GeneExMat))))
         #made a factor with first column as first level
         colnames(DESIGN) <- unique(colnames(GeneExMat))
         return(DESIGN)

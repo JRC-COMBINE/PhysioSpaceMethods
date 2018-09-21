@@ -320,7 +320,7 @@ calculatePhysioMap() in parallel:
 #Main calculation in parallel:
 RESULTS5 <- calculatePhysioMap(
     InputData = EMTAB2836CountMatrixRelativ[,Samples5Random], 
-    Space = HS_LUKK_Space, PARALLEL = T, NumbrOfCores = 2)
+    Space = HS_LUKK_Space, PARALLEL = TRUE, NumbrOfCores = 2)
 ```
 
 The output of calculatePhysioMap(), which here we called 'RESULTS5', is a
@@ -333,8 +333,8 @@ sample on M<sup>th</sup> axis of the Space.
 ```{r fig.width=10, fig.asp=1}
 #Plotting the results:
 PhysioHeatmap(PhysioResults = RESULTS5, main = "RNA-seq vs Microarray",
-            SymmetricColoring = T, SpaceClustering = T, Space = HS_LUKK_Space,
-                                                          ReducedPlotting = 5)
+            SymmetricColoring = TRUE, SpaceClustering = TRUE, 
+            Space = HS_LUKK_Space, ReducedPlotting = 5)
 ```
 
 As shown in Fig 1, we expect to have the highest values (most red) in the
@@ -460,7 +460,7 @@ the AT_Stress_Space:
 ```{r fig.width=6.5, fig.asp=1, message=FALSE, warning=FALSE}
 #Plotting the results:
 PhysioHeatmap(PhysioResults = RESULTS, main = "Stress Analysis of GSE106635",
-SymmetricColoring = T, SpaceClustering = T, Space = AT_Stress_Space, 
+SymmetricColoring = TRUE, SpaceClustering = TRUE, Space = AT_Stress_Space, 
                                                               PlotSize = 21)
 ```
 

@@ -39,5 +39,10 @@ RoxygenNote: 6.1.0
 Suggests: knitr,
     BiocStyle,
     rmarkdown,
-    testthat
+    testthat,
+    EnrichmentBrowser,
+    GEOquery,
+    HumanPhysioSpace,
+    PlantPhysioSpace,
+    biomaRt
 VignetteBuilder: knitr

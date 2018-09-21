@@ -70,8 +70,8 @@ parallelInitializerSolo <- function(NumbrOfCores){
         #In case the computer is single core
     }
     if(NumbrOfCores > detectCores())
-        stop("'NumbrOfCores' can not be higher than",
-                "the available number of cores, which is",
+        stop("'NumbrOfCores' can not be higher than ",
+                "the available number of cores, which is ",
                 as.character(detectCores())
                 )
     cl <- makeCluster(NumbrOfCores, outfile="")

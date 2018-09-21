@@ -46,7 +46,7 @@ Before running through the examples, we load all required packages of the
 vignette:
 ```r
 library(SummarizedExperiment) #SummarizedExperiment is needed for 
-    #working with RangedSummarizedExperiment objects.
+                            #working with RangedSummarizedExperiment objects.
 library(limma) #For linear modelling and stat. testing
 library(biomaRt) #For ID conversion
 library(GEOquery) #For downloading datasets from GEO
@@ -96,7 +96,7 @@ to be met for the function to perform properly. Detailed description of input
 requirements can be found in calculatePhysioMap's help page. In short,
 
 1. In case InputData is a **matrix**, it should be:
-    a. a matrix,
+    a. a matrix (clearly),
     b. with genes in rows, identified by Entrez IDs which are stored in 
     'rownames' of the matrix. And
     c. samples in columns, identified by sample names stored in 'colnames' 
@@ -124,7 +124,7 @@ genes, it is also possible for InputData to be a list:
 For demonstration purposes, in this example we prepare the InputData as 
 a matrix, and as a SummarizedExperiment.
 
-### E-MTAB-2836 InputData as a matrix:
+### E-MTAB-2836 InputData as a matrix
 We prepare E-MTAB-2836 for calculatePhysioMap() in four steps:
 
 * **Converting gene expression data into a matrix:** In this example 
@@ -200,7 +200,7 @@ one example could be to use the signed p value of a statistical test in
 logarithm scale (which will come later for the other example
 in this vignette).
 
-### E-MTAB-2836 InputData as a SummarizedExperiment object:
+### E-MTAB-2836 InputData as a SummarizedExperiment object
 As an alternative, InputData could be a SummarizedExperiment object when
 passed to the calculatePhysioMap() function. Here, we prepare the object
 in three steps:
@@ -320,7 +320,7 @@ calculatePhysioMap() in parallel:
 #Main calculation in parallel:
 RESULTS5 <- calculatePhysioMap(
     InputData = EMTAB2836CountMatrixRelativ[,Samples5Random], 
-    Space = HS_LUKK_Space, PARALLEL = T, NumbrOfCores = 4)
+    Space = HS_LUKK_Space, PARALLEL = T, NumbrOfCores = 2)
 ```
 
 The output of calculatePhysioMap(), which here we called 'RESULTS5', is a
@@ -475,7 +475,7 @@ of transgenic Arabidopsis seedlings by down-regulating the expression of CBFs.
 Plant Physiol Biochem 2018 Mar;124:100-111.].
 
 
-# SessionInfo()
+# SessionInfo
 ```{r}
 sessionInfo()
 ```

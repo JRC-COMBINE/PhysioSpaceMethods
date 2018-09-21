@@ -158,6 +158,8 @@ spaceMaker <- function(GeneExMatrix, DESIGN = NA, CONTRASTs = NA,
                             FUN.VALUE = numeric(length = nrow(GeneExMatrix)))
         } else if(Output == "Model"){
             return(FITMain)
+        } else {
+            stop("'Output' value is incorrect.")
         }
         rownames(Outi) <- rownames(GeneExMatrix)
         if(!UserDefinedDesign) colnames(Outi) <- colnames(DESIGN)[-1]
@@ -218,6 +220,8 @@ spaceMaker <- function(GeneExMatrix, DESIGN = NA, CONTRASTs = NA,
                             FUN.VALUE = numeric(length = nrow(GeneExMatrix)))
         } else if(Output == "Model"){
             return(MODELCalculated)
+        } else {
+            stop("'Output' value is incorrect.")
         }
         rownames(Outi) <- rownames(GeneExMatrix)
         if(!UserDefinedDesign) colnames(Outi) <- colnames(DESIGN)[-1]

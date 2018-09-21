@@ -1,7 +1,7 @@
 Package: PhysioSpaceMethods
 Type: Package
 Title: Creates and uses physio spaces as a dimension reduction mapping
-Version: 0.99.33
+Version: 0.99.34
 Authors@R: person("Ali", "H. Esfahani", 
     email = "ali.hadizadeh@rwth-aachen.de", role = c("aut", "cre"))
 Description: This package uses 'Big Data' to make robust 'Physiological Vectors' 
@@ -39,10 +39,5 @@ RoxygenNote: 6.1.0
 Suggests: knitr,
     BiocStyle,
     rmarkdown,
-    testthat,
-    EnrichmentBrowser,
-    GEOquery,
-    HumanPhysioSpace,
-    PlantPhysioSpace,
-    biomaRt
+    testthat
 VignetteBuilder: knitr

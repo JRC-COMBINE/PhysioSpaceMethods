@@ -7,7 +7,7 @@
 #' calculatePhysioMap.
 #'
 #'
-#' @inheritParams calculatePhysioMapCorePC
+#' @inheritParams .calculatePhysioMapCorePC
 #'
 #' @param ParallelMethod Parallel method to use.
 #' Two methods are implemented so far: "parCapply"
@@ -28,14 +28,14 @@ calculatePhysioMapCores <- function(InputData, Space,
                                                 pb, TTEST, cl,
                                                 ParallelMethod="parCapply"){
     switch(ParallelMethod,
-            parCapply = calculatePhysioMapCorePC(InputData = InputData,
+            parCapply = .calculatePhysioMapCorePC(InputData = InputData,
                                                 Space=Space,
                                                 NSamples=NSamples,
                                                 GenesRatio=GenesRatio,
                                                 NGenes=NGenes,
                                                 STATICResponse=STATICResponse,
                                                 pb=pb, TTEST=TTEST, cl=cl),
-            foreach = calculatePhysioMapCoreFE(InputData = InputData,
+            foreach = .calculatePhysioMapCoreFE(InputData = InputData,
                                                 Space=Space,
                                                 NSamples=NSamples,
                                                 GenesRatio=GenesRatio,

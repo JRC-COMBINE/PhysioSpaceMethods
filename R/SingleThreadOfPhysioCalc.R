@@ -1,8 +1,8 @@
 #' @title Mapping one sample into a physiological-space
 #'
-#' @description SingleThreadOfPhysioCalc is an internal function
+#' @description .singleThreadOfPhysioCalc is an internal function
 #' of calculatePhysioMap, computing the main mapping. We don't
-#' recommend the use of SingleThreadOfPhysioCalc outside of
+#' recommend the use of .singleThreadOfPhysioCalc outside of
 #' calculatePhysioMap.
 #'
 #' @import progress parallel
@@ -21,7 +21,7 @@
 #' Lenz et. al., PLOS One 2013).
 #'
 # #' @export #Not exporting since it's an internal function
-singleThreadOfPhysioCalc <- function(INPT, Space, GenesRatio,
+.singleThreadOfPhysioCalc <- function(INPT, Space, GenesRatio,
                                         NGenes, STATICResponse, pb, TTEST){
     if (!is.null(GenesRatio)) {
         numGenes = round(NGenes * GenesRatio)
@@ -35,6 +35,6 @@ singleThreadOfPhysioCalc <- function(INPT, Space, GenesRatio,
     }
     pb$tick()
     apply(X = Space, MARGIN = 2,
-            FUN = if(TTEST) tTestWrpr else wilTestWrpr,
+            FUN = if(TTEST) .tTest else .wilTest,
             iplus=iplus, iminus = iminus, STATICResponse = STATICResponse)
 }

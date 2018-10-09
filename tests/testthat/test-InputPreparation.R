@@ -7,7 +7,7 @@ SimulatedGeneExpressionData <- matrix(
     dimnames = list(1:10000, 1:10)
 )
 SimulatedGeneExpressionData_checked <-
-    inptPreparer(SimulatedGeneExpressionData)
+    .inptPreparer(SimulatedGeneExpressionData)
 
 library(SummarizedExperiment)
 SimulatedGeneExpressionData_SE <- SummarizedExperiment(
@@ -18,7 +18,7 @@ SimulatedGeneExpressionData_SE <- SummarizedExperiment(
                              colnames(SimulatedGeneExpressionData))
 )
 SimulatedGeneExpressionData_SE_checked <-
-    inptPreparer(SimulatedGeneExpressionData_SE)
+    .inptPreparer(SimulatedGeneExpressionData_SE)
 
 test_that("preparation returns a matrix",{
     expect_is(SimulatedGeneExpressionData_checked,"matrix")
@@ -32,5 +32,5 @@ test_that("preparation returns a matrix",{
 })
 
 test_that("Unknown object should make an error",{
-    expect_error(inptPreparer(InputData = "Some random Character string"))
+    expect_error(.inptPreparer(InputData = "Some random Character string"))
 })

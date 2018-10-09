@@ -1,6 +1,6 @@
 #' @title Imputing Missing Data
 #'
-#' @description imputeMissingGeneExpression is an internal function called
+#' @description .imputeMissingGeneExpression is an internal function called
 #' by inputChecker. It uses different methods to impute any missing value
 #' of the InputData or Space (or else missing values would break the
 #' pipeline in calculatePhysioMap).
@@ -26,11 +26,10 @@
 #'  MatToImpute[sample(x = 1:length(MatToImpute),
 #'                     size = length(MatToImpute) / 20)] <- NA
 #'  ImputedMat <-
-#'    imputeMissingGeneExpression(InptGEX = MatToImpute, METHOD = "PCA")
+#'    PhysioSpaceMethods:::.imputeMissingGeneExpression(InptGEX = MatToImpute,
+#'    METHOD = "PCA")
 #'
-#' @export imputeMissingGeneExpression
-
-imputeMissingGeneExpression <- function(InptGEX, METHOD="PCA"){
+.imputeMissingGeneExpression <- function(InptGEX, METHOD="PCA"){
     if(METHOD=="KNN"){
         ##KNN is shown to be among the worse but popular methods of
         #gene expression imputation, I'll use it for now but have to

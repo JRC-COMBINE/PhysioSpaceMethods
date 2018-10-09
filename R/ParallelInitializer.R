@@ -1,6 +1,6 @@
 #' @title Initializing and Preparing for Parallel Processing
 #'
-#' @description parallelInitializer is an internal function used by
+#' @description .parallelInitializer is an internal function used by
 #' calculatePhysioMap. It is called when user wants to
 #' run calculatePhysioMap in parallel.
 #'
@@ -16,22 +16,21 @@
 #' @return An object of class c("SOCKcluster", "cluster"), made by
 #' makeCluster of package parallel.
 #'
-#' @examples parallelInitializer(NumbrOfCores = 2)
+#' @examples PhysioSpaceMethods:::.parallelInitializer(NumbrOfCores = 2)
 #'
-#' @export
-parallelInitializer <- function(NumbrOfCores){
+.parallelInitializer <- function(NumbrOfCores){
     # suppressPackageStartupMessages(require(doParallel))
     # if(CLUSTER) {
-    #   cl <- parallelInitializer.Cluster(machineAddresses, rscript)
+    #   cl <- .parallelInitializer.Cluster(machineAddresses, rscript)
     # } else {
-    cl <- parallelInitializerSolo(NumbrOfCores)
+    cl <- .parallelInitializerSolo(NumbrOfCores)
     registerDoParallel(cl)
     return(cl)
 }
 
-# #' @export parallelInitializer.Cluster
+# #' @export .parallelInitializer.Cluster
 #
-# parallelInitializer.Cluster <- function(machineAddresses, rscript){
+# .parallelInitializer.Cluster <- function(machineAddresses, rscript){
 #   ##My ip is dynamic I have to get it everytime!:
 #   primary <- system("dig +short myip.opendns.com @resolver1.opendns.com",
 #                                                                intern = T)
@@ -51,18 +50,17 @@ parallelInitializer <- function(NumbrOfCores){
 
 #' @title Initializing and Preparing for Parallel Processing on a Single Machine
 #'
-#' @description parallelInitializerSolo is an internal
-#' function of parallelInitializer.
+#' @description .parallelInitializerSolo is an internal
+#' function of .parallelInitializer.
 #'
 #' @param NumbrOfCores Number of cores (Threads) to use in parallel.
 #'
 #' @return An object of class c("SOCKcluster", "cluster"), made by
 #' makeCluster of package parallel.
 #'
-#' @examples parallelInitializerSolo(NumbrOfCores = 2)
+#' @examples PhysioSpaceMethods:::.parallelInitializerSolo(NumbrOfCores = 2)
 #'
-#' @export
-parallelInitializerSolo <- function(NumbrOfCores){
+.parallelInitializerSolo <- function(NumbrOfCores){
     if(is.na(NumbrOfCores)) {
         NumbrOfCores=detectCores()-1
         #not to overload your computer

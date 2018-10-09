@@ -158,12 +158,20 @@ calculatePhysioMap.default <- function(InputData, Space, GenesRatio = 0.05,
                                         TTEST = FALSE, STATICResponse = FALSE,
                                         ImputationMethod = "PCA",
                                         ParallelMethod = "parCapply"){
-    #Initializing:
-    inptChecker(InputData, Space, ImputationMethod)
+    ##Initializing:
+    .inptChecker(InputData, Space)
+    #Imputing missing values:
+    if(anyNA(InputData)) InputData <-
+            .imputeMissingGeneExpression(InputData,
+                                        METHOD=ImputationMethod)
+    if(anyNA(Space)) Space <-
+            .imputeMissingGeneExpression(Space,
+                                        METHOD=ImputationMethod)
+
     NGenes <- nrow(InputData)
     NSamples <- ncol(InputData)
     physioMap <- matrix(NA, ncol(Space), NSamples)
-    if(PARALLEL) cl <- parallelInitializer(NumbrOfCores=NumbrOfCores)
+    if(PARALLEL) cl <- .parallelInitializer(NumbrOfCores=NumbrOfCores)
     pb <- progress_bar$new(format = "(:spin) [:bar] :percent eta: :eta",
                             total = ifelse(PARALLEL,NSamples/length(cl),
                                             NSamples),
@@ -179,7 +187,7 @@ calculatePhysioMap.default <- function(InputData, Space, GenesRatio = 0.05,
         stopCluster(cl)
     } else {
         physioMap <- apply(X = InputData,
-                            MARGIN = 2, FUN = singleThreadOfPhysioCalc,
+                            MARGIN = 2, FUN = .singleThreadOfPhysioCalc,
                             Space=Space, GenesRatio=GenesRatio,
                             NGenes=NGenes, STATICResponse=STATICResponse,
                             pb=pb, TTEST=TTEST)
@@ -209,7 +217,7 @@ calculatePhysioMap.list <- function(InputData, Space, GenesRatio = 0.05,
                     "were found in rownames of Space")
     }
     as.matrix(apply(X = Space, MARGIN = 2,
-                    FUN = if(TTEST) tTestWrpr else wilTestWrpr,
+                    FUN = if(TTEST) .tTest else .wilTest,
                     iplus=UpIndx, iminus = DownIndx,
                     STATICResponse = STATICResponse))
 }

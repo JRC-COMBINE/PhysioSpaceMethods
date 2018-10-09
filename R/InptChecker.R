@@ -1,18 +1,16 @@
 #' @title Checking calculatePhysioMap Inputs
 #'
-#' @description inptChecker is an internal function used by
+#' @description .inptChecker is an internal function used by
 #' calculatePhysioMap to check the format of inputs, 'InputData'
 #' and 'Space' to be exact. It checks to see 1- both 'InputData'
-#' and 'Space' are matrices, 2- if 'InputData' or 'Space' contain
-#' any NA, and trying to impute using imputeMissingGeneExpression
-#' function if they do, and 3- it matches the rows of 'InputData'
+#' and 'Space' are matrices, and 2- it matches the rows of 'InputData'
 #' or 'Space' based on their row names.
 #'
 #' @inheritParams calculatePhysioMap
 #'
 #' @import stats
 #'
-#' @return inptChecker returns corrected 'InputData' and 'Space'
+#' @return .inptChecker returns corrected 'InputData' and 'Space'
 #' directly to the environment it was called from
 #' (By assigning new matrices to parent.frame()).
 #'
@@ -23,25 +21,16 @@
 #'      ncol = 10,
 #'      dimnames = list(1:10000, 1:10)
 #'    )
-#'  inptChecker(InputData = SimulatedGeneExpressionData[, 1:5],
+#'  PhysioSpaceMethods:::.inptChecker(InputData = SimulatedGeneExpressionData[, 1:5],
 #'               Space = SimulatedGeneExpressionData[sample(1:10000), 6:10])
 #'
-#' @export
-#
-inptChecker <- function(InputData, Space, ImputationMethod = "PCA"){
+.inptChecker <- function(InputData, Space){
     #Space Checking:
     if(!is.matrix(Space))
         stop("'calculatePhysioMap' expects a matrix for Space"
         )
-    #Imputing missing values:
-    if(anyNA(InputData)) InputData <-
-            imputeMissingGeneExpression(InputData,
-                                        METHOD=ImputationMethod)
-    if(anyNA(Space)) Space <-
-            imputeMissingGeneExpression(Space,
-                                        METHOD=ImputationMethod)
     #Setting up and preparing InputData as a Matrix (if needed):
-    InputData <- inptPreparer(InputData)
+    InputData <- .inptPreparer(InputData)
     #Other checks:
     if (!identical(rownames(InputData), rownames(Space))) {
         message("Rows of InputData doesn't match rows of Space,",

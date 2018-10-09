@@ -3,7 +3,7 @@ context("Test TTest wrapper function used by calculatePhysioMap")
 SimulatedReferenceSpace <- matrix(rnorm(n = 100000, mean = 0, sd = 100),
                                   ncol = 10, dimnames = list(1:10000,11:20))
 
-loggedPs <- tTestWrpr(
+loggedPs <- .tTest(
         ReferencesJ = SimulatedReferenceSpace[, 4],
         iplus = sample(
           1:nrow(SimulatedReferenceSpace),
@@ -15,7 +15,7 @@ loggedPs <- tTestWrpr(
         ),
         STATICResponse = FALSE
       )
-Statss <- tTestWrpr(
+Statss <- .tTest(
     ReferencesJ = SimulatedReferenceSpace[, 4],
     iplus = sample(
         1:nrow(SimulatedReferenceSpace),
@@ -28,19 +28,19 @@ Statss <- tTestWrpr(
     STATICResponse = TRUE
 )
 
-test_that("'tTestWrpr' has to return a single numeric value",{
+test_that("'.tTest' has to return a single numeric value",{
   expect_is(loggedPs,"numeric")
   expect_length(loggedPs, 1)
   expect_is(Statss,"numeric")
   expect_length(Statss, 1)
 })
 
-test_that("'tTestWrpr' has to return minues-logged-pvalue",{
+test_that("'.tTest' has to return minues-logged-pvalue",{
     expect_lte(2^-abs(loggedPs), 1)
     expect_gte(2^-abs(loggedPs), 0)
 })
 
-test_that("'tTestWrpr' returns normalized stats",{
+test_that("'.tTest' returns normalized stats",{
     expect_lte(Statss, 1)
     expect_gte(Statss, -1)
 })

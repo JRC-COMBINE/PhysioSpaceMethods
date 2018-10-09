@@ -1,9 +1,9 @@
 #' @title Mapping new data into a physiological-space using foreach
 #'
-#' @description calculatePhysioMapCoreFE (FE: foreach) is an
+#' @description .calculatePhysioMapCoreFE (FE: foreach) is an
 #' internal function of calculatePhysioMap, computing the main
 #' mapping using foreach form foreach package. We don't
-#' recommend the use of calculatePhysioMapCoreFE outside of
+#' recommend the use of .calculatePhysioMapCoreFE outside of
 #' calculatePhysioMap.
 #'
 #' @import progress doParallel foreach parallel
@@ -22,7 +22,7 @@
 #' PhysioSpace paper: Lenz et. al., PLOS One 2013).
 #'
 # #' @export #Not exporting since it's an internal function
-calculatePhysioMapCoreFE <- function(InputData, Space,
+.calculatePhysioMapCoreFE <- function(InputData, Space,
                                             NSamples, GenesRatio,
                                             NGenes, STATICResponse,
                                             pb, TTEST){
@@ -45,9 +45,9 @@ calculatePhysioMapCoreFE <- function(InputData, Space,
                     X = Space,
                     MARGIN = 2,
                     FUN = if (TTEST)
-                        tTestWrpr
+                        .tTest
                     else
-                        wilTestWrpr,
+                        .wilTest,
                     iplus = iplus,
                     iminus = iminus,
                     STATICResponse = STATICResponse

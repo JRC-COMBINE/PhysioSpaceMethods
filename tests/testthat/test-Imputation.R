@@ -9,9 +9,9 @@ MatToImpute <-
 MatToImpute[sample(x = 1:length(MatToImpute),
                    size = length(MatToImpute) / 20)] <- NA
 ImputedMatPCA <-
-    imputeMissingGeneExpression(InptGEX = MatToImpute, METHOD = "PCA")
+    .imputeMissingGeneExpression(InptGEX = MatToImpute, METHOD = "PCA")
 ImputedMatKNN <-
-    imputeMissingGeneExpression(InptGEX = MatToImpute, METHOD = "KNN")
+    .imputeMissingGeneExpression(InptGEX = MatToImpute, METHOD = "KNN")
 
 test_that("imputation returns a non-na matrix",{
     expect_is(ImputedMatPCA,"matrix")
@@ -23,7 +23,7 @@ test_that("imputation returns a non-na matrix",{
 })
 
 test_that("Unknown method should make an error",{
-    expect_error(imputeMissingGeneExpression(InptGEX =
+    expect_error(.imputeMissingGeneExpression(InptGEX =
                                                  MatToImpute,
                                              METHOD = "NewMethod"))
 })

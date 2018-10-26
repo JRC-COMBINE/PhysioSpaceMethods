@@ -114,7 +114,7 @@ spaceMaker <- function(GeneExMatrix, DESIGN = NA, CONTRASTs = NA,
     UserDefinedDesign <- TRUE
     GeneExMatrix <- .inptPreparer(InputData = GeneExMatrix)
 
-    #'Design' construction from colnames of GeneExMatrix:
+    # 'Design' construction from colnames of GeneExMatrix:
     if(is.na(DESIGN)){
         DESIGN <- model.matrix(object =
                                    ~ 0 + factor(x = colnames(GeneExMatrix),
@@ -125,7 +125,7 @@ spaceMaker <- function(GeneExMatrix, DESIGN = NA, CONTRASTs = NA,
         UserDefinedDesign <- FALSE
     }
 
-    #'Contrast' construction from colnames of GeneExMatrix:
+    # 'Contrast' construction from colnames of GeneExMatrix:
     if(LinearOrRNASeq=="Linear"){
         if(is.na(CONTRASTs)){
             #Making the 'contrast's from colnames of GeneExMatrix:

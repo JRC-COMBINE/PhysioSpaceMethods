@@ -33,3 +33,20 @@ test_that("'calculatePhysioMap' has to have a matrices as input and space",{
                                   PARALLEL = TRUE, ParallelMethod = "NewMeth"))
   expect_equal(SCORES,SCORESParallel)
 })
+
+test_that("'calculatePhysioMap' should work with single input or space",{
+
+    SSSingle <- calculatePhysioMap(InputData =
+                                SimulatedGeneExpressionData[,1,drop=FALSE],
+                                     SimulatedGeneExpressionData)
+    SSingle <- calculatePhysioMap(InputData = SimulatedGeneExpressionData,
+                                 SimulatedReferenceSpace[,1,drop=FALSE])
+    SSPSingle <- calculatePhysioMap(InputData =
+                                    SimulatedGeneExpressionData[,1,drop=FALSE],
+                            Space = SimulatedReferenceSpace[,1,drop=FALSE],
+                                                PARALLEL = TRUE)
+    expect_is(SSSingle,"matrix")
+    expect_is(SSingle,"matrix")
+    expect_length(SSSingle, ncol(SimulatedReferenceSpace))
+    expect_equal(SSingle[1],as.numeric(SSPSingle))
+})

@@ -186,11 +186,12 @@ calculatePhysioMap.default <- function(InputData, Space, GenesRatio = 0.05,
                                                 ParallelMethod=ParallelMethod)
         stopCluster(cl)
     } else {
-        physioMap <- apply(X = InputData,
-                            MARGIN = 2, FUN = .singleThreadOfPhysioCalc,
-                            Space=Space, GenesRatio=GenesRatio,
-                            NGenes=NGenes, STATICResponse=STATICResponse,
-                            pb=pb, TTEST=TTEST)
+        physioMap <- matrix(apply(X = InputData, # 'matrix' for 1-dim cases
+                                    MARGIN = 2, FUN = .singleThreadOfPhysioCalc,
+                                        Space=Space, GenesRatio=GenesRatio,
+                                NGenes=NGenes, STATICResponse=STATICResponse,
+                                                pb=pb, TTEST=TTEST),
+                                                        ncol(Space), NSamples)
     }
 
     rownames(physioMap) = colnames(Space)

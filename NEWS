@@ -1,34 +1,68 @@
-# PhysioSpaceMethods 0.99.34 (21.9.2018)
+CHANGES IN VERSION 0.99.35 (16.11.2018)
+--------------------------------------
+NEW FEATURES
 
-* Temporary remove running of vignette to avoid build breakage appendage
+    o Switched to BiocParallel, for handling parallel processing
 
-# PhysioSpaceMethods 0.99.33 (21.9.2018)
+BUG FIXES
 
-* Temporary remove running of vignette to avoid build breakage
+    o Small text edit and typo corrections here and there
 
-# PhysioSpaceMethods 0.99.32 (21.9.2018)
+CHANGES IN VERSION 0.99.34 (21.9.2018)
+--------------------------------------
 
-* Fixed some bugs (specially in PhysioHeatmap())
-* Correction made to pass Bioconductor review
+BUG FIXES
 
-# PhysioSpaceMethods 0.99.22 (22.8.2018)
+    o Temporary remove running of vignette to avoid build breakage appendage
 
-* Added EnrichmentBrowser ID conversion to the vignette.
+CHANGES IN VERSION 0.99.33 (21.9.2018)
+--------------------------------------
 
-# PhysioSpaceMethods 0.99.21 (10.8.2018)
+BUG FIXES
 
-* Removed some examples to make building faster.
+    o Temporary remove running of vignette to avoid build breakage
 
-# PhysioSpaceMethods 0.99.2 (10.8.2018)
+CHANGES IN VERSION 0.99.32 (21.9.2018)
+--------------------------------------
 
-* Added SummarizedExperiment compatibility.
+BUG FIXES
 
-# PhysioSpaceMethods 0.99.1 (6.8.2018)
+    o Fixed some bugs (specially in PhysioHeatmap())
+    o Correction made to pass Bioconductor review
 
-* Fixed as much bugs and notes from 'checks' as possible.
-* Ready for bioconductor submission.
+CHANGES IN VERSION 0.99.22 (22.8.2018)
+--------------------------------------
 
+NEW FEATURES
 
-# PhysioSpaceMethods 0.99.0 (6.8.2018)
+    o Added EnrichmentBrowser ID conversion to the vignette.
 
-* Documentation updated, removed bugs and some notes from 'check's.
+CHANGES IN VERSION 0.99.21 (10.8.2018)
+--------------------------------------
+
+BUG FIXES
+
+    o Removed some examples to make building faster.
+
+CHANGES IN VERSION 0.99.2 (10.8.2018)
+-------------------------------------
+
+NEW FEATURES
+
+    o Added SummarizedExperiment compatibility.
+
+CHANGES IN VERSION 0.99.1 (8.8.2018)
+------------------------------------
+
+BUG FIXES
+
+    o Fixed as much bugs and notes from 'checks' as possible.
+    o Ready for bioconductor submission.
+
+CHANGES IN VERSION 0.99.0 (6.8.2018)
+------------------------------------
+
+BUG FIXES
+
+    o Documentation updated, removed bugs and some notes from 'check's.
+    o Ready for bioconductor submission.

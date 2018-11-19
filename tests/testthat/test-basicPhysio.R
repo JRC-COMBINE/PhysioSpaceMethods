@@ -1,16 +1,22 @@
 context("Test basic Physio Score calculations")
 
 SimulatedGeneExpressionData <- matrix(rnorm(n = 100000, mean = 0, sd = 100),
-                                      ncol = 10, dimnames = list(1:10000,1:10))
+                                    ncol = 10, dimnames = list(1:10000,1:10))
 SimulatedReferenceSpace <- matrix(rnorm(n = 100000, mean = 0, sd = 100),
-                                  ncol = 10, dimnames = list(1:10000,11:20))
+                                    ncol = 10, dimnames = list(1:10000,11:20))
 SelfSCORES <- calculatePhysioMap(InputData = SimulatedGeneExpressionData,
-                                 SimulatedGeneExpressionData)
+                                    SimulatedGeneExpressionData)
 SCORES <- calculatePhysioMap(InputData = SimulatedGeneExpressionData,
-                             SimulatedReferenceSpace)
+                                SimulatedReferenceSpace)
 SCORESParallel <- calculatePhysioMap(InputData = SimulatedGeneExpressionData,
-                                     Space = SimulatedReferenceSpace,
-                                     PARALLEL = TRUE)
+                                        Space = SimulatedReferenceSpace,
+                                        NumbrOfCores = 2)
+SCORESParallel2 <- calculatePhysioMap(InputData = SimulatedGeneExpressionData,
+                                        Space = SimulatedReferenceSpace,
+                                        NumbrOfCores = MulticoreParam(2))
+SCORESParallel3 <- calculatePhysioMap(InputData = SimulatedGeneExpressionData,
+                                        Space = SimulatedReferenceSpace,
+                                        NumbrOfCores = SnowParam(2))
 
 expectedSelfMax <-
     -log2(wilcox.test(
@@ -30,8 +36,10 @@ test_that("'calculatePhysioMap' has to have a matrices as input and space",{
   expect_lt(max(SCORES),expectedSelfMax)
   expect_error(calculatePhysioMap(InputData = SimulatedGeneExpressionData,
                                   Space = SimulatedReferenceSpace,
-                                  PARALLEL = TRUE, ParallelMethod = "NewMeth"))
+                                  NumbrOfCores = 2, ParallelMethod = "NewMeth"))
   expect_equal(SCORES,SCORESParallel)
+  expect_equal(SCORES,SCORESParallel2)
+  expect_equal(SCORES,SCORESParallel3)
 })
 
 test_that("'calculatePhysioMap' should work with single input or space",{
@@ -44,7 +52,7 @@ test_that("'calculatePhysioMap' should work with single input or space",{
     SSPSingle <- calculatePhysioMap(InputData =
                                     SimulatedGeneExpressionData[,1,drop=FALSE],
                             Space = SimulatedReferenceSpace[,1,drop=FALSE],
-                                                PARALLEL = TRUE)
+                            NumbrOfCores = 2)
     expect_is(SSSingle,"matrix")
     expect_is(SSingle,"matrix")
     expect_length(SSSingle, ncol(SimulatedReferenceSpace))

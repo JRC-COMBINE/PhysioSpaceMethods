@@ -5,14 +5,13 @@
 \title{Mapping new data into a physiological-space}
 \usage{
 calculatePhysioMap(InputData, Space, GenesRatio = 0.05,
-  PARALLEL = FALSE, NumbrOfCores = NA, TTEST = FALSE,
-  STATICResponse = FALSE, ImputationMethod = "PCA",
-  ParallelMethod = "parCapply")
+  NumbrOfCores = 1, TTEST = FALSE, STATICResponse = FALSE,
+  ImputationMethod = "PCA")
 }
 \arguments{
 \item{InputData}{A matrix, SummarizedExperiment object or a list,
 based on the gene expression data (or any other type of high
-dimnesional, e.g. protein abundance, SNP, Methylation, etc.),
+dimensional data, e.g. protein abundance, SNP, Methylation, etc.),
 to be analysed. InputData has to have a specific format to be
 properly analysed, these requirements are thoroughly explained
 in the 'Details' section.}
@@ -30,15 +29,19 @@ percent highest and lowest gene expression values of each sample.
 GenesRatio should be a numerical value between 0 and 1. Default value
 is 0.05.}
 
-\item{PARALLEL}{Logical value indicating if calculation should be done in
-parallel. Default value is FALSE.
-It is not recommended to use PARALLEL=TRUE on small datasets since due to
-large overhead, it could take more time than using PARALLEL=FALSE.}
-
-\item{NumbrOfCores}{Number of cores to be used when 'PARALLEL' is TRUE.
-Default is NA which will result in the program using
-'all available cores - 1'. Assigning a number higher than
-parallel::detectCores() will result in an error.}
+\item{NumbrOfCores}{Number of cpu-cores to be used.
+Default is 1 which will result in the program running in serial.
+If you assign a number higher than 1, BiocParallel::MulticoreParam is
+called to make a parallel back-end to use.
+Assigning a number higher than parallel::detectCores() will
+result in an error.
+You can also pass a BiocParallelParam instance to be used as parallel
+back-end.
+Remember that on Windows, the default MulticoreParam back-end doesn't
+work so you have to use another back-end, e.g. Snow by calling
+BiocParallel::SnowParam().
+For more information, check the examples at the end of this help page or
+documentation of BiocParallel package.}
 
 \item{TTEST}{Logical value indicating if t.test should be done in place
 of the default wilcoxon rank-sum test (more info can be found
@@ -50,14 +53,6 @@ returned rather than the default 'signed p value'. Default value is FALSE.}
 
 \item{ImputationMethod}{Imputation method to use in case of missing
 values. Available methods are "PCA" and "KNN". Default is "PCA".}
-
-\item{ParallelMethod}{Parallel method to use when PARALLEL=TRUE.
-Two methods are implemented so far: "parCapply"
-which uses parCapply function of parallel package, and "foreach" which
-uses foreach package to process in parallel.
-Speed-wise, foreach has an edge on parCapply, but the latter
-is more stable. Hence, we recommend to use parCapply.
-The default value for ParallelMethod is "parCapply".}
 }
 \value{
 Matrix of mapped 'InputData' values in 'Space', with rows
@@ -86,7 +81,7 @@ unknown input data with a physiological space. Physiological spaces
 are mathematical spaces build upon known
 physiological data, using the 'spaceMaker' function.
 
-When preparing the InputData, specific requirements need to be met.
+When preparing the InputData, specific requirements are needed to be met:
 
 1- In case of a matrix, InputData is supposed to be the
 gene expressions matrix to be analyzed, with genes as rows and samples
@@ -113,7 +108,7 @@ rownames in 'Space') of up regulated genes in InputData[[1]] and
 Entrez IDs (or any other identifier which is used as rownames
 in 'Space') of down regulated genes in InputData[[2]].
 Having a list InputData is usually slow and restrictive, hence,
-mainly it is not recommended.
+list input it is not recommended.
 }
 \examples{
  SimulatedGeneExpressionData <- matrix(
@@ -135,7 +130,6 @@ mainly it is not recommended.
    calculatePhysioMap(
      InputData = SimulatedGeneExpressionData,
      Space = SimulatedReferenceSpace,
-     PARALLEL = TRUE,
      NumbrOfCores = 2,
      GenesRatio = 0.01,
      STATICResponse = FALSE,
@@ -153,6 +147,28 @@ mainly it is not recommended.
  )
  calculatePhysioMap(InputData = SimulatedGeneExpressionData_SE,
                      Space = SimulatedReferenceSpace)
+
+ #Examples for user-defined parallel back-ends:
+ if (parallel::detectCores() > 1) {
+   #More than one core is needed for parallel processing
+   library(BiocParallel)
+   calculatePhysioMap(
+     InputData = SimulatedGeneExpressionData,
+     Space = SimulatedReferenceSpace,
+     NumbrOfCores = SnowParam(2), #Use this on Windows
+     GenesRatio = 0.01,
+     STATICResponse = FALSE,
+     TTEST = TRUE
+   )
+   calculatePhysioMap(
+     InputData = SimulatedGeneExpressionData,
+     Space = SimulatedReferenceSpace,
+     NumbrOfCores = MulticoreParam(2),
+     GenesRatio = 0.01,
+     STATICResponse = FALSE,
+     TTEST = TRUE
+   )
+ }
 
 }
 \references{

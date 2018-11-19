@@ -1,12 +1,12 @@
 #' @title Creates PhysioSpaces
 #'
 #' @description This function uses 'Big Data' to make robust
-#' 'Physiological Vectors' in N dimensions spaces, with which you
-#' will map new data to extract information from a new data set.
+#' 'Physiological Vectors' in N dimensional spaces, within which you
+#' can map new data to extract physiological information from a new data set.
 #'
 #' @param GeneExMatrix A matrix of input gene expressions or a
 #' SummarizedExperiment object, based on which the Physiological
-#' Space will be made.
+#' Space is made.
 #'
 #' In case of a matrix, GeneExMatrix is supposed to have genes
 #' as rows and samples as columns. Corresponding Entrez Gene
@@ -22,18 +22,18 @@
 #' multiple assays, only the first one is used.
 #'
 #' Unless 'DESIGN' and 'CONTRASTs' inputs are provided by the
-#' user, spaceMaker presumes the label of the first column
+#' user, spaceMaker supposes the label of the first column
 #' (colnames(GeneExMatrix)[1]) to be the reference of the
 #' experiment and uses all the samples with this label as control.
 #'
 #' @param DESIGN (Optional) Design matrix of GeneExMatrix, made by
 #' the function model.matrix(). If it's not provided, spaceMaker()
-#' will make a design matrix based on colnames(GeneExMatrix).
+#' will make a design matrix based on sample names of GeneExMatrix.
 #'
 #' @param CONTRASTs (Optional) character vector or list specifying
 #' contrasts. If it's not provided, spaceMaker()
 #' will make the CONTRASTs with the assumption that
-#' colnames(GeneExMatrix)[1] is the label of the control or reference.
+#' sample names of first column is the label of the control or reference.
 #' REMEMBER that expected user-defined CONTRASTs format changes based
 #' on the LinearOrRNASeq input: in case LinearOrRNASeq='Linear',
 #' CONTRASTs is expected to work as an input for
@@ -53,7 +53,7 @@
 #' limma::voom-transformed RNA-seq data, then LinearOrRNASeq should
 #' be 'Linear'. In this case limma package is used in the
 #' calculations. But in case your GeneExMatrix input is an RNA-seq
-#' count matrix, you should use 'RNASeq' as LinearOrRNASeq. In
+#' count matrix, you should pass 'RNASeq' to LinearOrRNASeq. In
 #' this case DESeq2 package is used for calculations.
 #'
 #'

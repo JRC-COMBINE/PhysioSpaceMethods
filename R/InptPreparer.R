@@ -1,15 +1,20 @@
 #' @title Preparing InputData for Calculation
 #'
 #' @description .inptPreparer is an internal function used by
-#' .inptChecker and spaceMaker to set up row- and column names of
+#' .inptChecker and spaceMaker to set up row and column names of
 #' 'InputData', and convert it to a matrix, if necessary.
 #'
-#' @inheritParams calculatePhysioMap
+#' @param InputData A matrix, SummarizedExperiment object or a list,
+#' based on the gene expression data (or any other type of high
+#' dimensional data, e.g. protein abundance, SNP, Methylation, etc.),
+#' to be analysed. InputData has to have a specific format to be
+#' properly analysed, these requirements are thoroughly explained
+#' in the 'Details' section of calculatePhysioMap() function.
 #'
 #' @importFrom SummarizedExperiment rowData colData assay
 #'
 #' @return .inptPreparer returns InputData as a matrix
-#' with proper row- and column names.
+#' with proper row and column names.
 #'
 #' @examples
 #'  SimulatedGeneExpressionData <- matrix(

@@ -6,7 +6,7 @@
 #'
 #' @param InputData A matrix, SummarizedExperiment object or a list,
 #' based on the gene expression data (or any other type of high
-#' dimnesional, e.g. protein abundance, SNP, Methylation, etc.),
+#' dimensional data, e.g. protein abundance, SNP, Methylation, etc.),
 #' to be analysed. InputData has to have a specific format to be
 #' properly analysed, these requirements are thoroughly explained
 #' in the 'Details' section.
@@ -21,14 +21,19 @@
 #' percent highest and lowest gene expression values of each sample.
 #' GenesRatio should be a numerical value between 0 and 1. Default value
 #' is 0.05.
-#' @param PARALLEL Logical value indicating if calculation should be done in
-#' parallel. Default value is FALSE.
-#' It is not recommended to use PARALLEL=TRUE on small datasets since due to
-#' large overhead, it could take more time than using PARALLEL=FALSE.
-#' @param NumbrOfCores Number of cores to be used when 'PARALLEL' is TRUE.
-#' Default is NA which will result in the program using
-#' 'all available cores - 1'. Assigning a number higher than
-#' parallel::detectCores() will result in an error.
+#' @param NumbrOfCores Number of cpu-cores to be used.
+#' Default is 1 which will result in the program running in serial.
+#' If you assign a number higher than 1, BiocParallel::MulticoreParam is
+#' called to make a parallel back-end to use.
+#' Assigning a number higher than parallel::detectCores() will
+#' result in an error.
+#' You can also pass a BiocParallelParam instance to be used as parallel
+#' back-end.
+#' Remember that on Windows, the default MulticoreParam back-end doesn't
+#' work so you have to use another back-end, e.g. Snow by calling
+#' BiocParallel::SnowParam().
+#' For more information, check the examples at the end of this help page or
+#' documentation of BiocParallel package.
 #' @param TTEST Logical value indicating if t.test should be done in place
 #' of the default wilcoxon rank-sum test (more info can be found
 #' in the original PhysioSpace: Lenz et. al., PLOS One 2013). Using t.test
@@ -37,16 +42,9 @@
 #' returned rather than the default 'signed p value'. Default value is FALSE.
 #' @param ImputationMethod Imputation method to use in case of missing
 #' values. Available methods are "PCA" and "KNN". Default is "PCA".
-#' @param ParallelMethod Parallel method to use when PARALLEL=TRUE.
-#' Two methods are implemented so far: "parCapply"
-#' which uses parCapply function of parallel package, and "foreach" which
-#' uses foreach package to process in parallel.
-#' Speed-wise, foreach has an edge on parCapply, but the latter
-#' is more stable. Hence, we recommend to use parCapply.
-#' The default value for ParallelMethod is "parCapply".
 #'
 #' @import progress
-#'
+#' @importFrom BiocParallel MulticoreParam SerialParam bplapply
 #' @details PhysioSpace is a robust
 #' statistical method for relating high dimensional omics data sets from
 #' heterogeneous sources using shared physiological
@@ -60,7 +58,7 @@
 #' are mathematical spaces build upon known
 #' physiological data, using the 'spaceMaker' function.
 #'
-#' When preparing the InputData, specific requirements need to be met.
+#' When preparing the InputData, specific requirements are needed to be met:
 #'
 #' 1- In case of a matrix, InputData is supposed to be the
 #' gene expressions matrix to be analyzed, with genes as rows and samples
@@ -87,7 +85,7 @@
 #' Entrez IDs (or any other identifier which is used as rownames
 #' in 'Space') of down regulated genes in InputData[[2]].
 #' Having a list InputData is usually slow and restrictive, hence,
-#' mainly it is not recommended.
+#' list input it is not recommended.
 #'
 #' @return Matrix of mapped 'InputData' values in 'Space', with rows
 #' corresponding to axes of 'Space' and columns representing
@@ -121,7 +119,6 @@
 #'    calculatePhysioMap(
 #'      InputData = SimulatedGeneExpressionData,
 #'      Space = SimulatedReferenceSpace,
-#'      PARALLEL = TRUE,
 #'      NumbrOfCores = 2,
 #'      GenesRatio = 0.01,
 #'      STATICResponse = FALSE,
@@ -140,13 +137,34 @@
 #'  calculatePhysioMap(InputData = SimulatedGeneExpressionData_SE,
 #'                      Space = SimulatedReferenceSpace)
 #'
+#'  #Examples for user-defined parallel back-ends:
+#'  if (parallel::detectCores() > 1) {
+#'    #More than one core is needed for parallel processing
+#'    library(BiocParallel)
+#'    calculatePhysioMap(
+#'      InputData = SimulatedGeneExpressionData,
+#'      Space = SimulatedReferenceSpace,
+#'      NumbrOfCores = SnowParam(2), #Use this on Windows
+#'      GenesRatio = 0.01,
+#'      STATICResponse = FALSE,
+#'      TTEST = TRUE
+#'    )
+#'    calculatePhysioMap(
+#'      InputData = SimulatedGeneExpressionData,
+#'      Space = SimulatedReferenceSpace,
+#'      NumbrOfCores = MulticoreParam(2),
+#'      GenesRatio = 0.01,
+#'      STATICResponse = FALSE,
+#'      TTEST = TRUE
+#'    )
+#'  }
+#'
 #' @export
 #Pre-function for dispaching the calculating to the right function:
 calculatePhysioMap <- function(InputData, Space, GenesRatio = 0.05,
-                                PARALLEL = FALSE, NumbrOfCores=NA,
-                                TTEST = FALSE, STATICResponse = FALSE,
-                                ImputationMethod = "PCA",
-                                ParallelMethod = "parCapply"){
+                                NumbrOfCores = 1, TTEST = FALSE,
+                                STATICResponse = FALSE,
+                                ImputationMethod = "PCA"){
     UseMethod("calculatePhysioMap")
 }
 
@@ -154,10 +172,9 @@ calculatePhysioMap <- function(InputData, Space, GenesRatio = 0.05,
 ##The main function for calculating PhysioScores:
 #' @export
 calculatePhysioMap.default <- function(InputData, Space, GenesRatio = 0.05,
-                                        PARALLEL = FALSE, NumbrOfCores=NA,
-                                        TTEST = FALSE, STATICResponse = FALSE,
-                                        ImputationMethod = "PCA",
-                                        ParallelMethod = "parCapply"){
+                                        NumbrOfCores = 1, TTEST = FALSE,
+                                        STATICResponse = FALSE,
+                                        ImputationMethod = "PCA"){
     ##Initializing:
     .inptChecker(InputData, Space)
     #Imputing missing values:
@@ -170,30 +187,39 @@ calculatePhysioMap.default <- function(InputData, Space, GenesRatio = 0.05,
 
     NGenes <- nrow(InputData)
     NSamples <- ncol(InputData)
-    physioMap <- matrix(NA, ncol(Space), NSamples)
-    if(PARALLEL) cl <- .parallelInitializer(NumbrOfCores=NumbrOfCores)
+    #Initializing BiocParallel back-end:
+    if(is.numeric(NumbrOfCores)) {
+        if(NumbrOfCores > 1){
+            if(NumbrOfCores <= detectCores()){
+                BPParam <- MulticoreParam(workers = NumbrOfCores)
+            } else {
+                stop("'NumbrOfCores' can not be higher than ",
+                     "the available number of cores, which is ",
+                     as.character(detectCores())
+                )
+            }
+        } else {
+            BPParam <- SerialParam()
+        }
+    } else if(attr(x = class(NumbrOfCores),which = "package")=="BiocParallel"){
+        BPParam <- NumbrOfCores
+    } else {
+        stop("'NumbrOfCores' is expected to be an integer, or a ",
+             "back-end param object made using BiocParallel package")
+    }
+    #Initializing progress-bar:
     pb <- progress_bar$new(format = "(:spin) [:bar] :percent eta: :eta",
-                            total = ifelse(PARALLEL,NSamples/length(cl),
-                                            NSamples),
+                            total = NSamples,
                             clear = FALSE)
     #
     #Main:
-    if(PARALLEL) {
-        physioMap <- calculatePhysioMapCores(InputData, Space,
-                                                NSamples, GenesRatio,
-                                                NGenes, STATICResponse,
-                                                pb, TTEST, cl,
-                                                ParallelMethod=ParallelMethod)
-        stopCluster(cl)
-    } else {
-        physioMap <- matrix(apply(X = InputData, # 'matrix' for 1-dim cases
-                                    MARGIN = 2, FUN = .singleThreadOfPhysioCalc,
-                                        Space=Space, GenesRatio=GenesRatio,
-                                NGenes=NGenes, STATICResponse=STATICResponse,
-                                                pb=pb, TTEST=TTEST),
-                                                        ncol(Space), NSamples)
-    }
-
+    physioMap <- bplapply(X = 1:ncol(InputData),
+                                FUN = .singleThreadOfPhysioCalc,
+                                InputData = InputData, Space=Space,
+                                GenesRatio=GenesRatio, NGenes=NGenes,
+                                STATICResponse=STATICResponse, pb=pb,
+                                TTEST=TTEST, BPPARAM = BPParam)
+    physioMap <- matrix(data = unlist(physioMap), ncol(Space), NSamples)
     rownames(physioMap) = colnames(Space)
     colnames(physioMap) = colnames(InputData)
     return(physioMap)
@@ -203,10 +229,9 @@ calculatePhysioMap.default <- function(InputData, Space, GenesRatio = 0.05,
 ##PhysioSpace for gene lists as a Input:
 #' @export
 calculatePhysioMap.list <- function(InputData, Space, GenesRatio = 0.05,
-                                    PARALLEL = FALSE, NumbrOfCores=NA,
-                                    TTEST = FALSE, STATICResponse = FALSE,
-                                    ImputationMethod = "PCA",
-                                    ParallelMethod = "parCapply"){
+                                    NumbrOfCores = 1, TTEST = FALSE,
+                                    STATICResponse = FALSE,
+                                    ImputationMethod = "PCA"){
     UpIndx <- na.omit(match(InputData[[1]],rownames(Space)))
     DownIndx <- na.omit(match(InputData[[2]],rownames(Space)))
     if(length(UpIndx) < 2){

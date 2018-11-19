@@ -4,11 +4,18 @@
 \alias{.singleThreadOfPhysioCalc}
 \title{Mapping one sample into a physiological-space}
 \usage{
-.singleThreadOfPhysioCalc(INPT, Space, GenesRatio, NGenes, STATICResponse,
-  pb, TTEST)
+.singleThreadOfPhysioCalc(SampleNum, InputData, Space, GenesRatio, NGenes,
+  STATICResponse, pb, TTEST)
 }
 \arguments{
-\item{INPT}{A sample (column) out of InputData.}
+\item{SampleNum}{A sample (column) number of InputData.}
+
+\item{InputData}{A matrix, SummarizedExperiment object or a list,
+based on the gene expression data (or any other type of high
+dimensional data, e.g. protein abundance, SNP, Methylation, etc.),
+to be analysed. InputData has to have a specific format to be
+properly analysed, these requirements are thoroughly explained
+in the 'Details' section of calculatePhysioMap() function.}
 
 \item{Space}{The space in which the 'InputData' will be mapped. Just as
 'InputData', it should be a matrix with genes as rows and samples as
@@ -36,7 +43,7 @@ in the original PhysioSpace: Lenz et. al., PLOS One 2013). Using t.test
 will speed up calculations. Default value is FALSE.}
 }
 \value{
-Vector of mapped 'INPT' values in 'Space'.
+Vector of mapped 'InputData[,SampleNum]' values in 'Space'.
 Mapped values are signed p value when STATICResponse==FALSE,
 and are 'statistic' value when STATICResponse==TRUE
 (more info can be found in the original PhysioSpace:
@@ -46,5 +53,5 @@ Lenz et. al., PLOS One 2013).
 .singleThreadOfPhysioCalc is an internal function
 of calculatePhysioMap, computing the main mapping. We don't
 recommend the use of .singleThreadOfPhysioCalc outside of
-calculatePhysioMap.
+calculatePhysioMap().
 }

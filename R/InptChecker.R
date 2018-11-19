@@ -1,10 +1,17 @@
 #' @title Checking calculatePhysioMap Inputs
 #'
 #' @description .inptChecker is an internal function used by
-#' calculatePhysioMap to check the format of inputs, 'InputData'
-#' and 'Space' to be exact. It checks to see 1- both 'InputData'
-#' and 'Space' are matrices, and 2- it matches the rows of 'InputData'
+#' calculatePhysioMap for checking the format of inputs, 'InputData'
+#' and 'Space' to be exact. It 1- checks to see if both 'InputData'
+#' and 'Space' are matrices, and 2- matches the rows of 'InputData'
 #' or 'Space' based on their row names.
+#'
+#' @param InputData A matrix, SummarizedExperiment object or a list,
+#' based on the gene expression data (or any other type of high
+#' dimensional data, e.g. protein abundance, SNP, Methylation, etc.),
+#' to be analysed. InputData has to have a specific format to be
+#' properly analysed, these requirements are thoroughly explained
+#' in the 'Details' section of calculatePhysioMap() function.
 #'
 #' @inheritParams calculatePhysioMap
 #'

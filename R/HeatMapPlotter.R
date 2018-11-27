@@ -161,12 +161,19 @@ PhysioHeatmap <- function(PhysioResults, ColorLevels = 100,
 
     if(SpaceClustering & nrow(PhysioResultsMorghed)>1){
         if(all(is.na(Space))){
-            stop("For SpaceClustering==TRUE,",
-                    "'Space' is needed and should be provided!")
+            warning("For SpaceClustering==TRUE,",
+                    "'Space' is needed and should be provided!",
+                    "'SpaceClustering' is switched to FALSE.")
+        } else if(any(is.infinite(Space))){
+            warning("For SpaceClustering==TRUE,",
+                    "'Space' should be bounded.",
+                    "'SpaceClustering' is switched to FALSE.")
+        } else {
+            PhysioResultsMorghed <-
+                PhysioResultsMorghed[hclust(d = as.dist(1 - cor(Space,
+                                        use = "pairwise.complete.obs")))$order,,
+                                        drop=FALSE]
         }
-        PhysioResultsMorghed <-
-            PhysioResultsMorghed[hclust(d = as.dist(1 - cor(Space)))$order, ,
-                                    drop=FALSE]
     }
 
     COLORInterpolated <-

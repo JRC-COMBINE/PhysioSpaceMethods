@@ -38,7 +38,8 @@ or 'Space' based on their row names.
      ncol = 10,
      dimnames = list(1:10000, 1:10)
    )
- PhysioSpaceMethods:::.inptChecker(InputData = SimulatedGeneExpressionData[, 1:5],
+ PhysioSpaceMethods:::.inptChecker(InputData =
+                                         SimulatedGeneExpressionData[, 1:5],
               Space = SimulatedGeneExpressionData[sample(1:10000), 6:10])
 
 }

@@ -21,6 +21,7 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: FALSE
 Imports: progress,
+    parallel,
     missMDA,
     DMwR,
     grDevices,
@@ -33,9 +34,13 @@ Imports: progress,
     BiocParallel
 BugReports: https://github.com/JRC-COMBINE/PhysioSpaceMethods/issues
 URL: https://github.com/JRC-COMBINE/PhysioSpaceMethods
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 Suggests: knitr,
     BiocStyle,
     rmarkdown,
-    testthat
+    testthat,
+    ExperimentHub,
+    biomaRt,
+    GEOquery,
+    EnrichmentBrowser
 VignetteBuilder: knitr

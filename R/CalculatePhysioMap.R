@@ -45,6 +45,7 @@
 #'
 #' @import progress
 #' @importFrom BiocParallel MulticoreParam SerialParam bplapply
+#' @importFrom parallel detectCores
 #' @details PhysioSpace is a robust
 #' statistical method for relating high dimensional omics data sets from
 #' heterogeneous sources using shared physiological
@@ -194,18 +195,21 @@ calculatePhysioMap.default <- function(InputData, Space, GenesRatio = 0.05,
                 BPParam <- MulticoreParam(workers = NumbrOfCores)
             } else {
                 stop("'NumbrOfCores' can not be higher than ",
-                     "the available number of cores, which is ",
-                     as.character(detectCores())
+                        "the available number of cores, which is ",
+                        as.character(detectCores())
                 )
             }
         } else {
             BPParam <- SerialParam()
         }
-    } else if(attr(x = class(NumbrOfCores),which = "package")=="BiocParallel"){
+    #wanted to ckeck if
+    #attr(x = class(NumbrOfCores),which = "package") is "BiocParallel"
+    #but biocCheck doesn't allow it, reformat to:
+    } else if(isS4(NumbrOfCores)){
         BPParam <- NumbrOfCores
     } else {
         stop("'NumbrOfCores' is expected to be an integer, or a ",
-             "back-end param object made using BiocParallel package")
+                "back-end param object made using BiocParallel package")
     }
     #Initializing progress-bar:
     pb <- progress_bar$new(format = "(:spin) [:bar] :percent eta: :eta",
@@ -213,7 +217,7 @@ calculatePhysioMap.default <- function(InputData, Space, GenesRatio = 0.05,
                             clear = FALSE)
     #
     #Main:
-    physioMap <- bplapply(X = 1:ncol(InputData),
+    physioMap <- bplapply(X = seq_len(ncol(InputData)),
                                 FUN = .singleThreadOfPhysioCalc,
                                 InputData = InputData, Space=Space,
                                 GenesRatio=GenesRatio, NGenes=NGenes,

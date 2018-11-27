@@ -106,7 +106,7 @@
 #'
 #' @export
 spaceMaker <- function(GeneExMatrix, DESIGN = NA, CONTRASTs = NA,
-                       Output = "PhysioScore", LinearOrRNASeq = "Linear"){
+                        Output = "PhysioScore", LinearOrRNASeq = "Linear"){
 
     if(!any(LinearOrRNASeq == c("Linear","RNASeq"))){
         stop("'LinearOrRNASeq' input should be either 'Linear' or 'RNASeq'")
@@ -117,8 +117,8 @@ spaceMaker <- function(GeneExMatrix, DESIGN = NA, CONTRASTs = NA,
     # 'Design' construction from colnames of GeneExMatrix:
     if(is.na(DESIGN)){
         DESIGN <- model.matrix(object =
-                                   ~ 0 + factor(x = colnames(GeneExMatrix),
-                                                levels = unique(colnames(GeneExMatrix))))
+                                    ~ 0 + factor(x = colnames(GeneExMatrix),
+                                    levels = unique(colnames(GeneExMatrix))))
         #made a factor with first column as first level
         colnames(DESIGN) <- unique(colnames(GeneExMatrix))
 
@@ -130,13 +130,13 @@ spaceMaker <- function(GeneExMatrix, DESIGN = NA, CONTRASTs = NA,
         if(is.na(CONTRASTs)){
             #Making the 'contrast's from colnames of GeneExMatrix:
             CONTRASTs <- paste(colnames(DESIGN)[-1],
-                               colnames(DESIGN)[1], sep = "-")
+                                colnames(DESIGN)[1], sep = "-")
         }
     } else {
         #Making colData for DESeqDataSetFromMatrix:
         colDataForDESeqModel = data.frame("CONDITION" = colnames(GeneExMatrix))
         colnames(GeneExMatrix) <- make.names(colnames(GeneExMatrix),
-                                             unique = TRUE)
+                                                unique = TRUE)
         ##Because DESeqDataSetFromMatrix forces colnames of countData as
         #rownames to colData, and colData is a data.frame so repeat
         #in those names mean error.
@@ -146,7 +146,7 @@ spaceMaker <- function(GeneExMatrix, DESIGN = NA, CONTRASTs = NA,
             for(K in 2:ncol(DESIGN)){
                 CONTRASTs[[colnames(DESIGN)[K]]] <-
                     list(colnames(DESIGN)[K],
-                         colnames(DESIGN)[1])
+                            colnames(DESIGN)[1])
             }
         }
     }
@@ -159,21 +159,21 @@ spaceMaker <- function(GeneExMatrix, DESIGN = NA, CONTRASTs = NA,
         MODELCalculated <- eBayes(MODELCalculated)
     } else {
         MODELStructured <- DESeqDataSetFromMatrix(countData = GeneExMatrix,
-                                                  colData = colDataForDESeqModel,
-                                                  design = DESIGN)
+                                                colData = colDataForDESeqModel,
+                                                design = DESIGN)
         MODELCalculated <- DESeq(MODELStructured, quiet = TRUE)
     }
 
     #Extracting aimed results:
     MODELResults <- list()
     pb <- progress_bar$new(format = "(:spin) [:bar] :percent eta: :eta",
-                           total = length(CONTRASTs), clear = FALSE)
+                            total = length(CONTRASTs), clear = FALSE)
     for(Const in CONTRASTs){
         MODELResults[[length(MODELResults) + 1]] <-
             if(LinearOrRNASeq=="Linear"){
                 topTable(fit = MODELCalculated, coef = Const,
-                         adjust.method="BH",
-                         number = Inf, sort.by = "none")
+                            adjust.method="BH",
+                            number = Inf, sort.by = "none")
             } else {
                 results(object = MODELCalculated,
                         pAdjustMethod = "BH",
@@ -187,11 +187,11 @@ spaceMaker <- function(GeneExMatrix, DESIGN = NA, CONTRASTs = NA,
     LFCs <- if(LinearOrRNASeq=="Linear") "logFC" else "log2FoldChange"
     if(Output == "PhysioScore"){
         Outi <- vapply(X = MODELResults,
-                       function(x) -log2(x[[PVALs]])*sign(x[[LFCs]]),
-                       FUN.VALUE = numeric(length = nrow(GeneExMatrix)))
+                        function(x) -log2(x[[PVALs]])*sign(x[[LFCs]]),
+                        FUN.VALUE = numeric(length = nrow(GeneExMatrix)))
     } else if(Output == "FoldChange"){
         Outi <- vapply(X = MODELResults, function(x) x[[LFCs]],
-                       FUN.VALUE = numeric(length = nrow(GeneExMatrix)))
+                        FUN.VALUE = numeric(length = nrow(GeneExMatrix)))
     } else if(Output == "Model"){
         return(MODELStructured)
     } else {

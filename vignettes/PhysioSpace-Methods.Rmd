@@ -282,8 +282,6 @@ Alternatively, we could use
 [biomaRt's package](
 https://bioconductor.org/packages/release/bioc/html/biomaRt.html):
 ```{r message=FALSE}
-#Loading the object into R:
-load("E-MTAB-2836-atlasExperimentSummary.Rdata")
 EMTAB2836_SEObj <- experimentSummary$rnaseq
 #
 #Converting Ensembl to Entrez IDs, and making EntrezID in rowData:

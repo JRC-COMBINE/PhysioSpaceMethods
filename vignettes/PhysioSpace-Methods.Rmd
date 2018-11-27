@@ -139,13 +139,11 @@ LukkSpace <- spaceMaker(GeneExMatrix = LukkDataMatrix)
 E-MTAB-2836 can be downloaded manually from [this
 page (the "Summary of the expression results for this experiment ready to view
 in R"" link)](https://www.ebi.ac.uk/gxa/experiments/E-MTAB-2836/Downloads),
-or by using the following command in R:
+or loaded directly into R by the following command:
 ```{r}
 #Download:
-download.file(url = "https://www.ebi.ac.uk/gxa/experiments-content/E-MTAB-2836/static/E-MTAB-2836-atlasExperimentSummary.Rdata",
-              destfile= "E-MTAB-2836-atlasExperimentSummary.Rdata") # We're
-              #downloading into the working directory, obviously using any
-              #other directory is possible.
+load(url(paste0("https://www.ebi.ac.uk/gxa/experiments-content/",
+                "E-MTAB-2836/static/E-MTAB-2836-atlasExperimentSummary.Rdata")))
 ```
 
 After downloading (and normalizing if necessary), the data can be analysed
@@ -191,7 +189,6 @@ E-MTAB-2836-atlasExperimentSummary.Rdata contains a RangedSummarizedExperiment
 object, from which we have to extract a gene expression matrix:
 ```{r}
 #Making the gene expression matrix:
-load("E-MTAB-2836-atlasExperimentSummary.Rdata") #Loading the object into R
 EMTAB2836CountMatrix <- assay(experimentSummary$rnaseq)
 ```
 

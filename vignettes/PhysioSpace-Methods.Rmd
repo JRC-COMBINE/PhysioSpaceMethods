@@ -44,7 +44,7 @@ demonstrated here by an example.
 
 Before running through the example, we load all required packages of the
 vignette:
-```{r eval=FALSE, echo=TRUE}
+```{r message=FALSE}
 library(SummarizedExperiment) #SummarizedExperiment is needed for 
                             #working with RangedSummarizedExperiment objects.
 library(EnrichmentBrowser)  # For converting IDs of a
@@ -54,15 +54,6 @@ library(biomaRt) #For ID conversion
 library(GEOquery) #For downloading datasets from GEO
 library(ExperimentHub) #Downloads datasets from ExperimentHub web service
 library(PhysioSpaceMethods) #Main package
-```
-```{r echo=FALSE}
-suppressPackageStartupMessages(library(SummarizedExperiment))
-suppressPackageStartupMessages(library(EnrichmentBrowser))
-suppressPackageStartupMessages(library(limma))
-suppressPackageStartupMessages(library(biomaRt))
-suppressPackageStartupMessages(library(GEOquery))
-suppressPackageStartupMessages(library(ExperimentHub))
-suppressPackageStartupMessages(library(PhysioSpaceMethods))
 ```
 
 # E-MTAB-2836 Analysis Using PhysioSpaceMethods

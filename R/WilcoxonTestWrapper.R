@@ -18,6 +18,7 @@
 #' if STATICResponse==TRUE.
 #'
 #' @examples
+#' \dontrun{
 #'  SimulatedReferenceSpace <-
 #'    matrix(
 #'      rnorm(n = 100000, mean = 0, sd = 100),
@@ -36,6 +37,7 @@
 #'    ),
 #'    STATICResponse = FALSE
 #'  )
+#' }
 #'
 
 .wilTest <- function(ReferencesJ,iplus,iminus,STATICResponse){

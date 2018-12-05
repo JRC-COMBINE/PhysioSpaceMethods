@@ -22,6 +22,7 @@
 #' (By assigning new matrices to parent.frame()).
 #'
 #' @examples
+#' \dontrun{
 #'  SimulatedGeneExpressionData <-
 #'    matrix(
 #'      rnorm(n = 100000, mean = 0, sd = 100),
@@ -31,6 +32,7 @@
 #'  PhysioSpaceMethods:::.inptChecker(InputData =
 #'                                          SimulatedGeneExpressionData[, 1:5],
 #'               Space = SimulatedGeneExpressionData[sample(1:10000), 6:10])
+#' }
 #'
 .inptChecker <- function(InputData, Space){
     #Space Checking:

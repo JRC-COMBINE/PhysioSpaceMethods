@@ -17,6 +17,7 @@
 #' @importFrom missMDA imputePCA estim_ncpPCA
 #'
 #' @examples
+#' \dontrun{
 #'  MatToImpute <-
 #'    matrix(
 #'      rnorm(n = 100000, mean = 0, sd = 100),
@@ -28,6 +29,7 @@
 #'  ImputedMat <-
 #'    PhysioSpaceMethods:::.imputeMissingGeneExpression(InptGEX = MatToImpute,
 #'    METHOD = "PCA")
+#' }
 #'
 .imputeMissingGeneExpression <- function(InptGEX, METHOD="PCA"){
     if(METHOD=="KNN"){

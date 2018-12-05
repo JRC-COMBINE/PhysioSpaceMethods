@@ -17,6 +17,7 @@
 #' with proper row and column names.
 #'
 #' @examples
+#' \dontrun{
 #'  SimulatedGeneExpressionData <- matrix(
 #'    rnorm(n = 100000, mean = 0,
 #'          sd = 100),
@@ -36,6 +37,7 @@
 #'  )
 #'  SimulatedGeneExpressionData_SE_checked <-
 #'      PhysioSpaceMethods:::.inptPreparer(SimulatedGeneExpressionData_SE)
+#' }
 #'
 .inptPreparer <- function(InputData){
     UseMethod(".inptPreparer")

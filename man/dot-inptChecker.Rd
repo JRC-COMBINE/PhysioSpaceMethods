@@ -32,6 +32,7 @@ and 'Space' are matrices, and 2- matches the rows of 'InputData'
 or 'Space' based on their row names.
 }
 \examples{
+\dontrun{
  SimulatedGeneExpressionData <-
    matrix(
      rnorm(n = 100000, mean = 0, sd = 100),
@@ -41,5 +42,6 @@ or 'Space' based on their row names.
  PhysioSpaceMethods:::.inptChecker(InputData =
                                          SimulatedGeneExpressionData[, 1:5],
               Space = SimulatedGeneExpressionData[sample(1:10000), 6:10])
+}
 
 }

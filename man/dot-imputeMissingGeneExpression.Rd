@@ -23,6 +23,7 @@ of the InputData or Space (or else missing values would break the
 pipeline in calculatePhysioMap).
 }
 \examples{
+\dontrun{
  MatToImpute <-
    matrix(
      rnorm(n = 100000, mean = 0, sd = 100),
@@ -34,5 +35,6 @@ pipeline in calculatePhysioMap).
  ImputedMat <-
    PhysioSpaceMethods:::.imputeMissingGeneExpression(InptGEX = MatToImpute,
    METHOD = "PCA")
+}
 
 }

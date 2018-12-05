@@ -2,9 +2,9 @@ context("Test basic Space making")
 
 INPTMat <-
     matrix(
-        data = rnorm(n = 180000, mean = 8, sd = 6),
-        nrow = 20000,
-        dimnames = list(paste0("g", 1:20000), c(
+        data = rnorm(n = 18000, mean = 8, sd = 6),
+        nrow = 2000,
+        dimnames = list(paste0("g", 1:2000), c(
             rep("Ctrl", 3), rep("Cancer1", 3), rep("Cancer2", 3)
         ))
     ) #Simulated DNA-array gene expression matrix
@@ -17,9 +17,9 @@ LinearSpaceOfINPTMatModl <- spaceMaker(GeneExMatrix = INPTMat,
 
 INPTMatRNASeq <-
     matrix(
-        data = rnbinom(n = 180000, size = 1.5, prob = 0.01),
-        nrow = 20000,
-        dimnames = list(paste0("g", 1:20000), c(
+        data = rnbinom(n = 18000, size = 1.5, prob = 0.01),
+        nrow = 2000,
+        dimnames = list(paste0("g", 1:2000), c(
             rep("Ctrl", 3), rep("Cancer1", 3), rep("Cancer2", 3)
         ))
     ) #Simulated RNA-seq gene expression matrix

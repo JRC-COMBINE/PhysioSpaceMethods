@@ -1,7 +1,7 @@
 context("Test Wilcoxon rank-sum wrapper function used by calculatePhysioMap")
 
-SimulatedReferenceSpace <- matrix(rnorm(n = 100000, mean = 0, sd = 100),
-                                  ncol = 10, dimnames = list(1:10000,11:20))
+SimulatedReferenceSpace <- matrix(rnorm(n = 10000, mean = 0, sd = 100),
+                                  ncol = 10, dimnames = list(1:1000,11:20))
 
 loggedPs <- .wilTest(
         ReferencesJ = SimulatedReferenceSpace[, 4],

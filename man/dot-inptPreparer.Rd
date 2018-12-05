@@ -24,6 +24,7 @@ with proper row and column names.
 'InputData', and convert it to a matrix, if necessary.
 }
 \examples{
+\dontrun{
  SimulatedGeneExpressionData <- matrix(
    rnorm(n = 100000, mean = 0,
          sd = 100),
@@ -43,5 +44,6 @@ with proper row and column names.
  )
  SimulatedGeneExpressionData_SE_checked <-
      PhysioSpaceMethods:::.inptPreparer(SimulatedGeneExpressionData_SE)
+}
 
 }

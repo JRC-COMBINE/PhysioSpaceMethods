@@ -26,6 +26,7 @@ calculatePhysioMap. It does a t-test between iplus and iminus
 indexed genes in ReferencesJ.
 }
 \examples{
+\dontrun{
  SimulatedReferenceSpace <-
    matrix(
      rnorm(n = 100000, mean = 0, sd = 100),
@@ -44,5 +45,6 @@ indexed genes in ReferencesJ.
    ),
    STATICResponse = FALSE
  )
+}
 
 }

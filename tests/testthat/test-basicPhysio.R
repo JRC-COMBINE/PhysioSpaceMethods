@@ -1,9 +1,9 @@
 context("Test basic Physio Score calculations")
 
-SimulatedGeneExpressionData <- matrix(rnorm(n = 100000, mean = 0, sd = 100),
-                                    ncol = 10, dimnames = list(1:10000,1:10))
-SimulatedReferenceSpace <- matrix(rnorm(n = 100000, mean = 0, sd = 100),
-                                    ncol = 10, dimnames = list(1:10000,11:20))
+SimulatedGeneExpressionData <- matrix(rnorm(n = 10000, mean = 0, sd = 100),
+                                    ncol = 10, dimnames = list(1:1000,1:10))
+SimulatedReferenceSpace <- matrix(rnorm(n = 10000, mean = 0, sd = 100),
+                                    ncol = 10, dimnames = list(1:1000,11:20))
 SelfSCORES <- calculatePhysioMap(InputData = SimulatedGeneExpressionData,
                                     SimulatedGeneExpressionData)
 SCORES <- calculatePhysioMap(InputData = SimulatedGeneExpressionData,

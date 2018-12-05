@@ -16,6 +16,7 @@
 #' t-test statisitic if STATICResponse==TRUE.
 #'
 #' @examples
+#' \dontrun{
 #'  SimulatedReferenceSpace <-
 #'    matrix(
 #'      rnorm(n = 100000, mean = 0, sd = 100),
@@ -34,6 +35,7 @@
 #'    ),
 #'    STATICResponse = FALSE
 #'  )
+#' }
 #'
 
 .tTest <- function(ReferencesJ,iplus,iminus,STATICResponse){

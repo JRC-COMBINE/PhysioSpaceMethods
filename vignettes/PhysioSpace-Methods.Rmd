@@ -48,10 +48,8 @@ vignette:
 library(SummarizedExperiment) #SummarizedExperiment is needed for 
                             #working with RangedSummarizedExperiment objects.
 library(EnrichmentBrowser)  # For converting IDs of a
-                            # RangedSummarizedExperiment object.    
-library(limma) #For linear modelling and statistical testing
-library(biomaRt) #For ID conversion
-library(GEOquery) #For downloading datasets from GEO
+                            # RangedSummarizedExperiment object.
+library(org.Hs.eg.db) #For ID conversion
 library(ExperimentHub) #Downloads datasets from ExperimentHub web service
 library(PhysioSpaceMethods) #Main package
 ```
@@ -194,21 +192,15 @@ ways for this conversion. For example by using
 Ensembl's [BioMart](https://www.ensembl.org/biomart/martview/) or
 [biomaRt's package](
 https://bioconductor.org/packages/release/bioc/html/biomaRt.html) in R.
-Here we used biomaRt's package:
+Here we used bioconductor's [org.Hs.eg.db](
+bioconductor.org/packages/release/data/annotation/html/org.Hs.eg.db.html) 
+annotation package:
 ```{r message=FALSE}
 #Converting Ensembl to Entrez IDs:
-humaRt <- useMart(biomart = "ENSEMBL_MART_ENSEMBL",
-                                  dataset = "hsapiens_gene_ensembl")
-ConvTabelle <- getBM(attributes = c("ensembl_gene_id","entrezgene"),
-                     filters = "ensembl_gene_id",
-                     values = rownames(EMTAB2836CountMatrix),
-                     mart = humaRt)
-rownames(EMTAB2836CountMatrix) <-
-              ConvTabelle$entrezgene[match(rownames(EMTAB2836CountMatrix),
-              ConvTabelle$ensembl_gene_id)]
-EMTAB2836CountMatrix <-
-          EMTAB2836CountMatrix[!is.na(rownames(EMTAB2836CountMatrix)),]
-          #We remove the IDs that couldn't be converted and turned into NAs.
+ENSEMBL2EG <- as.list(org.Hs.egENSEMBL2EG)
+IDIndx <- match(rownames(EMTAB2836CountMatrix), names(ENSEMBL2EG), nomatch = 0)
+EMTAB2836CountMatrix <- EMTAB2836CountMatrix[IDIndx!=0,]
+rownames(EMTAB2836CountMatrix) <- sapply(ENSEMBL2EG[IDIndx], function(x) x[1])
 ```
 
 * **Writing sample names in colnames:** This step is not necessary for proper
@@ -269,26 +261,18 @@ rowData(EMTAB2836_SEObj) <- data.frame("EntrezID" =
 We used idMap function from [EnrichmentBrowser package](
 https://bioconductor.org/packages/release/bioc/html/EnrichmentBrowser.html)
 for converting Ensembl to Entrez IDs.
-Alternatively, we could use
-[biomaRt's package](
-https://bioconductor.org/packages/release/bioc/html/biomaRt.html):
+Alternatively, we could use [org.Hs.eg.db](
+bioconductor.org/packages/release/data/annotation/html/org.Hs.eg.db.html) 
+annotation package:
 ```{r message=FALSE}
 EMTAB2836_SEObj <- experimentSummary$rnaseq
 #
 #Converting Ensembl to Entrez IDs, and making EntrezID in rowData:
-humaRt <- useMart(biomart = "ENSEMBL_MART_ENSEMBL",
-                                  dataset = "hsapiens_gene_ensembl")
-ConvTabelle <- getBM(attributes = c("ensembl_gene_id","entrezgene"),
-                     filters = "ensembl_gene_id",
-                     values = rownames(EMTAB2836_SEObj),
-                     mart = humaRt)
+ENSEMBL2EG <- as.list(org.Hs.egENSEMBL2EG)
+IDIndx <- match(rownames(EMTAB2836_SEObj), names(ENSEMBL2EG), nomatch = 0)
+EMTAB2836_SEObj <- EMTAB2836_SEObj[IDIndx!=0,]
 rowData(EMTAB2836_SEObj) <- data.frame("EntrezID" =
-              ConvTabelle$entrezgene[match(rownames(EMTAB2836_SEObj),
-              ConvTabelle$ensembl_gene_id)])
-EMTAB2836_SEObj <-
-          EMTAB2836_SEObj[!is.na(rowData(EMTAB2836_SEObj)$EntrezID),]
-          #We remove the rows with Entrez IDs that couldn't be
-          #converted and turned into NAs.
+              sapply(ENSEMBL2EG[IDIndx], function(x) x[1]))
 ```
 
 * **Setting up 'SampleName' component in colData:** This step is not

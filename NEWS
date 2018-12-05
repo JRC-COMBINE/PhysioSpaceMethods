@@ -1,8 +1,8 @@
-CHANGES IN VERSION 0.99.39 (04.12.2018)
+CHANGES IN VERSION 0.99.40 (05.12.2018)
 --------------------------------------
 BUG FIXES
 
-    o Vignette updated again, to solve a bug
+    o Vignette updated again, Got rid of biomaRt to solve build problems
 
 CHANGES IN VERSION 0.99.38 (27.11.2018)
 --------------------------------------

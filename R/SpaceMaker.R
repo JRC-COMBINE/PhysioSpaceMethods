@@ -73,6 +73,7 @@
 #'
 #'
 #' @examples
+#' \dontrun{
 #'  INPTMat <-
 #'    matrix(
 #'      data = rnorm(n = 18000, mean = 8, sd = 6),
@@ -102,7 +103,7 @@
 #'      colData = data.frame("SampleName" = colnames(INPTMat))
 #'  ) #Simulated DNA-array gene expression SummarizedExperiment obj.
 #'  LinearSpaceOfINPTMat_SE <- spaceMaker(GeneExMatrix = INPTMat_SE)
-#'
+#' }
 #'
 #' @export
 spaceMaker <- function(GeneExMatrix, DESIGN = NA, CONTRASTs = NA,

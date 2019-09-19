@@ -111,7 +111,6 @@ Having a list InputData is usually slow and restrictive, hence,
 list input it is not recommended.
 }
 \examples{
-\dontrun{
  SimulatedGeneExpressionData <- matrix(
    rnorm(n = 10000, mean = 0,
          sd = 100),
@@ -170,7 +169,7 @@ list input it is not recommended.
      TTEST = TRUE
    )
  }
-}
+
 }
 \references{
 Lenz, M., Schuldt, B. M., Müller, F. J., & Schuppert,

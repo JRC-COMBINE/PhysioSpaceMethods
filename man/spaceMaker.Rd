@@ -78,7 +78,6 @@ This function uses 'Big Data' to make robust
 can map new data to extract physiological information from a new data set.
 }
 \examples{
-\dontrun{
  INPTMat <-
    matrix(
      data = rnorm(n = 18000, mean = 8, sd = 6),
@@ -108,6 +107,6 @@ can map new data to extract physiological information from a new data set.
      colData = data.frame("SampleName" = colnames(INPTMat))
  ) #Simulated DNA-array gene expression SummarizedExperiment obj.
  LinearSpaceOfINPTMat_SE <- spaceMaker(GeneExMatrix = INPTMat_SE)
-}
+
 
 }

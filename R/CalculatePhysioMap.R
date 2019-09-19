@@ -101,7 +101,6 @@
 #' PLoS One, 8(10), e77627.
 #'
 #' @examples
-#' \dontrun{
 #'  SimulatedGeneExpressionData <- matrix(
 #'    rnorm(n = 10000, mean = 0,
 #'          sd = 100),
@@ -160,7 +159,7 @@
 #'      TTEST = TRUE
 #'    )
 #'  }
-#' }
+#'
 #' @export
 #Pre-function for dispaching the calculating to the right function:
 calculatePhysioMap <- function(InputData, Space, GenesRatio = 0.05,

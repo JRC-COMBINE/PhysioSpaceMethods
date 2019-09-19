@@ -17,9 +17,9 @@ accessible tool for R users.
 ### Installation Instructions
 You can install this package by:
 ```r
-if (!requireNamespace("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
-BiocManager::install("PhysioSpaceMethods", version = "devel")
+if (!requireNamespace("remotes", quietly = TRUE))
+    install.packages("remotes")
+remotes::install_gitlab("jrc-combine/PhysioSpaceMethods", host = "git.rwth-aachen.de")
 ```
 
 ### Usage Instructions

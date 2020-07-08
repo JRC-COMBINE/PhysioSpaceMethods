@@ -56,9 +56,24 @@
 #' count matrix, you should pass 'RNASeq' to LinearOrRNASeq. In
 #' this case DESeq2 package is used for calculations.
 #'
+#' @param NumbrOfCores Number of cpu-cores to be used (only in RNASeq mode).
+#' Default is 1 which will result in the program running in serial.
+#' If you assign a number higher than 1, BiocParallel::MulticoreParam is
+#' called to make a parallel back-end to use.
+#' Assigning a number higher than parallel::detectCores() will
+#' result in an error.
+#' You can also pass a BiocParallelParam instance to be used as parallel
+#' back-end.
+#' Remember that on Windows, the default MulticoreParam back-end doesn't
+#' work so you have to use another back-end, e.g. Snow by calling
+#' BiocParallel::SnowParam().
+#' For more information, check the
+#' documentation of BiocParallel package.
 #'
 #' @importFrom limma lmFit makeContrasts contrasts.fit eBayes topTable
 #' @importFrom DESeq2 DESeqDataSetFromMatrix DESeq results
+#' @importFrom BiocParallel MulticoreParam bpparam
+#' @importFrom parallel detectCores
 #'
 #' @return Depending on the 'Output' argument, the returned value is
 #' either a matrix, or a model. If Output = "PhysioScore",
@@ -106,13 +121,18 @@
 #'
 #' @export
 spaceMaker <- function(GeneExMatrix, DESIGN = NA, CONTRASTs = NA,
-                        Output = "PhysioScore", LinearOrRNASeq = "Linear"){
+                        Output = "PhysioScore", LinearOrRNASeq = "Linear",
+                        NumbrOfCores = 1){
 
     if(!any(LinearOrRNASeq == c("Linear","RNASeq"))){
         stop("'LinearOrRNASeq' input should be either 'Linear' or 'RNASeq'")
     }
     UserDefinedDesign <- TRUE
     GeneExMatrix <- .inptPreparer(InputData = GeneExMatrix)
+
+    #DESeq2 correct the names at some point, which breaks everything, unless:
+    colnames(GeneExMatrix) <- make.names(colnames(GeneExMatrix))
+
 
     # 'Design' construction from colnames of GeneExMatrix:
     if(is.na(DESIGN)){
@@ -133,6 +153,33 @@ spaceMaker <- function(GeneExMatrix, DESIGN = NA, CONTRASTs = NA,
                                 colnames(DESIGN)[1], sep = "-")
         }
     } else {
+        #Initializing BiocParallel back-end:
+        if(is.numeric(NumbrOfCores)) {
+            if(NumbrOfCores > 1){
+                if(NumbrOfCores <= detectCores()){
+                    BPParam <- MulticoreParam(workers = NumbrOfCores)
+                    Parlel <- TRUE
+                } else {
+                    stop("'NumbrOfCores' can not be higher than ",
+                         "the available number of cores, which is ",
+                         as.character(detectCores())
+                    )
+                }
+            } else {
+                BPParam <- bpparam()
+                Parlel <- FALSE
+            }
+            #wanted to ckeck if
+            #attr(x = class(NumbrOfCores),which = "package") is "BiocParallel"
+            #but biocCheck doesn't allow it, reformat to:
+        } else if(isS4(NumbrOfCores)){
+            BPParam <- NumbrOfCores
+            Parlel <- TRUE
+        } else {
+            stop("'NumbrOfCores' is expected to be an integer, or a ",
+                 "back-end param object made using BiocParallel package")
+        }
+
         #Making colData for DESeqDataSetFromMatrix:
         colDataForDESeqModel = data.frame("CONDITION" = colnames(GeneExMatrix))
         colnames(GeneExMatrix) <- make.names(colnames(GeneExMatrix),
@@ -161,7 +208,8 @@ spaceMaker <- function(GeneExMatrix, DESIGN = NA, CONTRASTs = NA,
         MODELStructured <- DESeqDataSetFromMatrix(countData = GeneExMatrix,
                                                 colData = colDataForDESeqModel,
                                                 design = DESIGN)
-        MODELCalculated <- DESeq(MODELStructured, quiet = TRUE)
+        MODELCalculated <- DESeq(MODELStructured, quiet = TRUE,
+                                 parallel = Parlel, BPPARAM = BPParam)
     }
 
     #Extracting aimed results:
@@ -177,7 +225,7 @@ spaceMaker <- function(GeneExMatrix, DESIGN = NA, CONTRASTs = NA,
             } else {
                 results(object = MODELCalculated,
                         pAdjustMethod = "BH",
-                        contrast = Const)
+                        contrast = Const, parallel = Parlel, BPPARAM = BPParam)
             }
         pb$tick()
     }

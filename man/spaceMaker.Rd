@@ -4,8 +4,14 @@
 \alias{spaceMaker}
 \title{Creates PhysioSpaces}
 \usage{
-spaceMaker(GeneExMatrix, DESIGN = NA, CONTRASTs = NA,
-  Output = "PhysioScore", LinearOrRNASeq = "Linear")
+spaceMaker(
+  GeneExMatrix,
+  DESIGN = NA,
+  CONTRASTs = NA,
+  Output = "PhysioScore",
+  LinearOrRNASeq = "Linear",
+  NumbrOfCores = 1
+)
 }
 \arguments{
 \item{GeneExMatrix}{A matrix of input gene expressions or a
@@ -59,6 +65,20 @@ be 'Linear'. In this case limma package is used in the
 calculations. But in case your GeneExMatrix input is an RNA-seq
 count matrix, you should pass 'RNASeq' to LinearOrRNASeq. In
 this case DESeq2 package is used for calculations.}
+
+\item{NumbrOfCores}{Number of cpu-cores to be used (only in RNASeq mode).
+Default is 1 which will result in the program running in serial.
+If you assign a number higher than 1, BiocParallel::MulticoreParam is
+called to make a parallel back-end to use.
+Assigning a number higher than parallel::detectCores() will
+result in an error.
+You can also pass a BiocParallelParam instance to be used as parallel
+back-end.
+Remember that on Windows, the default MulticoreParam back-end doesn't
+work so you have to use another back-end, e.g. Snow by calling
+BiocParallel::SnowParam().
+For more information, check the
+documentation of BiocParallel package.}
 }
 \value{
 Depending on the 'Output' argument, the returned value is

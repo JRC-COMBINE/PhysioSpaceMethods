@@ -1,7 +1,7 @@
 Package: PhysioSpaceMethods
 Type: Package
 Title: Creates and uses physio spaces as a dimension reduction mapping
-Version: 0.99.44
+Version: 0.99.55
 Authors@R: person("Ali", "H. Esfahani", 
     email = "ali.hadizadeh@rwth-aachen.de", role = c("aut", "cre"))
 Description: This package uses 'Big Data' to make robust 'Physiological Vectors' 
@@ -34,7 +34,7 @@ Imports: progress,
     BiocParallel
 BugReports: https://github.com/JRC-COMBINE/PhysioSpaceMethods/issues
 URL: https://github.com/JRC-COMBINE/PhysioSpaceMethods
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0
 Suggests: knitr,
     BiocStyle,
     rmarkdown,

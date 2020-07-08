@@ -1,3 +1,10 @@
+CHANGES IN VERSION 0.99.55 (08.07.2020)
+--------------------------------------
+BUG FIXES
+
+    o column name problem for DESeq2 solved
+    o Added parallel calc. to RNASeq spaceMaking
+
 CHANGES IN VERSION 0.99.44 (05.12.2018)
 --------------------------------------
 BUG FIXES

@@ -19,7 +19,7 @@ You can install this package by:
 ```r
 if (!requireNamespace("remotes", quietly = TRUE))
     install.packages("remotes")
-remotes::install_gitlab("jrc-combine/PhysioSpaceMethods", host = "git.rwth-aachen.de")
+remotes::install_gitlab("jrc-combine/PhysioSpaceMethods", host = "git.rwth-aachen.de", build_manual = TRUE, build_vignettes = TRUE)
 ```
 
 ### Usage Instructions

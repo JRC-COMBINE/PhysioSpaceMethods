@@ -1,7 +1,7 @@
 Package: PhysioSpaceMethods
 Type: Package
 Title: Creates and uses physio spaces as a dimension reduction mapping
-Version: 0.99.56
+Version: 0.99.66
 Authors@R: person("Ali", "H. Esfahani", 
     email = "ali.hadizadeh@rwth-aachen.de", role = c("aut", "cre"))
 Description: This package uses 'Big Data' to make robust 'Physiological Vectors' 

@@ -1,3 +1,13 @@
+CHANGES IN VERSION 0.99.66 (25.09.2020)
+--------------------------------------
+BUG FIXES
+
+    o Fixed a bug in the vignette (the garbage BiocStyle is buggy(at the moment, it's failing to build on bioconductor!!!), reverted back to rmarkdown)
+NEW FEATURES
+
+    o Added a reference manual.
+
+
 CHANGES IN VERSION 0.99.56 (09.07.2020)
 --------------------------------------
 BUG FIXES

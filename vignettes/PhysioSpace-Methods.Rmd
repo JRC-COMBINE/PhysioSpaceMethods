@@ -44,7 +44,7 @@ demonstrated here by an example.
 
 Before running through the example, we load all required packages of the
 vignette:
-```{r message=FALSE}
+```r
 library(SummarizedExperiment) #SummarizedExperiment is needed for 
                             #working with RangedSummarizedExperiment objects.
 library(EnrichmentBrowser)  # For converting IDs of a
@@ -82,7 +82,7 @@ normalization or batch effects.
 In the first step, we download the Lukk atlas gene expression data from 
 [ExperimentHub](
 https://bioconductor.org/packages/release/bioc/html/ExperimentHub.html):
-```{r message=FALSE}
+```r
 hub <- ExperimentHub()
 HumanAffys <- query(hub, "HumanAffyData")
 LukkData <- HumanAffys[["EH177"]]
@@ -93,7 +93,7 @@ spaceMaker expects a matrix of input gene expressions
 (or a SummarizedExperiment object), with genes as rows and samples as columns.
 LukkData is an ExpressionSet object, so we will use exprs() function from 
 Biobase package to extract the expression matrix:
-```{r}
+```r
 LukkDataMatrix <- exprs(LukkData)
 ```
 
@@ -102,7 +102,7 @@ each sample should be written in 'colnames' of the matrix.
 Rownames of LukkDataMatrix already contain Entrez IDs of each gene. But as for
 the sample names, we have to extract them from LukkData using pData() function
 and assign them to colnames of LukkDataMatrix:
-```{r}
+```r
 colnames(LukkDataMatrix) <- make.names(pData(LukkData)$Groups_369)
 #'make.names' is used so that some specific names won't break the pipeline
 #later on. 
@@ -114,13 +114,13 @@ mathematical space. In that process, it needs one or few 'Control' or
 (or all samples with the same label as the first column) to be the reference 
 of the experiment and uses it as control. In this experiment, we use the 
 mean value of all samples as control:
-```{r}
+```r
 LukkDataMatrix <- cbind(apply(LukkDataMatrix,1,mean),LukkDataMatrix)
 colnames(LukkDataMatrix)[1] <- "Ctrl"
 ```
 
 LukkDataMatrix is ready to be used by spaceMaker():
-```{r message=FALSE}
+```r
 LukkSpace <- spaceMaker(GeneExMatrix = LukkDataMatrix)
 ```
 
@@ -129,7 +129,7 @@ E-MTAB-2836 can be downloaded manually from [this
 page (the "Summary of the expression results for this experiment ready to view
 in R"" link)](https://www.ebi.ac.uk/gxa/experiments/E-MTAB-2836/Downloads),
 or loaded directly into R by the following command:
-```{r}
+```r
 #Download:
 load(url(paste0("https://www.ebi.ac.uk/gxa/experiments-content/",
                 "E-MTAB-2836/static/E-MTAB-2836-atlasExperimentSummary.Rdata")))
@@ -176,7 +176,7 @@ We prepare E-MTAB-2836 for calculatePhysioMap() in four steps:
 * **Converting gene expression data into a matrix:** In this example
 E-MTAB-2836-atlasExperimentSummary.Rdata contains a RangedSummarizedExperiment
 object, from which we have to extract a gene expression matrix:
-```{r}
+```r
 #Making the gene expression matrix:
 EMTAB2836CountMatrix <- assay(experimentSummary$rnaseq)
 ```
@@ -195,7 +195,7 @@ https://bioconductor.org/packages/release/bioc/html/biomaRt.html) in R.
 Here we used bioconductor's [org.Hs.eg.db](
 bioconductor.org/packages/release/data/annotation/html/org.Hs.eg.db.html) 
 annotation package:
-```{r message=FALSE}
+```r
 #Converting Ensembl to Entrez IDs:
 ENSEMBL2EG <- as.list(org.Hs.egENSEMBL2EG)
 IDIndx <- match(rownames(EMTAB2836CountMatrix), names(ENSEMBL2EG), nomatch = 0)
@@ -209,7 +209,7 @@ the result matrix. Sample names should be short, and to the point. Since in
 this example we aim to match RNA-seq counts of different human tissues to
 their corresponding tissues in a micro-array compendium, we use the tissue
 names as colnames of EMTAB2836CountMatrix:
-```{r}
+```r
 #Assigning colnames:
 colnames(EMTAB2836CountMatrix) <-
                             colData(experimentSummary$rnaseq)$organism_part
@@ -222,7 +222,7 @@ correspond to down-regulated genes. Easiest way to
 calculate this relative value is by calculating fold change, although more
 proper statistical tests could result in better performance.
 In this specific example we use fold change:
-```{r}
+```r
 #Calculating Fold-Changes:
 EMTAB2836CountMatrixRelativ <- EMTAB2836CountMatrix -
                                         apply(EMTAB2836CountMatrix,1,mean)
@@ -247,7 +247,7 @@ in three steps:
 into working environment, we have to add a component named 'EntrezID' to
 row data of the loaded object. This new added component should contain
 Entrez IDs of the rows of data in the SummarizedExperiment object:
-```{r}
+```r
 #Loading the object into R:
 EMTAB2836_SEObj <- experimentSummary$rnaseq
 #
@@ -264,7 +264,7 @@ for converting Ensembl to Entrez IDs.
 Alternatively, we could use [org.Hs.eg.db](
 bioconductor.org/packages/release/data/annotation/html/org.Hs.eg.db.html) 
 annotation package:
-```{r message=FALSE}
+```r
 EMTAB2836_SEObj <- experimentSummary$rnaseq
 #
 #Converting Ensembl to Entrez IDs, and making EntrezID in rowData:
@@ -284,7 +284,7 @@ In this example, we aim to detect the tissue type of samples in
 E-MTAB-2836. So our target annotation is the source tissue name of each
 sample, already available as 'organism_part' component of column data.
 But we have to rename 'organism_part' to 'SampleName':
-```{r}
+```r
 #Assigning SampleName:
 names(colData(EMTAB2836_SEObj))[names(colData(EMTAB2836_SEObj)) ==
                                     "organism_part"] <- "SampleName"
@@ -296,7 +296,7 @@ it assumes the most positive values correspond to up-regulated genes
 and most negative values correspond to down-regulated genes.
 As mentioned above, in this example we use universal mean as control
 and calculate fold changes based on that reference:
-```{r}
+```r
 #Calculating Fold-Changes:
 assay(EMTAB2836_SEObj) <- assay(EMTAB2836_SEObj) -
                                         apply(assay(EMTAB2836_SEObj),1,mean)
@@ -316,7 +316,7 @@ possible to plot results of all 200 samples and go through all of them
 individually in this vignette, we randomly choose 5 samples out
 of 200 and show the matching between RNA-seq input
 data set to micro-array reference compendium is successful:
-```{r message=FALSE}
+```r
 #Choosing 5 random samples:
 set.seed(seed = 0) #So results would be reproducible
 Samples5Random <- sample(x = 1:ncol(EMTAB2836CountMatrixRelativ), size = 5)
@@ -325,7 +325,7 @@ RESULTS5 <- calculatePhysioMap(
     InputData = EMTAB2836CountMatrixRelativ[,Samples5Random],
     Space = LukkSpace)
 ```
-```{r message=FALSE}
+```r
 #Main calculation, for SummarizedExperiment input obj.:
 RESULTS5_SE <- calculatePhysioMap(
     InputData = EMTAB2836_SEObj[,Samples5Random],
@@ -333,7 +333,7 @@ RESULTS5_SE <- calculatePhysioMap(
 ```
 
 
-```{r}
+```r
 #Check to see if the results are the same, regardless of input format:
 identical(RESULTS5, RESULTS5_SE)
 ```
@@ -343,7 +343,7 @@ all the calculations in the matrix format.
 
 In cases with large number of input samples, we recommend running
 calculatePhysioMap() in parallel:
-```{r message=FALSE}
+```r
 #Main calculation in parallel:
 RESULTS5 <- calculatePhysioMap(
     InputData = EMTAB2836CountMatrixRelativ[,Samples5Random],
@@ -357,12 +357,14 @@ samples in 'InputData', and the same number of rows as the number of axes
 value in row M and Column N in RESULTS5 is the mapped values of N<sup>th</sup>
 sample on M<sup>th</sup> axis of the Space.
 
-```{r fig.width=10, fig.asp=1}
+```r
 #Plotting the results:
 PhysioHeatmap(PhysioResults = RESULTS5, main = "RNA-seq vs Microarray",
             SymmetricColoring = TRUE, SpaceClustering = FALSE,
             Space = LukkSpace, ReducedPlotting = 5)
 ```
+
+![](REsults.png)
 
 As shown in figure above, we expect to have the highest values (most red) 
 in the intersection of
@@ -382,9 +384,3 @@ our results, it is highly probable that the smooth muscle sample is acquired
 from uterine wall (myometrium is the middle layer of the uterine wall, 
 consisting mainly of uterine smooth muscle cells^[
 https://en.wikipedia.org/wiki/Myometrium]).
-
-
-# SessionInfo
-```{r}
-sessionInfo()
-```

@@ -387,65 +387,87 @@ PhysioHeatmap(PhysioResults = RESULTS5, main = &quot;RNA-seq vs Microarray&quot;
 &gt; Running under: macOS Catalina 10.15.6
 &gt; 
 &gt; Matrix products: default
-&gt; BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib
+&gt; BLAS:   /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRblas.0.dylib
 &gt; LAPACK: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRlapack.dylib
 &gt; 
 &gt; locale:
-&gt; [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+&gt; [1] C/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 &gt; 
 &gt; attached base packages:
-&gt;  [1] parallel  stats4    tools     stats     graphics  grDevices utils     datasets  methods  
-&gt; [10] base     
+&gt; [1] parallel  stats4    stats     graphics  grDevices utils     datasets 
+&gt; [8] methods   base     
 &gt; 
 &gt; other attached packages:
-&gt;  [1] HumanAffyData_1.12.0        PhysioSpaceMethods_0.99.66  ExperimentHub_1.12.0       
-&gt;  [4] AnnotationHub_2.18.0        BiocFileCache_1.10.2        dbplyr_1.4.4               
-&gt;  [7] org.Hs.eg.db_3.10.0         AnnotationDbi_1.48.0        EnrichmentBrowser_2.16.1   
-&gt; [10] graph_1.64.0                SummarizedExperiment_1.16.1 DelayedArray_0.12.3        
-&gt; [13] BiocParallel_1.20.1         matrixStats_0.57.0          Biobase_2.46.0             
-&gt; [16] GenomicRanges_1.38.0        GenomeInfoDb_1.22.1         IRanges_2.20.2             
+&gt;  [1] HumanAffyData_1.12.0        PhysioSpaceMethods_0.99.66 
+&gt;  [3] ExperimentHub_1.12.0        AnnotationHub_2.18.0       
+&gt;  [5] BiocFileCache_1.10.2        dbplyr_1.4.4               
+&gt;  [7] org.Hs.eg.db_3.10.0         AnnotationDbi_1.48.0       
+&gt;  [9] EnrichmentBrowser_2.16.1    graph_1.64.0               
+&gt; [11] SummarizedExperiment_1.16.1 DelayedArray_0.12.3        
+&gt; [13] BiocParallel_1.20.1         matrixStats_0.57.0         
+&gt; [15] Biobase_2.46.0              GenomicRanges_1.38.0       
+&gt; [17] GenomeInfoDb_1.22.1         IRanges_2.20.2             
 &gt; [19] S4Vectors_0.24.4            BiocGenerics_0.32.0        
 &gt; 
 &gt; loaded via a namespace (and not attached):
-&gt;   [1] backports_1.1.10              Hmisc_4.4-1                   GSEABase_1.48.0              
-&gt;   [4] splines_3.6.3                 ggplot2_3.3.2                 digest_0.6.25                
-&gt;   [7] foreach_1.5.0                 htmltools_0.5.0               rsconnect_0.8.16             
-&gt;  [10] magrittr_1.5                  checkmate_2.0.0               memoise_1.1.0                
-&gt;  [13] cluster_2.1.0                 doParallel_1.0.15             ROCR_1.0-11                  
-&gt;  [16] limma_3.42.2                  annotate_1.64.0               xts_0.12.1                   
-&gt;  [19] prettyunits_1.1.1             jpeg_0.1-8.1                  colorspace_1.4-1             
-&gt;  [22] blob_1.2.1                    rappdirs_0.3.1                ggrepel_0.8.2                
-&gt;  [25] xfun_0.18                     dplyr_1.0.2                   crayon_1.3.4                 
-&gt;  [28] RCurl_1.98-1.2                roxygen2_7.1.1                genefilter_1.68.0            
-&gt;  [31] survival_3.2-7                zoo_1.8-8                     iterators_1.0.12             
-&gt;  [34] glue_1.4.2                    gtable_0.3.0                  zlibbioc_1.32.0              
-&gt;  [37] XVector_0.26.0                quantmod_0.4.17               abind_1.4-5                  
-&gt;  [40] scales_1.1.1                  mvtnorm_1.1-1                 DBI_1.1.0                    
-&gt;  [43] Rcpp_1.0.5                    xtable_1.8-4                  progress_1.2.2               
-&gt;  [46] htmlTable_2.1.0               flashClust_1.01-2             foreign_0.8-76               
-&gt;  [49] bit_4.0.4                     Formula_1.2-3                 htmlwidgets_1.5.2            
-&gt;  [52] httr_1.4.2                    RColorBrewer_1.1-2            ellipsis_0.3.1               
-&gt;  [55] mice_3.11.0                   pkgconfig_2.0.3               XML_3.99-0.3                 
-&gt;  [58] nnet_7.3-14                   locfit_1.5-9.4                tidyselect_1.1.0             
-&gt;  [61] rlang_0.4.7                   later_1.1.0.1                 munsell_0.5.0                
-&gt;  [64] BiocVersion_3.10.1            generics_0.0.2                RSQLite_2.2.1                
-&gt;  [67] broom_0.7.1                   evaluate_0.14                 stringr_1.4.0                
-&gt;  [70] fastmap_1.0.1                 yaml_2.2.1                    knitr_1.30                   
-&gt;  [73] bit64_4.0.5                   purrr_0.3.4                   mime_0.9                     
-&gt;  [76] KEGGgraph_1.46.0              leaps_3.1                     xml2_1.3.2                   
-&gt;  [79] compiler_3.6.3                rstudioapi_0.11               curl_4.3                     
-&gt;  [82] png_0.1-7                     interactiveDisplayBase_1.24.0 tibble_3.0.3                 
-&gt;  [85] geneplotter_1.64.0            stringi_1.5.3                 missMDA_1.17                 
-&gt;  [88] lattice_0.20-41               Matrix_1.2-18                 vctrs_0.3.4                  
-&gt;  [91] pillar_1.4.6                  lifecycle_0.2.0               BiocManager_1.30.10          
-&gt;  [94] data.table_1.12.8             bitops_1.0-6                  httpuv_1.5.4                 
-&gt;  [97] R6_2.4.1                      latticeExtra_0.6-29           promises_1.1.1               
-&gt; [100] gridExtra_2.3                 codetools_0.2-16              MASS_7.3-53                  
-&gt; [103] assertthat_0.2.1              DESeq2_1.26.0                 DMwR_0.4.1                   
-&gt; [106] GenomeInfoDbData_1.2.2        hms_0.5.3                     grid_3.6.3                   
-&gt; [109] rpart_4.1-15                  tidyr_1.1.2                   class_7.3-17                 
-&gt; [112] rmarkdown_2.4                 TTR_0.24.2                    scatterplot3d_0.3-41         
-&gt; [115] shiny_1.5.0                   base64enc_0.1-3               FactoMineR_2.3</code></pre>
+&gt;   [1] colorspace_1.4-1              class_7.3-17                 
+&gt;   [3] ellipsis_0.3.1                htmlTable_2.1.0              
+&gt;   [5] XVector_0.26.0                base64enc_0.1-3              
+&gt;   [7] mice_3.11.0                   rstudioapi_0.11              
+&gt;   [9] ggrepel_0.8.2                 bit64_4.0.5                  
+&gt;  [11] mvtnorm_1.1-1                 missMDA_1.17                 
+&gt;  [13] interactiveDisplayBase_1.24.0 leaps_3.1                    
+&gt;  [15] codetools_0.2-16              splines_3.6.3                
+&gt;  [17] doParallel_1.0.15             geneplotter_1.64.0           
+&gt;  [19] knitr_1.30                    DMwR_0.4.1                   
+&gt;  [21] Formula_1.2-3                 broom_0.7.1                  
+&gt;  [23] annotate_1.64.0               cluster_2.1.0                
+&gt;  [25] png_0.1-7                     shiny_1.5.0                  
+&gt;  [27] BiocManager_1.30.10           compiler_3.6.3               
+&gt;  [29] httr_1.4.2                    backports_1.1.10             
+&gt;  [31] assertthat_0.2.1              Matrix_1.2-18                
+&gt;  [33] fastmap_1.0.1                 limma_3.42.2                 
+&gt;  [35] later_1.1.0.1                 htmltools_0.5.0              
+&gt;  [37] prettyunits_1.1.1             tools_3.6.3                  
+&gt;  [39] gtable_0.3.0                  glue_1.4.2                   
+&gt;  [41] GenomeInfoDbData_1.2.2        FactoMineR_2.3               
+&gt;  [43] dplyr_1.0.2                   rappdirs_0.3.1               
+&gt;  [45] Rcpp_1.0.5                    vctrs_0.3.4                  
+&gt;  [47] iterators_1.0.12              xfun_0.18                    
+&gt;  [49] stringr_1.4.0                 mime_0.9                     
+&gt;  [51] lifecycle_0.2.0               XML_3.99-0.3                 
+&gt;  [53] MASS_7.3-53                   zoo_1.8-8                    
+&gt;  [55] zlibbioc_1.32.0               scales_1.1.1                 
+&gt;  [57] hms_0.5.3                     promises_1.1.1               
+&gt;  [59] KEGGgraph_1.46.0              RColorBrewer_1.1-2           
+&gt;  [61] quantmod_0.4.17               yaml_2.2.1                   
+&gt;  [63] curl_4.3                      memoise_1.1.0                
+&gt;  [65] gridExtra_2.3                 ggplot2_3.3.2                
+&gt;  [67] rpart_4.1-15                  latticeExtra_0.6-29          
+&gt;  [69] stringi_1.5.3                 RSQLite_2.2.1                
+&gt;  [71] BiocVersion_3.10.1            genefilter_1.68.0            
+&gt;  [73] foreach_1.5.0                 checkmate_2.0.0              
+&gt;  [75] TTR_0.24.2                    rlang_0.4.7                  
+&gt;  [77] pkgconfig_2.0.3               bitops_1.0-6                 
+&gt;  [79] evaluate_0.14                 lattice_0.20-41              
+&gt;  [81] ROCR_1.0-11                   purrr_0.3.4                  
+&gt;  [83] htmlwidgets_1.5.2             bit_4.0.4                    
+&gt;  [85] tidyselect_1.1.0              GSEABase_1.48.0              
+&gt;  [87] magrittr_1.5                  DESeq2_1.26.0                
+&gt;  [89] R6_2.4.1                      generics_0.0.2               
+&gt;  [91] Hmisc_4.4-1                   DBI_1.1.0                    
+&gt;  [93] pillar_1.4.6                  foreign_0.8-76               
+&gt;  [95] xts_0.12.1                    scatterplot3d_0.3-41         
+&gt;  [97] survival_3.2-7                abind_1.4-5                  
+&gt;  [99] RCurl_1.98-1.2                nnet_7.3-14                  
+&gt; [101] tibble_3.0.3                  crayon_1.3.4                 
+&gt; [103] rmarkdown_2.4                 jpeg_0.1-8.1                 
+&gt; [105] progress_1.2.2                locfit_1.5-9.4               
+&gt; [107] grid_3.6.3                    data.table_1.12.8            
+&gt; [109] blob_1.2.1                    flashClust_1.01-2            
+&gt; [111] digest_0.6.25                 xtable_1.8-4                 
+&gt; [113] tidyr_1.1.2                   httpuv_1.5.4                 
+&gt; [115] munsell_0.5.0</code></pre>
 </div>
 <div class="footnotes">
 <hr />

@@ -1,0 +1,390 @@
+---
+title: "Introduction to PhysioSpaceMethods"
+author: "A. H. Esfahani"
+output: rmarkdown::html_document
+vignette: >
+  %\VignetteIndexEntry{Introduction to PhysioSpace}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = ">"
+)
+```
+
+PhysioSpace is a robust statistical method for relating high dimensional omics
+data sets^[Lenz, Michael, et al. "PhysioSpace: relating gene expression
+experiments from heterogeneous sources using shared physiological processes."
+PLoS One 8.10 (2013): e77627]. It is designed to take advantage of the vast
+availability of public omics data, which in combination with statistical
+approaches makes a potent tool capable of analyzing heterogeneous biological
+data sets.
+
+PhysioSpaceMethods is a R package which provides an implementation of
+PhysioSpace method alongside other handy functions for making PhysioSpace an
+easily accessible tool for R users.
+
+
+
+# Installation Instructions
+You can install this package by:
+```r
+if (!requireNamespace("remotes", quietly = TRUE))
+    install.packages("remotes")
+remotes::install_gitlab("jrc-combine/PhysioSpaceMethods", host = "git.rwth-aachen.de")
+```
+
+# Usage Instructions
+PhysioSpaceMethods can map user samples inside a physiological space,
+calculated beforehand from a compendium of known samples. This process is 
+demonstrated here by an example.
+
+Before running through the example, we load all required packages of the
+vignette:
+```{r message=FALSE}
+library(SummarizedExperiment) #SummarizedExperiment is needed for 
+                            #working with RangedSummarizedExperiment objects.
+library(EnrichmentBrowser)  # For converting IDs of a
+                            # RangedSummarizedExperiment object.
+library(org.Hs.eg.db) #For ID conversion
+library(ExperimentHub) #Downloads datasets from ExperimentHub web service
+library(PhysioSpaceMethods) #Main package
+```
+
+# E-MTAB-2836 Analysis Using PhysioSpaceMethods
+The data set used in this example is 
+[E-MTAB-2836](https://www.ebi.ac.uk/gxa/experiments/E-MTAB-2836/), 
+a RNA-seq atlas of coding RNA from tissue samples of 122
+_**human**_ individuals representing 32 
+different tissues, stored on ebi's 
+[Expression Atlas](https://www.ebi.ac.uk/gxa/home).
+
+Before starting the analysis, we need a physiological space in which we could
+map E-MTAB-2836 samples. There are spaces available in 'HumanPhysioSpace' 
+package, accessible at https://github.com/JRC-COMBINE/HumanPhysioSpace. For 
+demonstration purposes, we won't use that package. Instead, we will make a new
+physiological space in the next section, and use it through the rest of this 
+vignette.
+
+## Making a PhysioSpace out of Lukk et. al. human atlas
+In this section we use lukk et. al. human atlas^[Lukk, Margus, et al. 
+"A global map of human gene expression." Nature biotechnology 28.4 
+(2010): 322.] to make a human tissue space.
+
+Lukk et. al. atlas is generated using DNA-microarray (Affymetrix Human 
+Genome U133A Array). We chose this data set for analyzing E-MTAB-2836 (RNA-Seq) 
+to demonstrate PhysioSpace robustness against measurement technology, 
+normalization or batch effects.
+
+In the first step, we download the Lukk atlas gene expression data from 
+[ExperimentHub](
+https://bioconductor.org/packages/release/bioc/html/ExperimentHub.html):
+```{r message=FALSE}
+hub <- ExperimentHub()
+HumanAffys <- query(hub, "HumanAffyData")
+LukkData <- HumanAffys[["EH177"]]
+```
+
+We have to prepare the gene expression data set for the function spaceMaker().
+spaceMaker expects a matrix of input gene expressions 
+(or a SummarizedExperiment object), with genes as rows and samples as columns.
+LukkData is an ExpressionSet object, so we will use exprs() function from 
+Biobase package to extract the expression matrix:
+```{r}
+LukkDataMatrix <- exprs(LukkData)
+```
+
+Corresponding Entrez Gene IDs must be assigned to 'rownames', and name of 
+each sample should be written in 'colnames' of the matrix.
+Rownames of LukkDataMatrix already contain Entrez IDs of each gene. But as for
+the sample names, we have to extract them from LukkData using pData() function
+and assign them to colnames of LukkDataMatrix:
+```{r}
+colnames(LukkDataMatrix) <- make.names(pData(LukkData)$Groups_369)
+#'make.names' is used so that some specific names won't break the pipeline
+#later on. 
+```
+
+spaceMaker uses (linear) modeling and statistical testing while generating the
+mathematical space. In that process, it needs one or few 'Control' or 
+'Reference' samples. It assumes the first column 
+(or all samples with the same label as the first column) to be the reference 
+of the experiment and uses it as control. In this experiment, we use the 
+mean value of all samples as control:
+```{r}
+LukkDataMatrix <- cbind(apply(LukkDataMatrix,1,mean),LukkDataMatrix)
+colnames(LukkDataMatrix)[1] <- "Ctrl"
+```
+
+LukkDataMatrix is ready to be used by spaceMaker():
+```{r message=FALSE}
+LukkSpace <- spaceMaker(GeneExMatrix = LukkDataMatrix)
+```
+
+## E-MTAB-2836 Preparation
+E-MTAB-2836 can be downloaded manually from [this
+page (the "Summary of the expression results for this experiment ready to view
+in R"" link)](https://www.ebi.ac.uk/gxa/experiments/E-MTAB-2836/Downloads),
+or loaded directly into R by the following command:
+```{r}
+#Download:
+load(url(paste0("https://www.ebi.ac.uk/gxa/experiments-content/",
+                "E-MTAB-2836/static/E-MTAB-2836-atlasExperimentSummary.Rdata")))
+```
+
+After downloading (and normalizing if necessary), the data can be analysed
+using "calculatePhysioMap()" function. It is important to note that
+'InputData' of this function has specific format requirements which are needed
+to be met for the function to perform properly. Detailed description of input
+requirements can be found in calculatePhysioMap's help page. In short,
+
+1. In case InputData is a **matrix**, it should be:
+    a. a matrix (clearly),
+    b. with genes in rows, identified by Entrez IDs which are stored in
+    'rownames' of the matrix. And
+    c. samples in columns, identified by sample names stored in 'colnames'
+    of the matrix. Lastly,
+    d. values of InputData matrix should be **relative**, e.g. fold changes of
+    genes, rather than pure gene expressions.
+
+2. In case InputData is a **SummarizedExperiment object**, it is supposed to
+have:
+    a. a component named 'EntrezID' in its rowData, containing Entrez IDs of
+    rows in the object. And
+    b. a component named 'SampleName' in its colData, containing name or the
+    main annotation of the samples in the object. Lastly,
+    c. the assay in the SummarizedExperiment object (accessible by using
+    SummarizedExperiment::assay(obj)) has to have **relative** values, e.g.
+    fold changes of genes, rather than pure gene expressions.
+
+3. In case user has their own list of significantly up and down regulated
+genes, it is also possible for InputData to be a list:
+    a. containing Entrez IDs (or any other identifier which is used as
+    rownames in 'Space') of up regulated genes in InputData[[1]], and
+    b. Entrez IDs (or any other identifier which is used as rownames
+    in 'Space') of down regulated genes in InputData[[2]].
+
+For demonstration purposes, in this example we prepare the InputData as
+a matrix, and also as a SummarizedExperiment.
+
+### E-MTAB-2836 InputData as a matrix
+We prepare E-MTAB-2836 for calculatePhysioMap() in four steps:
+
+* **Converting gene expression data into a matrix:** In this example
+E-MTAB-2836-atlasExperimentSummary.Rdata contains a RangedSummarizedExperiment
+object, from which we have to extract a gene expression matrix:
+```{r}
+#Making the gene expression matrix:
+EMTAB2836CountMatrix <- assay(experimentSummary$rnaseq)
+```
+
+* **Having genes in rows and samples in columns, with Entrez IDs in
+rownames:** After converting the gene expression data
+to a matrix, we have to make sure that the matrix has genes in rows and 
+samples in columns, with genes identified by Entrez IDs stored in 
+'rownames' of the matrix. In EMTAB2836CountMatrix genes are already in rows and 
+samples are in columns. However, Ensembl IDs, stored 
+in rownames, have to be converted to Entrez IDs. There are numerous 
+ways for this conversion. For example by using
+Ensembl's [BioMart](https://www.ensembl.org/biomart/martview/) or
+[biomaRt's package](
+https://bioconductor.org/packages/release/bioc/html/biomaRt.html) in R.
+Here we used bioconductor's [org.Hs.eg.db](
+bioconductor.org/packages/release/data/annotation/html/org.Hs.eg.db.html) 
+annotation package:
+```{r message=FALSE}
+#Converting Ensembl to Entrez IDs:
+ENSEMBL2EG <- as.list(org.Hs.egENSEMBL2EG)
+IDIndx <- match(rownames(EMTAB2836CountMatrix), names(ENSEMBL2EG), nomatch = 0)
+EMTAB2836CountMatrix <- EMTAB2836CountMatrix[IDIndx!=0,]
+rownames(EMTAB2836CountMatrix) <- sapply(ENSEMBL2EG[IDIndx], function(x) x[1])
+```
+
+* **Writing sample names in colnames:** This step is not necessary for proper
+calculation, but it is highly recommended as it helps in proper inference of
+the result matrix. Sample names should be short, and to the point. Since in
+this example we aim to match RNA-seq counts of different human tissues to
+their corresponding tissues in a micro-array compendium, we use the tissue
+names as colnames of EMTAB2836CountMatrix:
+```{r}
+#Assigning colnames:
+colnames(EMTAB2836CountMatrix) <-
+                            colData(experimentSummary$rnaseq)$organism_part
+```
+
+* **Having _RELATIVE_ values for gene expression:** PhysioSpace method expects
+relative values as input, i.e. it assumes the most
+positive values correspond to up-regulated genes and most negative values
+correspond to down-regulated genes. Easiest way to
+calculate this relative value is by calculating fold change, although more
+proper statistical tests could result in better performance.
+In this specific example we use fold change:
+```{r}
+#Calculating Fold-Changes:
+EMTAB2836CountMatrixRelativ <- EMTAB2836CountMatrix -
+                                        apply(EMTAB2836CountMatrix,1,mean)
+```
+We used the gene-wise mean value of the whole data set as a virtual control
+sample and calculated the fold changes based on this
+virtual control, since all data points in E-MTAB-2836 are biopsy samples and
+there are no actual control samples. At the same time, because of the high
+number of samples in E-MTAB-2836, the mean value is a good measure of
+background noise on each gene. Therefore,
+mean values work great as controls to compare against.
+As mentioned above, there are more sophisticated ways for this calculation,
+one example could be to use the signed p value of a statistical test in
+logarithm scale.
+
+### E-MTAB-2836 InputData as a SummarizedExperiment object
+As an alternative, InputData could be a SummarizedExperiment object when
+passed to the calculatePhysioMap() function. Here, we prepare the object
+in three steps:
+
+* **Setting up 'EntrezID' component in rowData:** After loading E-MTAB-2836
+into working environment, we have to add a component named 'EntrezID' to
+row data of the loaded object. This new added component should contain
+Entrez IDs of the rows of data in the SummarizedExperiment object:
+```{r}
+#Loading the object into R:
+EMTAB2836_SEObj <- experimentSummary$rnaseq
+#
+#Converting Ensembl to Entrez IDs:
+EMTAB2836_SEObj <- idMap(EMTAB2836_SEObj, org="hsa",
+                                                from="ENSEMBL", to="ENTREZID")
+#Making EntrezID in rowData:
+rowData(EMTAB2836_SEObj) <- data.frame("EntrezID" =
+                                           rownames(EMTAB2836_SEObj))
+```
+We used idMap function from [EnrichmentBrowser package](
+https://bioconductor.org/packages/release/bioc/html/EnrichmentBrowser.html)
+for converting Ensembl to Entrez IDs.
+Alternatively, we could use [org.Hs.eg.db](
+bioconductor.org/packages/release/data/annotation/html/org.Hs.eg.db.html) 
+annotation package:
+```{r message=FALSE}
+EMTAB2836_SEObj <- experimentSummary$rnaseq
+#
+#Converting Ensembl to Entrez IDs, and making EntrezID in rowData:
+ENSEMBL2EG <- as.list(org.Hs.egENSEMBL2EG)
+IDIndx <- match(rownames(EMTAB2836_SEObj), names(ENSEMBL2EG), nomatch = 0)
+EMTAB2836_SEObj <- EMTAB2836_SEObj[IDIndx!=0,]
+rowData(EMTAB2836_SEObj) <- data.frame("EntrezID" =
+              sapply(ENSEMBL2EG[IDIndx], function(x) x[1]))
+```
+
+* **Setting up 'SampleName' component in colData:** This step is not
+necessary for proper calculation, but it is highly recommended as it
+helps in proper inference of the result matrix. We have to assign a
+component named 'SampleName' to col data of the object, which contains
+the main annotation of samples in the data set under analysis.
+In this example, we aim to detect the tissue type of samples in
+E-MTAB-2836. So our target annotation is the source tissue name of each
+sample, already available as 'organism_part' component of column data.
+But we have to rename 'organism_part' to 'SampleName':
+```{r}
+#Assigning SampleName:
+names(colData(EMTAB2836_SEObj))[names(colData(EMTAB2836_SEObj)) ==
+                                    "organism_part"] <- "SampleName"
+```
+
+* **Having _RELATIVE_ values in Assay:** PhysioSpace method expects
+relative values is assay of SummarizedExperiment input object, i.e.
+it assumes the most positive values correspond to up-regulated genes
+and most negative values correspond to down-regulated genes.
+As mentioned above, in this example we use universal mean as control
+and calculate fold changes based on that reference:
+```{r}
+#Calculating Fold-Changes:
+assay(EMTAB2836_SEObj) <- assay(EMTAB2836_SEObj) -
+                                        apply(assay(EMTAB2836_SEObj),1,mean)
+```
+
+Having the proper format for the input, the main calculation can be done
+easily by the calculatePhysioMap() function.
+
+## E-MTAB-2836 Analysis
+calculatePhysioMap() has two required input arguments: InputData, which is the
+relative gene expression matrix (or SummarizedExperiment obj.), and Space,
+which is the Physiological Space in which we want to map our input data. In
+this example, we use E-MTAB-2836 data set and LukkSpace we prepared above,
+as InputData and Space respectively.
+We should mention that there are 200 samples in E-MTAB-2836. Since it is not 
+possible to plot results of all 200 samples and go through all of them 
+individually in this vignette, we randomly choose 5 samples out
+of 200 and show the matching between RNA-seq input
+data set to micro-array reference compendium is successful:
+```{r message=FALSE}
+#Choosing 5 random samples:
+set.seed(seed = 0) #So results would be reproducible
+Samples5Random <- sample(x = 1:ncol(EMTAB2836CountMatrixRelativ), size = 5)
+#Main calculation:
+RESULTS5 <- calculatePhysioMap(
+    InputData = EMTAB2836CountMatrixRelativ[,Samples5Random],
+    Space = LukkSpace)
+```
+```{r message=FALSE}
+#Main calculation, for SummarizedExperiment input obj.:
+RESULTS5_SE <- calculatePhysioMap(
+    InputData = EMTAB2836_SEObj[,Samples5Random],
+    Space = LukkSpace)
+```
+
+
+```{r}
+#Check to see if the results are the same, regardless of input format:
+identical(RESULTS5, RESULTS5_SE)
+```
+As expected, results are the same for both input types of matrix and
+SummarizedExperiment obj.. In this vignette from here onward, we do
+all the calculations in the matrix format.
+
+In cases with large number of input samples, we recommend running
+calculatePhysioMap() in parallel:
+```{r message=FALSE}
+#Main calculation in parallel:
+RESULTS5 <- calculatePhysioMap(
+    InputData = EMTAB2836CountMatrixRelativ[,Samples5Random],
+    Space = LukkSpace, NumbrOfCores = 2)
+```
+
+The output of calculatePhysioMap(), which we named 'RESULTS5', is a
+matrix with the same number of columns as the number of
+samples in 'InputData', and the same number of rows as the number of axes
+(Columns) in the 'Space'. The
+value in row M and Column N in RESULTS5 is the mapped values of N<sup>th</sup>
+sample on M<sup>th</sup> axis of the Space.
+
+```{r fig.width=10, fig.asp=1}
+#Plotting the results:
+PhysioHeatmap(PhysioResults = RESULTS5, main = "RNA-seq vs Microarray",
+            SymmetricColoring = TRUE, SpaceClustering = FALSE,
+            Space = LukkSpace, ReducedPlotting = 5)
+```
+
+As shown in figure above, we expect to have the highest values (most red) 
+in the intersection of
+each column with its corresponding tissue in rows. From the 5 samples we
+analysed, "skeletal muscle tissue", "esophagus" and "placenta"
+are clearly matched to their corresponding tissues from micro-array space.
+From two remaining samples, "vermiform appendix" is matched to blood; 
+that is because there is no appendix tissue sample in Lukk data set.
+Considering that, matching to blood makes sense because the vermiform appendix
+biopsy is very likely to contain a large portion of blood, hence the
+conversion from RNA-seq to micro-array is probably successful in this sample
+as well. Same is true for the sample "smooth muscle tissue": there are many
+organs from which this smooth muscle sample could be acquired. Since no
+more extra information is provided in E-MTAB-2836 about this sample except
+that the sample is smooth muscle tissue from a female adult human, based on
+our results, it is highly probable that the smooth muscle sample is acquired
+from uterine wall (myometrium is the middle layer of the uterine wall, 
+consisting mainly of uterine smooth muscle cells^[
+https://en.wikipedia.org/wiki/Myometrium]).
+
+
+# SessionInfo
+```{r}
+sessionInfo()
+```

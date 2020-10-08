@@ -34,7 +34,7 @@ Imports: progress,
     BiocParallel
 BugReports: https://github.com/JRC-COMBINE/PhysioSpaceMethods/issues
 URL: https://github.com/JRC-COMBINE/PhysioSpaceMethods
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 Suggests: knitr,
     BiocStyle,
     rmarkdown,

@@ -4,9 +4,15 @@
 \alias{calculatePhysioMap}
 \title{Mapping new data into a physiological-space}
 \usage{
-calculatePhysioMap(InputData, Space, GenesRatio = 0.05,
-  NumbrOfCores = 1, TTEST = FALSE, STATICResponse = FALSE,
-  ImputationMethod = "PCA")
+calculatePhysioMap(
+  InputData,
+  Space,
+  GenesRatio = 0.05,
+  NumbrOfCores = 1,
+  TTEST = FALSE,
+  STATICResponse = FALSE,
+  ImputationMethod = "PCA"
+)
 }
 \arguments{
 \item{InputData}{A matrix, SummarizedExperiment object or a list,

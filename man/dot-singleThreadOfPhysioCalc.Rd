@@ -4,8 +4,16 @@
 \alias{.singleThreadOfPhysioCalc}
 \title{Mapping one sample into a physiological-space}
 \usage{
-.singleThreadOfPhysioCalc(SampleNum, InputData, Space, GenesRatio, NGenes,
-  STATICResponse, pb, TTEST)
+.singleThreadOfPhysioCalc(
+  SampleNum,
+  InputData,
+  Space,
+  GenesRatio,
+  NGenes,
+  STATICResponse,
+  pb,
+  TTEST
+)
 }
 \arguments{
 \item{SampleNum}{A sample (column) number of InputData.}

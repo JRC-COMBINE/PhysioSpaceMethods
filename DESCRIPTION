@@ -1,7 +1,7 @@
 Package: PhysioSpaceMethods
 Type: Package
 Title: Creates and uses physio spaces as a dimension reduction mapping
-Version: 0.99.66
+Version: 0.99.67
 Authors@R: person("Ali", "H. Esfahani", 
     email = "ali.hadizadeh@rwth-aachen.de", role = c("aut", "cre"))
 Description: This package uses 'Big Data' to make robust 'Physiological Vectors' 
@@ -23,7 +23,7 @@ LazyData: FALSE
 Imports: progress,
     parallel,
     missMDA,
-    DMwR,
+    impute,
     grDevices,
     graphics,
     stats,
@@ -31,7 +31,8 @@ Imports: progress,
     DESeq2,
     limma,
     SummarizedExperiment,
-    BiocParallel
+    BiocParallel,
+    rmarkdown
 BugReports: https://github.com/JRC-COMBINE/PhysioSpaceMethods/issues
 URL: https://github.com/JRC-COMBINE/PhysioSpaceMethods
 RoxygenNote: 7.1.1

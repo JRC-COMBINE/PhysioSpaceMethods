@@ -13,7 +13,7 @@
 #' values imputed.
 #'
 #' @import utils
-#' @importFrom DMwR knnImputation
+#' @importFrom impute impute.knn
 #' @importFrom missMDA imputePCA estim_ncpPCA
 #'
 #' @examples
@@ -37,7 +37,7 @@
         #gene expression imputation, I'll use it for now but have to
         #change later Prob'ly won't work for RNA-seq either -> another
         #reason to change to a better method
-        return(knnImputation(data = InptGEX))
+        return(impute.knn(data = InptGEX)$data)
     } else if(METHOD=="PCA") {
         res.comp <- imputePCA(InptGEX,ncp = estim_ncpPCA(InptGEX,ncp.max=7)$ncp)
         return(res.comp$completeObs)

@@ -56,8 +56,8 @@
                 " which is not enough for PhysioSpace, aborting..."
             )
         }
-        InputData <- InputData[!is.na(matchedIndxes),]
-        Space <- Space[na.omit(matchedIndxes),]
+        InputData <- InputData[!is.na(matchedIndxes),,drop=FALSE]
+        Space <- Space[na.omit(matchedIndxes),,drop=FALSE]
         message("Matching done, with ", nrow(Space),
                         " common rows between InputData and Space.")
     }

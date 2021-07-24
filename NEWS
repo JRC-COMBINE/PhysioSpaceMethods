@@ -1,4 +1,10 @@
-CHANGES IN VERSION 0.99.66 (25.09.2020)
+CHANGES IN VERSION 0.99.66 (24.07.2021)
+--------------------------------------
+BUG FIXES
+
+    o Fixed the problem of InptChecker with single sample inputs
+    
+CHANGES IN VERSION 0.99.67 (5.07.2021)
 --------------------------------------
 BUG FIXES
 
